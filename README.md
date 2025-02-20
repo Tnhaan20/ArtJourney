@@ -1,13 +1,13 @@
-# ArtJourney Front-End
+# ArtJourney
 
-ArtJourney is an online platform for learning and researching art. It is designed to provide a personalized, interactive, and inspiring learning experience using advanced technologies such as AI personalization, gamification, and virtual classrooms.
+ArtJourney is an online platform for learning and researching art. It is designed to provide a personalized, interactive, and inspiring learning experience by combining advanced features such as AI-powered personalization, gamification, and virtual classrooms.
 
 ## Overview
 
 The ArtJourney Front-End project aims to:
 - Deliver a modern, intuitive, and user-friendly interface.
 - Integrate interactive features like virtual classrooms, AI-based course recommendations, and gamification to enhance the learning experience.
-- Support a responsive design that works seamlessly across desktops and mobile devices.
+- Provide a fully responsive design that works seamlessly across desktops and mobile devices.
 
 ## Key Features
 
@@ -15,33 +15,27 @@ The ArtJourney Front-End project aims to:
   Explore themed virtual classrooms featuring structured lectures, interactive exercises, and case studies on art history.
 
 - **Personalization (AI):**  
-  An AI-powered recommendation system analyzes your preferences and skill levels to suggest courses that match your interests.
+  An AI-powered recommendation system analyzes your preferences and skill level to suggest courses that match your interests.
 
 - **Gamification:**  
   Earn badges, accumulate points, and climb leaderboards to boost your motivation and track your progress.
 
 - **Responsive Design:**  
-  A fully responsive interface that ensures a smooth user experience on both desktop and mobile devices.
+  A fully responsive interface ensures a smooth user experience on both desktop and mobile devices.
 
 ## Technologies Used
 
-- **HTML5, CSS3, JavaScript:**  
-  Core technologies for building the user interface.
+- **Tailwind CSS:**  
+  For fast, efficient styling and responsive design.
 
-- **React.js:**  
-  A JavaScript library used for building dynamic and interactive UIs.
-
-- **Redux / Context API:**  
+- **Zustand:**  
   For state management throughout the application.
 
-- **Axios / Fetch API:**  
-  For communicating with the backend through REST APIs.
+- **React.js:**  
+  To build dynamic and interactive user interfaces.
 
-- **Sass / Styled Components:**  
-  Tools for efficient styling and theming of the application.
-
-- **Responsive Frameworks (Bootstrap/Material UI):**  
-  Ensuring compatibility across different screen sizes and devices.
+- **Axios/Fetch API:**  
+  For communication with the backend via REST APIs.
 
 ## Installation
 
@@ -52,7 +46,7 @@ The ArtJourney Front-End project aims to:
    cd artjourney-frontend
    ```
 
-2. **Install required packages:**
+2. **Install the required packages:**
 
    ```bash
    npm install
@@ -80,10 +74,6 @@ We welcome contributions from the community. To contribute:
 3. Commit your changes with clear commit messages.
 4. Submit a Pull Request for review.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 ## Contact
 
 For any questions or support, please contact us at [contact@artjourney.com](mailto:contact@artjourney.com).
@@ -95,4 +85,4 @@ Thank you for your interest in the ArtJourney Front-End project. We hope this pl
 
 ---
 
-You can update the repository link, contact email, and other project-specific details as needed.
+Feel free to update repository links and contact details as needed.
