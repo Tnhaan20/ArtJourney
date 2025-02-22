@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout';
 import HomePage from '../page/HomePage';
 import Signin from '../components/Signin/Signin';
 import Signup from '../components/Signup/Signup';
+import Error from "../components/Error/Error";
 
 export default function AppRoutes() {
   return (
@@ -20,7 +21,9 @@ export default function AppRoutes() {
           </MainLayout>
         }
       />
-      {/* Add other routes with MainLayout */}
+
+      {/* Error route - will catch all unmatched paths */}
+      <Route path="*" element={<Error />} />
     </Routes>
   );
 }
