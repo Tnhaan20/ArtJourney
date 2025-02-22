@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import Logo from '../../assets/ArtJourney-Logo.png';
 import GoogleIcon from '../../assets/google.svg';
+import SideBG from "../../assets/SideBGSignIn.jpg"; // Make sure to add this image
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: ''
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleSubmit = (e) => {
@@ -24,13 +25,16 @@ export default function Signup() {
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
       <div className="flex w-full max-w-5xl rounded-lg shadow-lg overflow-hidden bg-[#3a3838]">
+        {/* Form bên phải */}
         <div className="w-full md:w-2/3 p-8">
           <div className="flex items-center justify-center">
             <Link to="/">
               <img className="h-20" src={Logo} alt="Logo" />
             </Link>
             <div className="border-l border-primary mx-5 h-12"></div>
-            <span className="text-gray-300 font-bold text-3xl text-primary">Đăng ký</span>
+            <span className="text-gray-300 font-bold text-3xl text-primary">
+              Đăng ký
+            </span>
           </div>
 
           <div className="text-center mt-2">
@@ -39,21 +43,29 @@ export default function Signup() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-200">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-200"
+              >
                 Email
               </label>
               <input
                 type="email"
                 id="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 className="mt-1 block w-full px-3 py-2 border border-gray-500 rounded-md shadow-sm text-white placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-200">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-200"
+              >
                 Mật khẩu
               </label>
               <div className="relative mt-1">
@@ -61,7 +73,9 @@ export default function Signup() {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="block w-full px-3 py-2 border border-gray-500 rounded-md shadow-sm text-white placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
                   required
                 />
@@ -76,7 +90,10 @@ export default function Signup() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-200">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-200"
+              >
                 Xác nhận mật khẩu
               </label>
               <div className="relative mt-1">
@@ -84,7 +101,12 @@ export default function Signup() {
                   type={showPassword ? "text" : "password"}
                   id="confirmPassword"
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
                   className="block w-full px-3 py-2 border border-gray-500 rounded-md shadow-sm text-white placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
                   required
                 />
@@ -113,23 +135,33 @@ export default function Signup() {
             </button>
 
             <p className="text-center text-sm text-gray-300">
-              Đã có tài khoản?{' '}
-              <Link to="/signin" className="font-medium text-[#e0c068] hover:text-amber-500">
+              Đã có tài khoản?{" "}
+              <Link
+                to="/signin"
+                className="font-medium text-[#e0c068] hover:text-amber-500"
+              >
                 Đăng nhập ngay
               </Link>
             </p>
           </form>
         </div>
-
-        <div className="hidden md:flex w-full md:w-1/3 p-8 border-l border-gray-500 items-center justify-center">
-          <div className="text-center">
+        {/* Cột giới thiệu (bên trái) */}
+        <div className="hidden md:flex w-full md:w-1/3 p-8 items-center justify-center">
+          <div className="text-center max-w-sm">
             <h2 className="text-2xl font-bold text-white mb-4">
               Chào mừng bạn đến với ArtJourney
             </h2>
-            <p className="text-gray-300 mb-6">
-              Hãy bắt đầu hành trình học tập của bạn với nền tảng đầy đủ tính năng và tài nguyên phong phú.
-            </p>
-            <button className="px-6 py-3 bg-[#e0c068] text-primary-black font-medium rounded-lg hover:bg-amber-500 transition-colors">
+
+            {/* Adjusted image container */}
+            <div className="mb-6 -mx-8">
+              <img
+                src={SideBG}
+                alt="ArtJourney illustration"
+                className="w-full h-[400px] object-cover"
+              />
+            </div>
+
+            <button className="w-full px-6 py-3 bg-[#e0c068] text-primary-black font-medium rounded-lg transition-colors hover:bg-amber-500">
               Bắt đầu học miễn phí
             </button>
           </div>
