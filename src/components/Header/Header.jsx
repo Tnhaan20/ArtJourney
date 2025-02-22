@@ -52,13 +52,13 @@ export default function Header() {
                     {/* Right Buttons - 2 cột */}
                     <div className="col-span-2 hidden md:flex items-center justify-end gap-4">
                         <Link 
-                            to="/login" 
+                            to="/signin" 
                             className="px-4 py-2 text-sm font-medium text-white hover:text-[#e0c068] transition-all duration-300 hover:shadow-[0_0_15px_#e0c068] rounded"
                         >
                             Đăng nhập
                         </Link>
                         <Link 
-                            to="/register" 
+                            to="/signup" 
                             className="px-4 py-2 text-sm font-medium bg-[#e0c068] text-black hover:bg-amber-500 rounded transition-all duration-300 hover:shadow-[0_0_15px_#e0c068]"
                         >
                             Đăng ký

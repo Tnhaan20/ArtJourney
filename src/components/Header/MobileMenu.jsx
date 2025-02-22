@@ -37,14 +37,14 @@ export default function MobileMenu({ isOpen, onClose }) {
                 </Link>
                 <div className="flex flex-col gap-4 pt-4 border-t border-gray-800">
                     <Link 
-                        to="/login" 
+                        to="/signin" 
                         className="text-sm font-medium text-white hover:text-[#e0c068] transition-all duration-300"
                         onClick={onClose}
                     >
                         Đăng nhập
                     </Link>
                     <Link 
-                        to="/register" 
+                        to="/signup" 
                         className="text-sm font-medium bg-[#e0c068] text-black hover:bg-amber-500 rounded py-2 text-center transition-all duration-300"
                         onClick={onClose}
                     >

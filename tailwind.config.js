@@ -7,7 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        tprimary: '#e0c068',
+        primary: {
+          light: '#e0c068',
+          DEFAULT: '#1E40AF',
+          dark: '#1E3A8A',
+        },
       },
     },
   },
