@@ -35,24 +35,24 @@ import southAmericaModern from '../../assets/southAmerica-modern.png';
 import southAmericaPostmodern from '../../assets/southAmerica-postmodern.png';
 
 // 5) Africa
-/*
+
 import africaPrehistoric from '../../assets/africa-prehistoric.png';
 import africaAncient from '../../assets/africa-ancient.png';
 import africaMedieval from '../../assets/africa-medieval.png';
 import africaRenaissance from '../../assets/africa-renaissance.png';
 import africaModern from '../../assets/africa-modern.png';
 import africaPostmodern from '../../assets/africa-postmodern.png';
-*/
+
 
 // 6) Oceania
-/*
+
 import oceaniaPrehistoric from '../../assets/oceania-prehistoric.png';
 import oceaniaAncient from '../../assets/oceania-ancient.png';
 import oceaniaMedieval from '../../assets/oceania-medieval.png';
 import oceaniaRenaissance from '../../assets/oceania-renaissance.png';
 import oceaniaModern from '../../assets/oceania-modern.png';
 import oceaniaPostmodern from '../../assets/oceania-postmodern.png';
-*/
+ 
 
 // ========== COMBINE IMAGES IN AN OBJECT ==========
 const imageSets = {
@@ -88,7 +88,6 @@ const imageSets = {
     modern: southAmericaModern,
     postmodern: southAmericaPostmodern,
   },
-    /*
   africa: {
     prehistoric: africaPrehistoric,
     ancient: africaAncient,
@@ -104,8 +103,7 @@ const imageSets = {
     renaissance: oceaniaRenaissance,
     modern: oceaniaModern,
     postmodern: oceaniaPostmodern,
-  },
-  */
+  }
 };
 
 // A helper to show a nicer label in the UI:
