@@ -11,6 +11,7 @@ import user3 from "../../assets/user3.png";
 import commentUser1 from "../../assets/comment-user1.png";
 import commentUser2 from "../../assets/comment-user2.png";
 import commentUser3 from "../../assets/comment-user3.png";
+import commentUser4 from "../../assets/comment-user4.png";
 
 const testimonials = [
   {
@@ -19,14 +20,19 @@ const testimonials = [
     text: "As an aspiring artist, I find ArtJourney incredibly inspiring. It not only teaches art history but also encourages creativity. The seamless navigation and visually stunning presentations make it a joy to use. I absolutely love it!",
   },
   {
-    name: "Nguyen An",
+    name: "Doan Thai Minh Khang",
     image: commentUser2,
-    text: "This platform has truly changed my perspective on art. I can engage with historical artworks and learn in a very interactive way!",
+    text: "ArtJourney is a great platform for art lovers! It’s easy to use, interactive, and makes learning about art history fun and personal.",
   },
   {
-    name: "Tran Binh",
+    name: "Hoang Minh Quoc",
     image: commentUser3,
-    text: "I love the way ArtJourney makes learning so immersive! The quizzes and challenges keep me engaged, and I feel motivated to learn more every day.",
+    text: "ArtJourney offers an amazing art experience! The user-friendly interface and rich content make it easy for me to explore and create unique artworks. The customer service is attentive and responds quickly. Definitely worth trying!",
+  },
+  {
+    name: "Ta Thi Kieu Thi",
+    image: commentUser4,
+    text: "I was amazed by the depth of knowledge ArtJourney provides. From classic masterpieces to contemporary works, every detail is well-explained. The platform is smooth, visually appealing, and engaging. It's a must-have for anyone passionate about art!",
   },
 ];
 
@@ -103,7 +109,7 @@ export default function HomeAchieve() {
     }
 
   return (
-    <div className="w-full bg-[#f8f8f8] py-30 text-black min-h-screen pb-20">
+    <div className="w-full bg-[#f8f8f8] py-30 text-black min-h-screen pb-5">
       {/* Top 3 Users Section */}
       <div className="text-center py-12">
         {/* User Images Container */}
@@ -146,11 +152,11 @@ export default function HomeAchieve() {
       </div>
 
       {/* Join the challenge */}
-      <div className="text-center mt-[180px]">
+      <div className="text-center mt-[155px]">
         <h2 className="text-2xl font-extrabold">
           Top 3 Users with the Highest Achievements
         </h2>
-        <button className="mt-4 px-8 py-3 text-lg font-bold bg-[#e0c068] text-white rounded-lg hover:bg-[#dda853] transition cursor-pointer mb-10">
+        <button className="mt-10 px-8 py-3 text-lg font-bold bg-[#e0c068] text-white rounded-lg hover:bg-[#dda853] transition cursor-pointer mb-10">
           Join the Challenge
         </button>
       </div>
