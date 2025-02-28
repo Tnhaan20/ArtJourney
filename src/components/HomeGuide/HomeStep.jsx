@@ -43,8 +43,8 @@ export default function HomeStep() {
         {/* Text Section */}
         <div className="lg:w-2/5 text-left flex flex-col items-start relative">
           {/* Step Title - Separate */}
-          <div className="absolute top-[-90px] left-[-230px]">
-            <span className="inline-block bg-[#E3A857] text-white px-6 py-3 rounded-md text-xl font-semibold">
+          <div className="absolute top-[-80px] left-[-80px]">
+            <span className="inline-block bg-[#E3A857] text-white px-6 py-2 rounded-md text-xl font-semibold">
               Step 2 - Practice
             </span>
           </div>
