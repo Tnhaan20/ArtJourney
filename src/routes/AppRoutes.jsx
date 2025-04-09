@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import HomePage from '../page/HomePage';
+import AboutPage from '../page/AboutPage';
 import Signin from '../components/Signin/Signin';
 import Signup from '../components/Signup/Signup';
 import Error from "../components/Error/Error";
@@ -18,6 +19,15 @@ export default function AppRoutes() {
         element={
           <MainLayout>
             <HomePage />
+          </MainLayout>
+        }
+      />
+      
+      <Route
+        path="/about"
+        element={
+          <MainLayout>
+            <AboutPage />
           </MainLayout>
         }
       />

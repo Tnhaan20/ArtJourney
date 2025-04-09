@@ -42,6 +42,12 @@ export default function Header() {
                             Bảng xếp hạng
                         </Link>
                         <Link 
+                            to="/about" 
+                            className="text-sm font-medium text-white hover:text-[#e0c068] transition-all duration-300 hover:shadow-[0_0_15px_#e0c068] px-4 py-2 rounded"
+                        >
+                            About Us
+                        </Link>
+                        <Link 
                             to="/blog" 
                             className="text-sm font-medium text-white hover:text-[#e0c068] transition-all duration-300 hover:shadow-[0_0_15px_#e0c068] px-4 py-2 rounded"
                         >

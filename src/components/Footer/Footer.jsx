@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Logo from "../../assets/ArtJourney-Logo.png";
 import FacebookIcon from "../../assets/facebook.png";
 import InstagramIcon from "../../assets/instagram.png";
@@ -7,7 +8,7 @@ import YoutubeIcon from "../../assets/youtube.png";
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-[#dda853] py-10 pb-10">
+    <footer className="bg-white text-[#dda853] py-10">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-x-12 gap-y-8">
         
         {/* Column 1: Logo & Address */}
@@ -21,13 +22,16 @@ export default function Footer() {
           <h3 className="font-semibold uppercase">About Us</h3>
           <ul className="space-y-2">
             <li>
-              <a href="#" className="hover:underline">Promotion</a>
+              <Link to="/about" className="hover:underline">About Us</Link>
             </li>
             <li>
-              <a href="#" className="hover:underline">Founder</a>
+              <Link to="#" className="hover:underline">Promotion</Link>
             </li>
             <li>
-              <a href="#" className="hover:underline">Contact</a>
+              <Link to="#" className="hover:underline">Founder</Link>
+            </li>
+            <li>
+              <Link to="#" className="hover:underline">Contact</Link>
             </li>
           </ul>
         </div>

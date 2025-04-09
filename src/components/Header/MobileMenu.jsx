@@ -29,6 +29,13 @@ export default function MobileMenu({ isOpen, onClose }) {
                     Bảng xếp hạng
                 </Link>
                 <Link 
+                    to="/about" 
+                    className="text-sm font-medium text-white hover:text-[#e0c068] transition-all duration-300"
+                    onClick={onClose}
+                >
+                    About Us
+                </Link>
+                <Link 
                     to="/blog" 
                     className="text-sm font-medium text-white hover:text-[#e0c068] transition-all duration-300"
                     onClick={onClose}
