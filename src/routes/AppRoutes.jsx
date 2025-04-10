@@ -4,7 +4,8 @@ import HomePage from '../page/HomePage';
 import AboutPage from '../page/AboutPage';
 import Signin from '../components/Signin/Signin';
 import Signup from '../components/Signup/Signup';
-import Error from "../components/Error/Error";
+import Error from "../components/Error/404Error";
+import ServerError from "../components/Error/500Error";
 
 export default function AppRoutes() {
   return (
@@ -22,7 +23,7 @@ export default function AppRoutes() {
           </MainLayout>
         }
       />
-      
+
       <Route
         path="/about"
         element={
@@ -34,6 +35,7 @@ export default function AppRoutes() {
 
       {/* Error route - will catch all unmatched paths */}
       <Route path="*" element={<Error />} />
+      <Route path="/server-error" element={<ServerError />} />
     </Routes>
   );
 }

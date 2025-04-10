@@ -1,0 +1,41 @@
+/* Header glassmorphism styles */
+.header {
+  transition: all 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-scrolled {
+background: rgba(130, 123, 123, 0.29);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(17.4px);
+-webkit-backdrop-filter: blur(17.4px);
+border: 1px solid rgba(130, 123, 123, 0.3);
+}
+
+/* Enhance link hover effects */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #e0c068;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 70%;
+}
+
+.nav-link-active::after {
+  width: 70%;
+}

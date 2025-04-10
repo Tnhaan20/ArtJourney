@@ -130,20 +130,7 @@ export default function HomeTopic() {
 
   return (
     <div className="w-full bg-[#f8f8f8] text-black min-h-screen pb-20">
-      {/* SCROLL BUTTON */}
-      <div className="flex justify-center pt-4 bg-[#f8f8f8]">
-        <button
-          onClick={() =>
-            document
-              .getElementById("featured-topics")
-              ?.scrollIntoView({ behavior: "smooth" })
-          }
-          className="w-12 h-12 rounded-full bg-gray-300 shadow flex items-center justify-center cursor-pointer 
-                    hover:bg-gray-400 hover:scale-110 transition-all duration-200 ease-in-out"
-        >
-          <ChevronDown size={30} strokeWidth={2} strokeLinecap="round" />
-        </button>
-      </div>
+      
 
       {/* INTRO TEXT */}
       <div className="max-w-6xl mx-auto text-center mt-6 px-4">

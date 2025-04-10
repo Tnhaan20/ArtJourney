@@ -1,6 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+@theme{
+  
+  --color-primary: #e0c068;
+  --color-primary-black: #343434;
+  --color-primary-white: #f9f9f9;
+
+  /* Yellow color for root */
+  --color-primary-yellow: #dda853;
+  --color-secondary-yellow: #e8ba70;
+  --color-third-yellow: #ecd2aa;
+}
+
 :root {
   font-family: 'Inter', monospace;
   display: flex;
@@ -8,10 +20,9 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #343434;
-  --primary: #e0c068;
-  --primary-button: #dda853;
-  --primaryblack: #343434;
+  background: #f9f9f9;
+  
+
 }
 
 
@@ -20,7 +31,7 @@ body, html {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow-x: hidden; /* Ngăn scroll ngang */
+  overflow-x: hidden;
 
 }
 

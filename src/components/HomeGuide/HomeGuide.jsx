@@ -1,59 +1,85 @@
-import { Search } from 'lucide-react'
-import BG1 from '../../assets/Home-BG-1.jpg'
+import BG1 from '../../assets/BGHome.png'
 import sideBG from '../../assets/Side-BG.jpg'
 
 export default function HomeGuide() {
   return (
     <div className="relative min-h-[calc(100vh-64px)] w-full overflow-hidden">
-      {/* Overlay mờ đen và hình nền */}
-      <div className="absolute inset-0 bg-black/60 z-0"></div>
-      <img
-        src={BG1}
-        alt="background"
-        className="absolute inset-0 w-full h-full object-cover brightness-[0.5]"
-      />
+      <div className="absolute inset-x-0 top-0 h-[78vh] overflow-hidden">
+        <img
+          src={BG1}
+          alt="background"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-      {/* Container chính - dùng flex để căn giữa toàn bộ */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
-        {/* Grid 2 cột, 1 cột trên mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-center">
-          {/* Cột bên trái (nội dung) */}
+      {/* Main content container */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col">
+        <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-center py-12">
+          {/* Left column (content) */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
-              Nền tảng học lịch sử sáng tạo
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
+              STUDY WITH <span className="block text-4xl font-bold">ART JOURNEY</span>
             </h1>
             <p className="text-white mb-6 max-w-md">
-              Chúng tôi mang đến trải nghiệm học lịch sử qua việc đọc sách và thực hiện thử thách tương tác. 
-              Tìm hiểu ngay để khám phá kho tàng tri thức!
+              "Learn art history & Discover the stories behind masterpieces and enhance your understanding of art."
             </p>
 
-            {/* Ô tìm kiếm */}
-            <div className="relative w-full max-w-md mb-6">
-              <input
-                type="text"
-                placeholder="Tìm kiếm..."
-                className="w-full px-4 py-3 rounded-lg bg-white/90 text-black placeholder:text-gray-500"
-              />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
-            </div>
-
-            {/* Nút bấm */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-6 py-3 bg-[#e0c068] text-black font-medium rounded-lg hover:bg-amber-500 transition-colors">
-                Trải nghiệm miễn phí
-              </button>
-              
-            </div>
+            {/* Sign up button */}
+            <button className="px-6 py-3 bg-[#e0c068] text-black font-medium rounded-lg hover:bg-amber-500 transition-colors">
+              LET'S SIGN UP
+            </button>
           </div>
 
-          {/* Cột bên phải (hình ảnh), ẩn trên mobile */}
-          <div className="hidden md:block mt-10">
+          {/* Right column (artwork image) */}
+          <div className="hidden md:flex md:justify-center">
             <img
               src={sideBG}
-              alt="side decoration"
-              className="w-full h-auto max-h-[80vh] object-contain"
+              alt="Art masterpiece"
+              className="w-full h-auto max-h-[60vh] object-contain rounded-lg"
             />
           </div>
+        </div>
+        
+        {/* Stats section at bottom */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mb-12">
+          {/* Stat 1 */}
+          <div className="bg-[#e0c068] p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold">2M +</div>
+            <div className="text-sm">CUSTOMERS</div>
+          </div>
+          
+          {/* Stat 2 */}
+          <div className="bg-[#e0c068] p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold">4 +</div>
+            <div className="text-sm">YEARS EXPERIENCE</div>
+          </div>
+          
+          {/* Stat 3 */}
+          <div className="bg-[#e0c068] p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold">60 +</div>
+            <div className="text-sm">TOTAL LESSONS</div>
+          </div>
+          
+          {/* Stat 4 */}
+          <div className="bg-[#e0c068] p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold">4.9</div>
+            <div className="text-sm">STAR REVIEWS</div>
+          </div>
+        </div>
+        
+        {/* Double down arrow indicator with subtle animation and smooth scroll */}
+        <div 
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 cursor-pointer transition-transform hover:translate-y-1 duration-300"
+          onClick={() => {
+            document.getElementById('featured-topics').scrollIntoView({ 
+              behavior: 'smooth' 
+            });
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black">
+            <path d="M7 8L12 13L17 8" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M7 14L12 19L17 14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
       </div>
     </div>
