@@ -66,7 +66,7 @@ export default function Header() {
             <Link to="/about" className={getLinkClass("/about")}>
               About Us
             </Link>
-            <Link to="/blog" className={getLinkClass("/blog")}>
+            <Link to="/community" className={getLinkClass("/community")}>
               Blog/Diễn đàn
             </Link>
           </nav>

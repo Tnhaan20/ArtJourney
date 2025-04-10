@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import TeamMember1 from '../../assets/team-member-1.png';
 import TeamMember2 from '../../assets/team-member-2.png';
 import TeamMember3 from '../../assets/team-member-3.png';
@@ -8,81 +8,37 @@ import TeamMember6 from '../../assets/team-member-6.png';
 
 export default function AboutTeam() {
   const teamScrollerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
   
-  useEffect(() => {
-    const slider = teamScrollerRef.current;
-    let isDown = false;
-    let startX;
-    let scrollLeft;
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    teamScrollerRef.current.classList.add('cursor-grabbing');
+    setStartX(e.pageX - teamScrollerRef.current.offsetLeft);
+    setScrollLeft(teamScrollerRef.current.scrollLeft);
+    e.preventDefault(); // Prevent default drag behavior
+  };
 
-    const handleMouseDown = (e) => {
-      isDown = true;
-      slider.classList.add('cursor-grabbing');
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-      e.preventDefault();
-    };
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    teamScrollerRef.current.classList.remove('cursor-grabbing');
+  };
 
-    const handleTouchStart = (e) => {
-      isDown = true;
-      slider.classList.add('cursor-grabbing');
-      startX = e.touches[0].pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    };
+  const handleMouseLeave = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    teamScrollerRef.current.classList.remove('cursor-grabbing');
+  };
 
-    const handleMouseLeave = () => {
-      isDown = false;
-      slider.classList.remove('cursor-grabbing');
-    };
-
-    const handleMouseUp = () => {
-      isDown = false;
-      slider.classList.remove('cursor-grabbing');
-    };
-
-    const handleMouseMove = (e) => {
-      if(!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 1.2;
-      slider.scrollLeft = scrollLeft - walk;
-    };
-
-    const handleTouchMove = (e) => {
-      if(!isDown) return;
-      const x = e.touches[0].pageX - slider.offsetLeft;
-      const walk = (x - startX) * 1.2;
-      slider.scrollLeft = scrollLeft - walk;
-    };
-
-    if (slider) {
-      slider.addEventListener('mousedown', handleMouseDown);
-      slider.addEventListener('mouseleave', handleMouseLeave);
-      slider.addEventListener('mouseup', handleMouseUp);
-      slider.addEventListener('mousemove', handleMouseMove);
-      
-      slider.addEventListener('touchstart', handleTouchStart);
-      slider.addEventListener('touchend', handleMouseUp);
-      slider.addEventListener('touchmove', handleTouchMove);
-      
-      slider.addEventListener('contextmenu', e => e.preventDefault());
-    }
-
-    return () => {
-      if (slider) {
-        slider.removeEventListener('mousedown', handleMouseDown);
-        slider.removeEventListener('mouseleave', handleMouseLeave);
-        slider.removeEventListener('mouseup', handleMouseUp);
-        slider.removeEventListener('mousemove', handleMouseMove);
-        
-        slider.removeEventListener('touchstart', handleTouchStart);
-        slider.removeEventListener('touchend', handleMouseUp);
-        slider.removeEventListener('touchmove', handleTouchMove);
-        
-        slider.removeEventListener('contextmenu', e => e.preventDefault());
-      }
-    };
-  }, []);
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - teamScrollerRef.current.offsetLeft;
+    const walk = (x - startX) * 1.2; // Increase multiplier to match AboutClients
+    teamScrollerRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   return (
     <div className="bg-white text-black overflow-hidden pt-0 mt-0">
@@ -95,14 +51,17 @@ export default function AboutTeam() {
           <div className="mx-0 overflow-hidden">
             <div 
               ref={teamScrollerRef}
-              className="flex overflow-x-auto pb-6 gap-4 md:gap-6 hide-scrollbar cursor-grab no-select"
-              style={{ 
-                scrollSnapType: 'x proximity',
-                scrollBehavior: 'smooth',
+              className="flex overflow-x-auto pb-6 gap-4 md:gap-6 hide-scrollbar no-select"
+              style={{
                 WebkitOverflowScrolling: 'touch',
-                touchAction: 'pan-x'
+                touchAction: 'pan-x', // Keep touch action for mobile
+                userSelect: 'none',
+                cursor: isDragging ? 'grabbing' : 'grab' // Add dynamic cursor
               }}
-              onDragStart={(e) => e.preventDefault()}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+              onMouseMove={handleMouseMove}
             >
               <div className="flex-shrink-0 w-full max-w-[calc(22.5%-12px)] sm:max-w-[calc(45%-10px)] md:max-w-[calc(30%-12px)] lg:max-w-[calc(22.5%-12px)]" style={{ scrollSnapAlign: 'start' }}>
                 <div className="mb-0 overflow-hidden rounded-lg relative">
@@ -213,6 +172,8 @@ export default function AboutTeam() {
           -ms-user-select: none;
           user-select: none;
         }
+        /* Remove cursor-grabbing if no longer needed due to inline style */
+        /* .cursor-grabbing { cursor: grabbing; } */
       `}</style>
     </div>
   );
