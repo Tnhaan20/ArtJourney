@@ -4,15 +4,17 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1); /* Solid white initially */
 }
 
 .header-scrolled {
-background: rgba(130, 123, 123, 0.29);
-border-radius: 16px;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(17.4px);
--webkit-backdrop-filter: blur(17.4px);
-border: 1px solid rgba(130, 123, 123, 0.3);
+  background: rgba(37, 37, 37, 0.61); /* More transparent white */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(130, 123, 123, 0.3);
+  border-radius: 0; /* Remove border radius - typically headers span full width */
 }
 
 /* Enhance link hover effects */

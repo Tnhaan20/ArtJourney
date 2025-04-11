@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/ArtJourney-Logo.png";
-import FacebookIcon from "../../assets/facebook.png";
-import InstagramIcon from "../../assets/instagram.png";
-import TiktokIcon from "../../assets/tiktok.png";
-import YoutubeIcon from "../../assets/youtube.png";
+import FacebookIcon from "../../assets/icons/facebook.png";
+import InstagramIcon from "../../assets/icons/instagram.png";
+import TiktokIcon from "../../assets/icons/tiktok.png";
+import YoutubeIcon from "../../assets/icons/youtube.png";
 
 export default function Footer() {
   return (

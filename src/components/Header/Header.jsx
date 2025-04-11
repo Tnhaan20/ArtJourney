@@ -13,19 +13,27 @@ export default function Header() {
   // Add scroll event listener to detect when user scrolls
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
+      // Use window.scrollY as the primary way to detect scrolling
+      const scrollPosition = window.scrollY;
+
+      console.log("Scroll Position:", scrollPosition); // Debugging
+
+      if (scrollPosition > 10) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
     };
 
-    // Initial check
+    // Initial check on component mount
     handleScroll();
-    
-    window.addEventListener('scroll', handleScroll);
+
+    // Add event listener for scroll events
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Clean up the event listener when component unmounts
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -44,7 +52,7 @@ export default function Header() {
   };
 
   return (
-    <header className={`header ${isScrolled ? "header-scrolled" : "bg-primary-white"}`}>
+    <header className={`header ${isScrolled ? "header-scrolled" : ""}`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-12 h-16 items-center">
           {/* Logo - 2 cột */}
@@ -54,36 +62,33 @@ export default function Header() {
 
           {/* Desktop Navigation - 8 cột */}
           <nav className="col-span-8 hidden md:flex items-center justify-center gap-8">
-            <Link to="/library" className={getLinkClass("/library")}>
-              Thư viện
+            <Link to="/learn" className={getLinkClass("/learn")}>
+              Learn
             </Link>
-            <Link to="/challenges" className={getLinkClass("/challenges")}>
-              Thử thách ôn tập
-            </Link>
-            <Link to="/leaderboard" className={getLinkClass("/leaderboard")}>
-              Bảng xếp hạng
+            <Link to="/ranking" className={getLinkClass("/ranking")}>
+              Ranking
             </Link>
             <Link to="/about" className={getLinkClass("/about")}>
               About Us
             </Link>
             <Link to="/community" className={getLinkClass("/community")}>
-              Blog/Diễn đàn
+              Community
             </Link>
           </nav>
 
           {/* Right Buttons - 2 cột */}
           <div className="col-span-2 hidden md:flex items-center justify-end gap-4">
             <Link
-              to="/signin"
-              className="px-4 py-2 text-sm font-medium text-primary-yellow hover:text-secondary-yellow transition-all duration-300 rounded"
-            >
-              Đăng nhập
-            </Link>
-            <Link
               to="/signup"
               className="px-4 py-2 text-sm font-medium bg-secondary-yellow text-black hover:bg-amber-500 rounded transition-all duration-300"
             >
-              Đăng ký
+              Sign up
+            </Link>
+            <Link
+              to="/signin"
+              className="px-4 py-2 text-sm font-medium text-primary-yellow hover:text-primary-black hover:bg-primary-yellow border-secondary-yellow border-1 transition-all duration-300 rounded"
+            >
+              Log in
             </Link>
           </div>
 
