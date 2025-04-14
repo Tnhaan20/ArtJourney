@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
-import HomePage from '../page/HomePage';
-import AboutPage from '../page/AboutPage';
-import CommunityPage from '../page/CommunityPage';
-import Signin from '../components/Signin/Signin';
-import Signup from '../components/Signup/Signup';
-import Error from "../components/Error/404Error";
-import ServerError from "../components/Error/500Error";
+import HomePage from '../pages/HomePage';
+import AboutPage from '../pages/AboutPage';
+import CommunityPage from '../pages/CommunityPage';
+import Signin from "../components/layout/Signin/Signin";
+import Signup from "../components/layout/Signup/Signup";
+import Error from "../components/layout/Error/404Error";
+import ServerError from "../components/layout/Error/500Error";
 
 export default function AppRoutes() {
   return (
