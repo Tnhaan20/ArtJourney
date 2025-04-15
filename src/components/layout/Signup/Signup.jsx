@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import Logo from "../../../assets/ArtJourney-Logo.png";
 import GoogleIcon from "../../../assets/google.svg";
-import SideBG from "../../../assets/SideBGSignIn.jpg"; // Make sure to add this image
+import SideBG from "../../../assets/SideBGSignIn.jpg";
+import Input from "../../elements/input/Input";
+import { TailwindStyle } from '../../../utils/Enum';
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +14,12 @@ export default function Signup() {
     password: "",
     confirmPassword: "",
   });
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,147 +31,135 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
-      <div className="flex w-full max-w-5xl rounded-lg shadow-lg overflow-hidden bg-[#3a3838]">
-        {/* Form bên phải */}
-        <div className="w-full md:w-2/3 p-8">
-          <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="flex w-full max-w-6xl rounded-lg shadow-lg overflow-hidden">
+        {/* Form section (left) */}
+        <div className="w-full md:w-1/2 p-8 bg-white">
+          <div className="flex items-center justify-center mb-6">
             <Link to="/">
-              <img className="h-20" src={Logo} alt="Logo" />
+              <img className="h-16" src={Logo} alt="Logo" />
             </Link>
-            <div className="border-l border-primary mx-5 h-12"></div>
-            <span className="text-gray-300 font-bold text-3xl text-primary">
-              Đăng ký
+            <div className="border-l border-primary-yellow mx-5 h-10"></div>
+            <span className="text-primary-yellow font-bold text-2xl">
+              SIGN UP
             </span>
           </div>
 
-          <div className="text-center mt-2">
-            <p className="text-gray-300">Tạo tài khoản mới</p>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-200"
+            <Input
+              type="email"
+              name="email"
+              label="Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                label="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500"
               >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                className="mt-1 block w-full px-3 py-2 border border-gray-500 rounded-md shadow-sm text-white placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                label="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
                 required
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-200"
-              >
-                Mật khẩu
-              </label>
-              <div className="relative mt-1">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="block w-full px-3 py-2 border border-gray-500 rounded-md shadow-sm text-white placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300"
+            <div className="text-right">
+              <p className="text-sm text-gray-600">
+                Already have an account?{" "}
+                <Link
+                  to="/signin"
+                  className="font-medium text-primary-yellow hover:text-secondary"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
+                  Login
+                </Link>
+              </p>
             </div>
 
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-200"
+            <div className="relative flex items-center justify-center my-4">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
+              <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+
+            <div className="text-sm">
+              <p className="font-medium">Sign up with</p>
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                className="w-full mt-2 flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
-                Xác nhận mật khẩu
+                <img src={GoogleIcon} alt="Google" className="w-5 h-5" />
+                Sign up with Google
+              </button>
+            </div>
+
+            <div className="flex items-start">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                checked={agreeToTerms}
+                onChange={() => setAgreeToTerms(!agreeToTerms)}
+                className="h-4 w-4 text-primary-yellow focus:ring-secondary border-gray-300 rounded mt-1"
+              />
+              <label
+                htmlFor="terms"
+                className="ml-2 block text-sm text-gray-600"
+              >
+                You accept our Terms of Use, Privacy Policy, and agree that your
+                data will be shared.
               </label>
-              <div className="relative mt-1">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                  className="block w-full px-3 py-2 border border-gray-500 rounded-md shadow-sm text-white placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
-                  required
-                />
-              </div>
             </div>
 
             <button
               type="submit"
-              className="w-full cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-black bg-[#e0c068] hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className={`cursor-pointer w-full flex justify-center rounded-lg py-2 px-4 ${TailwindStyle.HIGHLIGHT_FRAME}`}
             >
-              Đăng ký
+              Sign up
             </button>
-
-            <div className="flex items-center w-full">
-              <div className="border-t border-gray-400 flex-grow mr-3"></div>
-              <span className="text-gray-400">hoặc</span>
-              <div className="border-t border-gray-400 flex-grow ml-3"></div>
-            </div>
-
-            <button
-              onClick={handleGoogleSignIn}
-              className="w-full cursor-pointer mb-4 flex items-center justify-center gap-2 py-2 px-4 border border-gray-500 rounded-md shadow-sm text-sm font-medium text-gray-200"
-            >
-              <img src={GoogleIcon} alt="Google" className="w-5 h-5" />
-              Đăng ký với Google
-            </button>
-
-            <p className="text-center text-sm text-gray-300">
-              Đã có tài khoản?{" "}
-              <Link
-                to="/signin"
-                className="font-medium text-[#e0c068] hover:text-amber-500"
-              >
-                Đăng nhập ngay
-              </Link>
-            </p>
           </form>
         </div>
-        {/* Cột giới thiệu (bên trái) */}
-        <div className="hidden md:flex w-full md:w-1/3 p-8 items-center justify-center">
-          <div className="text-center max-w-sm">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Chào mừng bạn đến với ArtJourney
+
+        {/* Welcome section (right) */}
+        <div className="hidden md:block w-1/2 p-8">
+          <div className="h-full flex flex-col items-center justify-center">
+            <h2 className="text-2xl font-bold text-primary-yellow mb-4">
+              Welcome to Art Journey
             </h2>
 
-            {/* Adjusted image container */}
-            <div className="mb-6 -mx-8">
+            <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
               <img
                 src={SideBG}
-                alt="ArtJourney illustration"
-                className="w-full h-[400px] object-cover"
+                alt="Art Journey"
+                className="w-full h-auto object-cover"
               />
             </div>
 
-            <button className="w-full px-6 py-3 bg-[#e0c068] text-primary-black font-medium rounded-lg transition-colors hover:bg-amber-500">
-              Bắt đầu học miễn phí
-            </button>
+            <p className="text-center text-primary-yellow mb-4">
+              "Learn art history & Discover the stories behind masterpieces and
+              enhance your understanding of art."
+            </p>
           </div>
         </div>
       </div>

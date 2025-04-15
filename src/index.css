@@ -2,16 +2,21 @@
 @import "tailwindcss";
 
 @theme{
-  
   --color-primary: #e0c068;
   --color-primary-black: #343434;
   --color-primary-white: #f9f9f9;
+
+  --color-primary-blue: #102E50;
+  --color-secondary-blue: #2270e5;
 
   /* Yellow color for root */
   --color-primary-yellow: #dda853;
   --color-secondary-yellow: #e8ba70;
   --color-third-yellow: #ecd2aa;
+
 }
+
+
 
 :root {
   font-family: 'Inter', monospace;

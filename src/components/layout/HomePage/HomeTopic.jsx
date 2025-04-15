@@ -1,4 +1,5 @@
 import React from "react";
+import { useAppTranslation } from '../../../contexts/TranslationContext';
 import FirstImgTopic from "../../../assets/HomePage/Topic/FirstTopic.jpg";
 
 // Import region representative images
@@ -10,30 +11,29 @@ import africaImage from "../../../assets/HomePage/Topic/Africa-Topic.png"; // Us
 import oceaniaImage from "../../../assets/HomePage/Topic/Oceania-Topic.png"; // Using aboriginal art
 
 export default function HomeTopic() {
+  const { t } = useAppTranslation();
+  
   // Define regions with their representative images
   const regions = [
-    { name: "North America", image: northAmericaImage },
-    { name: "South America", image: southAmericaImage },
-    { name: "Oceania", image: oceaniaImage },
-    { name: "Europe", image: europeImage },
-    { name: "Africa", image: africaImage },
-    { name: "Asia", image: asiaImage },
+    { name: t('home.regions.northAmerica'), image: northAmericaImage },
+    { name: t('home.regions.southAmerica'), image: southAmericaImage },
+    { name: t('home.regions.oceania'), image: oceaniaImage },
+    { name: t('home.regions.europe'), image: europeImage },
+    { name: t('home.regions.africa'), image: africaImage },
+    { name: t('home.regions.asia'), image: asiaImage },
   ];
 
   return (
-    <div className="w-full bg-[#f8f8f8] text-black min-h-screen pb-20">
+    <div className="w-full text-black min-h-screen">
       {/* INTRO TEXT */}
-      <div className="max-w-6xl mx-auto text-center mt-6 px-4">
+      <div className="max-w-6xl mx-auto text-center mt-20 px-4">
         <img
           src={FirstImgTopic}
           alt=""
           className="w-full h-full max-h-[60vh] object-contain"
         />
         <p className="text-base leading-relaxed pt-5">
-          We offer an interactive learning experience that helps users not only
-          absorb art history knowledge effectively but also stay engaged through
-          immersive activities. Learners can take exciting quizzes, earn badges,
-          and climb the leaderboard to track their progress.
+          {t('home.topics.description')}
         </p>
       </div>
 
@@ -42,7 +42,7 @@ export default function HomeTopic() {
         id="featured-topics"
         className="max-w-5xl mx-auto text-center px-4 py-12"
       >
-        <h2 className="text-3xl font-bold mb-10">Featured Topics</h2>
+        <h2 className="text-3xl font-bold mb-10">{t('home.topics.title')}</h2>
 
         {/* Region Grid - 3x2 layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

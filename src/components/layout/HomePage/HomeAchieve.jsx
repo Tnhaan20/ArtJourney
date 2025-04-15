@@ -12,6 +12,7 @@ import commentUser1 from "../../../assets/comment-user1.png";
 import commentUser2 from "../../../assets/comment-user2.png";
 import commentUser3 from "../../../assets/comment-user3.png";
 import commentUser4 from "../../../assets/comment-user4.png";
+import { TailwindStyle } from "../../../utils/Enum";
 
 const testimonials = [
   {
@@ -156,7 +157,8 @@ export default function HomeAchieve() {
         <h2 className="text-2xl font-extrabold">
           Top 3 Users with the Highest Achievements
         </h2>
-        <button className="mt-10 px-8 py-3 text-lg font-bold bg-[#e0c068] text-white rounded-lg hover:bg-[#dda853] transition cursor-pointer mb-10">
+        <button
+          className={`inline-block bg-primary-yellow text-white px-6 py-3 rounded-md text-lg font-semibold mt-5 cursor-pointer ${TailwindStyle.HIGHLIGHT_FRAME}`}>
           Join the Challenge
         </button>
       </div>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function HomePrice() {
   return (
-    <div className="bg-white py-16">
+    <div className="py-16">
       {/* Page heading */}
       <h1 className="text-center text-3xl md:text-4xl font-bold text-primary-black mb-14">
         Membership and Pricing

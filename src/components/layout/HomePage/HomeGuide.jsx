@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useAppTranslation } from '../../../contexts/TranslationContext';
 import BG1 from "../../../assets/Home-BG-1.jpg";
 import sideBG from "../../../assets/Side-BG.jpg";
+import { TailwindStyle } from '../../../utils/Enum';
 
 export default function HomeGuide() {
+  const { t } = useAppTranslation();
+  
   return (
-    <div className="relative min-h-[calc(100vh-64px)] w-full overflow-hidden">
-      {/* Background image with glassmorphism effect */}
+    <div className="relative min-h-[calc(100vh-64px)] w-full overflow-hidden py-10">
       <div className="absolute inset-x-0 top-0 h-[78vh] overflow-hidden">
         <img
           src={BG1}
@@ -22,17 +25,21 @@ export default function HomeGuide() {
           {/* Left column (content) */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
-              STUDY WITH{" "}
-              <span className="block text-4xl font-bold">ART JOURNEY</span>
+              {t("home.hero.title")}{" "}
+              <span className="block text-4xl font-bold">
+                {t("home.hero.subtitle")}
+              </span>
             </h1>
             <p className="text-white mb-6 max-w-md">
-              "Learn art history & Discover the stories behind masterpieces and
-              enhance your understanding of art."
+              {t("home.hero.description")}
             </p>
 
             {/* Sign up button */}
-            <Link to="/signup" className="px-6 py-3 bg-third-yellow text-black font-medium rounded-lg hover:bg-secondary-yellow transition-colors">
-              LET'S SIGN UP
+            <Link
+              to="/signup"
+              className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-3 font-medium rounded-lg`}
+            >
+              {t("home.hero.signUp")}
             </Link>
           </div>
 
@@ -47,29 +54,37 @@ export default function HomeGuide() {
         </div>
 
         {/* Stats section at bottom */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mx-auto mt-0 pb-18">
           {/* Stat 1 */}
-          <div className="bg-secondary-yellow p-4 rounded-lg text-center text-primary-white">
+          <div
+            className={`p-4 text-sm font-medium ${TailwindStyle.HIGHLIGHT_FRAME}`}
+          >
             <div className="text-2xl font-bold">2M +</div>
-            <div className="text-sm">CUSTOMERS</div>
+            <div className="text-sm">{t("home.stats.customers")}</div>
           </div>
 
           {/* Stat 2 */}
-          <div className="bg-secondary-yellow p-4 rounded-lg text-center text-primary-white">
+          <div
+            className={`p-4 text-sm font-medium ${TailwindStyle.HIGHLIGHT_FRAME}`}
+          >
             <div className="text-2xl font-bold">4 +</div>
-            <div className="text-sm">YEARS EXPERIENCE</div>
+            <div className="text-sm">{t("home.stats.experience")}</div>
           </div>
 
           {/* Stat 3 */}
-          <div className="bg-secondary-yellow p-4 rounded-lg text-center text-primary-white">
+          <div
+            className={`p-4 text-sm font-medium ${TailwindStyle.HIGHLIGHT_FRAME}`}
+          >
             <div className="text-2xl font-bold">60 +</div>
-            <div className="text-sm">TOTAL LESSONS</div>
+            <div className="text-sm">{t("home.stats.lessons")}</div>
           </div>
 
           {/* Stat 4 */}
-          <div className="bg-secondary-yellow p-4 rounded-lg text-center text-primary-white">
+          <div
+            className={`p-4 text-sm font-medium ${TailwindStyle.HIGHLIGHT_FRAME}`}
+          >
             <div className="text-2xl font-bold">4.9</div>
-            <div className="text-sm">STAR REVIEWS</div>
+            <div className="text-sm">{t("home.stats.reviews")}</div>
           </div>
         </div>
 

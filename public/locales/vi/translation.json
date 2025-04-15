@@ -1,0 +1,55 @@
+{
+  "header": {
+    "learn": "Học tập",
+    "ranking": "Xếp hạng",
+    "aboutUs": "Về chúng tôi",
+    "community": "Cộng đồng",
+    "signUp": "Đăng ký",
+    "logIn": "Đăng nhập"
+  },
+  "language": {
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt"
+  },
+  "home": {
+    "hero": {
+      "title": "HỌC TẬP CÙNG",
+      "subtitle": "ART JOURNEY",
+      "description": "Học lịch sử nghệ thuật & Khám phá câu chuyện đằng sau các kiệt tác và nâng cao hiểu biết của bạn về nghệ thuật.",
+      "signUp": "ĐĂNG KÝ NGAY"
+    },
+    "stats": {
+      "customers": "KHÁCH HÀNG",
+      "experience": "NĂM KINH NGHIỆM",
+      "lessons": "BÀI HỌC",
+      "reviews": "SAO ĐÁNH GIÁ"
+    },
+    "topics": {
+      "title": "Chủ đề nổi bật",
+      "description": "Chúng tôi cung cấp trải nghiệm học tập tương tác giúp người dùng không chỉ tiếp thu kiến thức lịch sử nghệ thuật một cách hiệu quả mà còn tham gia thông qua các hoạt động hấp dẫn. Người học có thể làm các bài kiểm tra thú vị, kiếm huy hiệu và leo lên bảng xếp hạng để theo dõi tiến độ của họ."
+    },
+    "regions": {
+      "northAmerica": "Bắc Mỹ",
+      "southAmerica": "Nam Mỹ",
+      "oceania": "Châu Đại Dương",
+      "europe": "Châu Âu",
+      "africa": "Châu Phi",
+      "asia": "Châu Á"
+    },
+    "steps": {
+      "title": "Công thức của 5% Bậc thầy Lịch sử Nghệ thuật hàng đầu",
+      "step1": {
+        "title": "Bước 1 - Đọc",
+        "description": "Bắt đầu hành trình của bạn bằng cách khám phá nội dung được tuyển chọn kỹ lưỡng đi sâu vào lịch sử nghệ thuật. Từ các nền văn minh cổ đại đến các kiệt tác hiện đại, hiểu biết sâu sắc về sự phát triển của biểu đạt nghệ thuật. Khám phá cách các phong trào văn hóa định hình phong cách nghệ thuật và cách các nghệ sĩ huyền thoại cách mạng hóa kỹ thuật và quan điểm theo thời gian."
+      },
+      "step2": {
+        "title": "Bước 2 - Thực hành",
+        "description": "Học tập vượt ra ngoài lý thuyết—kiểm tra kiến thức của bạn với các bài tập tương tác, câu đố hấp dẫn và các hoạt động thực hành được thiết kế để củng cố hiểu biết của bạn về lịch sử nghệ thuật.",
+        "button": "Thử thách ngay"
+      }
+    },
+    "testimonials": {
+      "title": "Người dùng nói gì về chúng tôi"
+    }
+  }
+}

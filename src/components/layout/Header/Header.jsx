@@ -3,9 +3,14 @@ import { Menu, X } from "lucide-react";
 import logo from "../../../assets/ArtJourney-Logo.png";
 import { useState, useEffect } from "react";
 import MobileMenu from "./MobileMenu";
+import LanguageSwitcher from "../../elements/LanguageSwitcher/LanguageSwitcher";
+import { useAppTranslation } from "../../../contexts/TranslationContext";
 import "./Header.css"; // Import the CSS file
+import { TailwindStyle } from "../../../utils/Enum";
+import HightlightText from "../../elements/hightlight-text/Text";
 
 export default function Header() {
+  const { t } = useAppTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -15,8 +20,6 @@ export default function Header() {
     const handleScroll = () => {
       // Use window.scrollY as the primary way to detect scrolling
       const scrollPosition = window.scrollY;
-
-      console.log("Scroll Position:", scrollPosition); // Debugging
 
       if (scrollPosition > 10) {
         setIsScrolled(true);
@@ -44,57 +47,72 @@ export default function Header() {
 
   // Function to generate link class based on active state
   const getLinkClass = (path) => {
-    return `text-sm font-medium nav-link ${
+    return `text-sm font-medium relative group ${
       isActive(path)
-        ? "text-primary-yellow nav-link-active"
-        : "text-secondary-yellow hover:text-primary-yellow"
+        ? "text-primary-blue font-semibold nav-link-active"
+        : "text-primary-blue hover:text-secondary-blue"
     } transition-all duration-300 px-4 py-2`;
   };
 
   return (
-    <header className={`header ${isScrolled ? "header-scrolled" : ""}`}>
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-12 h-16 items-center">
-          {/* Logo - 2 cột */}
-          <Link to="/" className="col-span-2 flex items-center">
-            <img src={logo} alt="ArtJourney Logo" className="h-8 w-auto" />
+    <header className="absolute z-50 w-full px-4 md:px-10">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo with text */}
+          <Link to="/" className={`px-3 ${TailwindStyle.GLASSMORPHISM}`}>
+            <img src={logo} alt="ArtJourney Logo" className="h-8 w-auto mr-2" />
+            <span className="font-medium text-primary-yellow">ArtJourney</span>
           </Link>
 
-          {/* Desktop Navigation - 8 cột */}
-          <nav className="col-span-8 hidden md:flex items-center justify-center gap-8">
-            <Link to="/learn" className={getLinkClass("/learn")}>
-              Learn
-            </Link>
-            <Link to="/ranking" className={getLinkClass("/ranking")}>
-              Ranking
-            </Link>
-            <Link to="/about" className={getLinkClass("/about")}>
-              About Us
-            </Link>
-            <Link to="/community" className={getLinkClass("/community")}>
-              Community
-            </Link>
+          {/* Navigation - centered */}
+          <nav className={`${TailwindStyle.GLASSMORPHISM} mx-auto`}>
+            <HightlightText to="/learn" className={getLinkClass("/learn")}>
+              {t("header.learn")}
+            </HightlightText>
+            <HightlightText to="/ranking" className={getLinkClass("/ranking")}>
+              {t("header.ranking")}
+            </HightlightText>
+            <HightlightText to="/about" className={getLinkClass("/about")}>
+              {t("header.aboutUs")}
+            </HightlightText>
+            <HightlightText
+              to="/community"
+              className={getLinkClass("/community")}
+            >
+              {t("header.community")}
+            </HightlightText>
           </nav>
 
-          {/* Right Buttons - 2 cột */}
-          <div className="col-span-2 hidden md:flex items-center justify-end gap-4">
-            <Link
-              to="/signup"
-              className="px-4 py-2 text-sm font-medium bg-secondary-yellow text-black hover:bg-amber-500 rounded transition-all duration-300"
+          <div className="w-auto hidden md:flex items-center gap-2 pr-3">
+            {/* Auth Buttons */}
+            <div
+              className={`flex items-center gap-1 rounded-full px-1 py-0.5 justify-between ${TailwindStyle.GLASSMORPHISM}`}
             >
-              Sign up
-            </Link>
-            <Link
-              to="/signin"
-              className="px-4 py-2 text-sm font-medium text-primary-yellow hover:text-primary-black hover:bg-primary-yellow border-secondary-yellow border-1 transition-all duration-300 rounded"
-            >
-              Log in
-            </Link>
-          </div>
+              <HightlightText
+                to="/signup"
+                className="px-4 py-1.5 text-sm font-medium hover:text-secondary-blue text-black transition-all duration-300 rounded-l-full bg-white border border-white/50 shadow-lg shadow-gray-800/5 ring-1 ring-gray-800/[.075] backdrop-blur-xl"
+              >
+                {t("header.signUp")}
+              </HightlightText>
 
+              <Link
+                to="/signin"
+                className="px-4 py-1.5 text-sm font-medium text-[#753f09] transition-all duration-300 rounded-r-full bg-gradient-to-r from-[#FCC059] to-[#F7D368] border border-white/50 shadow-lg shadow-gray-800/5 ring-1 ring-gray-800/[.075] backdrop-blur-xl"
+              >
+                {t("header.logIn")}
+              </Link>
+            </div>
+
+            {/* Language Switcher - circular and independent */}
+          </div>
+          <div
+            className={`${TailwindStyle.GLASSMORPHISM} flex items-center justify-center z-50 p-0 aspect-square cursor-pointer `}
+          >
+            <LanguageSwitcher />
+          </div>
           {/* Mobile Menu Button */}
           <button
-            className="col-span-10 md:hidden flex justify-end"
+            className="md:hidden flex items-center justify-center"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
