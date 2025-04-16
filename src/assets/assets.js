@@ -1,5 +1,9 @@
 import artjourney_logo from './MainLogo/ArtJourney-Logo.png';
 
 export const assets = {
-  artjourney_logo
+  main_logo: {
+    artjourney_logo
+  },
+
+  
 }

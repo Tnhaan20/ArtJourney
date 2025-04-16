@@ -1,5 +1,5 @@
 import React from 'react';
-import DefaultAvatar from "../../../assets/team-member-1.png"; // Using an existing avatar as placeholder
+import DefaultAvatar from "@/assets/team-member-1.png"; // Using an existing avatar as placeholder
 
 export default function PostCreator() {
   return (

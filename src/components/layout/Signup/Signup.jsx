@@ -38,7 +38,11 @@ export default function Signup() {
         <div className="w-full md:w-1/2 p-8 bg-white">
           <div className="flex items-center justify-center mb-6">
             <Link to="/">
-              <img className="h-16" src={assets.artjourney_logo} alt="Logo" />
+              <img
+                className="h-16"
+                src={assets.main_logo.artjourney_logo}
+                alt="Logo"
+              />
             </Link>
             <div className="border-l border-primary-yellow mx-5 h-10"></div>
             <span className="text-primary-yellow font-bold text-2xl">

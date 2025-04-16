@@ -1,5 +1,5 @@
 import React from 'react';
-import BestChoiceImage from "../../../assets/aboutus-bestchoice.png";
+import BestChoiceImage from "@/assets/aboutus-bestchoice.png";
 
 export default function AboutBenefits() {
   return (

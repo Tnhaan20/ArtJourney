@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PostItem from './PostItem';
-import TeamMember1 from "../../../assets/team-member-1.png";
-import TeamMember2 from "../../../assets/team-member-2.png";
-import TeamMember3 from "../../../assets/team-member-3.png";
+import TeamMember1 from "@/assets/team-member-1.png";
+import TeamMember2 from "@/assets/team-member-2.png";
+import TeamMember3 from "@/assets/team-member-3.png";
 
 // Sample data
 const samplePosts = [

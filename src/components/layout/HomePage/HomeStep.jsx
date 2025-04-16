@@ -1,12 +1,12 @@
-import { useAppTranslation } from '../../../contexts/TranslationContext';
-import step1Image from "../../../assets/step1-image.png";
-import step2Image from "../../../assets/step2-image.png";
+import { useAppTranslation } from "@/contexts/TranslationContext";
+import step1Image from "@/assets/step1-image.png";
+import step2Image from "@/assets/step2-image.png";
 import { Link } from "react-router-dom";
-import { TailwindStyle } from '../../../utils/Enum';
+import { TailwindStyle } from "@/utils/Enum";
 
 export default function HomeStep() {
   const { t } = useAppTranslation();
-  
+
   return (
     <div className="w-full py-16 px-6 lg:px-16">
       {/* Title */}
@@ -46,9 +46,7 @@ export default function HomeStep() {
           <div
             className={`inline-block bg-primary-yellow text-white px-6 py-3 rounded-md text-lg font-semibold mb-8 ${TailwindStyle.HIGHLIGHT_FRAME}`}
           >
-            <span>
-              {t("home.steps.step2.title")}
-            </span>
+            <span>{t("home.steps.step2.title")}</span>
           </div>
 
           <p className="text-base text-gray-800 leading-relaxed mb-8">

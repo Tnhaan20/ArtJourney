@@ -1,8 +1,8 @@
 import React from 'react';
-import CommunitySearch from "../../components/layout/CommunityPage/CommunitySearch";
-import PostCreator from "../../components/layout/CommunityPage/PostCreator";
-import CommunityTabs from "../../components/layout/CommunityPage/CommunityTabs";
-import CommunityFeed from "../../components/layout/CommunityPage/CommunityFeed";
+import CommunitySearch from "@/components/layout/CommunityPage/CommunitySearch";
+import PostCreator from "@/components/layout/CommunityPage/PostCreator";
+import CommunityTabs from "@/components/layout/CommunityPage/CommunityTabs";
+import CommunityFeed from "@/components/layout/CommunityPage/CommunityFeed";
 
 export default function CommunityPage() {
   return (

@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { useAppTranslation } from '../../../contexts/TranslationContext';
-import BG1 from "../../../assets/Home-BG-1.jpg";
-import sideBG from "../../../assets/Side-BG.jpg";
-import { TailwindStyle } from '../../../utils/Enum';
+import { useAppTranslation } from "@/contexts/TranslationContext";
+import BG1 from "@/assets/Home-BG-1.jpg";
+import sideBG from "@/assets/Side-BG.jpg";
+import { TailwindStyle } from "@/utils/Enum";
 
 export default function HomeGuide() {
   const { t } = useAppTranslation();

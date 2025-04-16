@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Import crown and users' images
-import crownImage from "../../../assets/crown.png";
-import user1 from "../../../assets/user1.png";
-import user2 from "../../../assets/user2.png";
-import user3 from "../../../assets/user3.png";
+import crownImage from "@/assets/crown.png";
+import user1 from "@/assets/user1.png";
+import user2 from "@/assets/user2.png";
+import user3 from "@/assets/user3.png";
 
 // Import testimonial images
-import commentUser1 from "../../../assets/comment-user1.png";
-import commentUser2 from "../../../assets/comment-user2.png";
-import commentUser3 from "../../../assets/comment-user3.png";
-import commentUser4 from "../../../assets/comment-user4.png";
-import { TailwindStyle } from "../../../utils/Enum";
+import commentUser1 from "@/assets/comment-user1.png";
+import commentUser2 from "@/assets/comment-user2.png";
+import commentUser3 from "@/assets/comment-user3.png";
+import commentUser4 from "@/assets/comment-user4.png";
+import { TailwindStyle } from "@/utils/Enum";
 
 const testimonials = [
   {

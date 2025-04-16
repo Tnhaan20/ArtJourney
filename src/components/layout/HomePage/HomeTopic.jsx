@@ -1,14 +1,14 @@
 import React from "react";
-import { useAppTranslation } from '../../../contexts/TranslationContext';
-import FirstImgTopic from "../../../assets/HomePage/Topic/FirstTopic.jpg";
+import { useAppTranslation } from '@/contexts/TranslationContext';
+import FirstImgTopic from "@/assets/HomePage/Topic/FirstTopic.jpg";
 
 // Import region representative images
-import europeImage from "../../../assets/HomePage/Topic/europe-topic.jpg"; // Using renaissance as representative
-import asiaImage from "../../../assets/HomePage/Topic/Asia-Topic.png"; // Using The Great Wave
-import northAmericaImage from "../../../assets/HomePage/Topic/NA-Topic.png"; // Using modern art
-import southAmericaImage from "../../../assets/HomePage/Topic/SouthAmerica-Topic.png"; // Using ancient art
-import africaImage from "../../../assets/HomePage/Topic/Africa-Topic.png"; // Using Nefertiti bust
-import oceaniaImage from "../../../assets/HomePage/Topic/Oceania-Topic.png"; // Using aboriginal art
+import europeImage from "@/assets/HomePage/Topic/europe-topic.jpg"; // Using renaissance as representative
+import asiaImage from "@/assets/HomePage/Topic/Asia-Topic.png"; // Using The Great Wave
+import northAmericaImage from "@/assets/HomePage/Topic/NA-Topic.png"; // Using modern art
+import southAmericaImage from "@/assets/HomePage/Topic/SouthAmerica-Topic.png"; // Using ancient art
+import africaImage from "@/assets/HomePage/Topic/Africa-Topic.png"; // Using Nefertiti bust
+import oceaniaImage from "@/assets/HomePage/Topic/Oceania-Topic.png"; // Using aboriginal art
 
 export default function HomeTopic() {
   const { t } = useAppTranslation();

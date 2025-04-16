@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import TeamMember1 from '../../../assets/team-member-1.png';
-import TeamMember2 from "../../../assets/team-member-2.png";
-import TeamMember3 from "../../../assets/team-member-3.png";
-import TeamMember4 from "../../../assets/team-member-4.png";
-import TeamMember5 from "../../../assets/team-member-5.png";
-import TeamMember6 from "../../../assets/team-member-6.png";
+import TeamMember1 from "@/assets/team-member-1.png";
+import TeamMember2 from "@/assets/team-member-2.png";
+import TeamMember3 from "@/assets/team-member-3.png";
+import TeamMember4 from "@/assets/team-member-4.png";
+import TeamMember5 from "@/assets/team-member-5.png";
+import TeamMember6 from "@/assets/team-member-6.png";
 
 export default function AboutTeam() {
   const teamScrollerRef = useRef(null);

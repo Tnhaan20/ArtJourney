@@ -1,5 +1,5 @@
 import React from 'react';
-import AchivedImage from "../../../assets/aboout-achieved.png";
+import AchivedImage from "@/assets/aboout-achieved.png";
 
 export default function AboutStories() {
   return (

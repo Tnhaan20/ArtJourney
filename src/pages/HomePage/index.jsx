@@ -1,8 +1,8 @@
-import HomeAchieve from "../../components/layout/HomePage/HomeAchieve";
-import HomeGuide from "../../components/layout/HomePage/HomeGuide";
-import HomePrice from "../../components/layout/HomePage/HomePrice";
-import HomeStep from "../../components/layout/HomePage/HomeStep";
-import HomeTopic from "../../components/layout/HomePage/HomeTopic";
+import HomeAchieve from "@/components/layout/HomePage/HomeAchieve";
+import HomeGuide from "@/components/layout/HomePage/HomeGuide";
+import HomePrice from "@/components/layout/HomePage/HomePrice";
+import HomeStep from "@/components/layout/HomePage/HomeStep";
+import HomeTopic from "@/components/layout/HomePage/HomeTopic";
 
 export default function HomePage() {
   return (
@@ -22,7 +22,6 @@ export default function HomePage() {
       <div>
         <HomePrice />
       </div>
-      
     </div>
   );
 }

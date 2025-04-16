@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import errorImage from "../../../assets/error/404.png";
-import { TailwindStyle } from '../../../utils/Enum';
+import errorImage from "@/assets/error/404.png";
+import { TailwindStyle } from "@/utils/Enum";
 
 export default function Error() {
   return (

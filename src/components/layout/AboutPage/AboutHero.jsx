@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import RightImage from "../../../assets/about-us-circle3.png";
-import MiddleImage from "../../../assets/about-us-circle2.png";
-import LeftImage from "../../../assets/about-us-circle1.png";
+import RightImage from "@/assets/about-us-circle3.png";
+import MiddleImage from "@/assets/about-us-circle2.png";
+import LeftImage from "@/assets/about-us-circle1.png";
 
 export default function AboutHero() {
   return (

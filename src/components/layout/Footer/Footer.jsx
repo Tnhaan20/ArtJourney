@@ -1,19 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import FacebookIcon from "../../../assets/icons/facebook.png";
-import InstagramIcon from "../../../assets/icons/instagram.png";
-import TiktokIcon from "../../../assets/icons/tiktok.png";
-import YoutubeIcon from "../../../assets/icons/youtube.png";
+import FacebookIcon from "@/assets/icons/facebook.png";
+import InstagramIcon from "@/assets/icons/instagram.png";
+import TiktokIcon from "@/assets/icons/tiktok.png";
+import YoutubeIcon from "@/assets/icons/youtube.png";
 import { assets } from "@/assets/assets";
 
 export default function Footer() {
   return (
     <footer className="bg-white text-[#dda853] py-10">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-x-12 gap-y-8">
-        
         {/* Column 1: Logo & Address */}
         <div className="flex flex-col space-y-4">
-          <img src={assets.artjourney_logo} alt="Logo" className="w-20 h-auto" />
+          <img
+            src={assets.main_logo.artjourney_logo}
+            alt="Logo"
+            className="w-20 h-auto"
+          />
           <p>610 Nguyen Thuong Hien, District 10 Ho Chi Minh city</p>
         </div>
 
@@ -22,16 +25,24 @@ export default function Footer() {
           <h3 className="font-semibold uppercase">About Us</h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/about" className="hover:underline">About Us</Link>
+              <Link to="/about" className="hover:underline">
+                About Us
+              </Link>
             </li>
             <li>
-              <Link to="#" className="hover:underline">Promotion</Link>
+              <Link to="#" className="hover:underline">
+                Promotion
+              </Link>
             </li>
             <li>
-              <Link to="#" className="hover:underline">Founder</Link>
+              <Link to="#" className="hover:underline">
+                Founder
+              </Link>
             </li>
             <li>
-              <Link to="#" className="hover:underline">Contact</Link>
+              <Link to="#" className="hover:underline">
+                Contact
+              </Link>
             </li>
           </ul>
         </div>
@@ -41,22 +52,34 @@ export default function Footer() {
           <h3 className="font-semibold uppercase">Featured Topics</h3>
           <ul className="space-y-2">
             <li>
-              <a href="#" className="hover:underline">North America</a>
+              <a href="#" className="hover:underline">
+                North America
+              </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">South America</a>
+              <a href="#" className="hover:underline">
+                South America
+              </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">Oceania</a>
+              <a href="#" className="hover:underline">
+                Oceania
+              </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">Europe</a>
+              <a href="#" className="hover:underline">
+                Europe
+              </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">Africa</a>
+              <a href="#" className="hover:underline">
+                Africa
+              </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">Asia</a>
+              <a href="#" className="hover:underline">
+                Asia
+              </a>
             </li>
           </ul>
         </div>
@@ -66,10 +89,14 @@ export default function Footer() {
           <h3 className="font-semibold uppercase">Get Started</h3>
           <ul className="space-y-2 mt-2">
             <li>
-              <a href="#" className="hover:underline">Pricing</a>
+              <a href="#" className="hover:underline">
+                Pricing
+              </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">Free Trial</a>
+              <a href="#" className="hover:underline">
+                Free Trial
+              </a>
             </li>
           </ul>
         </div>
@@ -78,8 +105,8 @@ export default function Footer() {
         <div>
           <h3 className="font-semibold uppercase">Follow Us</h3>
           <div className="flex flex-col space-y-4 mt-2">
-           {/* Facebook SVG */}
-           <a href="https://facebook.com" className="cursor-pointer">
+            {/* Facebook SVG */}
+            <a href="https://facebook.com" className="cursor-pointer">
               <svg
                 className="w-8 h-8"
                 fill="#DDA853"
@@ -124,7 +151,6 @@ export default function Footer() {
             </a>
           </div>
         </div>
-
       </div>
     </footer>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import CommunityBackground from "../../../assets/community-background.png";
+import CommunityBackground from "@/assets/community-background.png";
 
 export default function CommunitySearch() {
   return (

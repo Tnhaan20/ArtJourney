@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { assets } from "../../../assets/assets";
-import GoogleIcon from "../../../assets/google.svg";
-import SideBG from "../../../assets/SideBGSignIn.jpg";
-import Input from "../../elements/input/Input";
-import { TailwindStyle } from "../../../utils/Enum";
+import { assets } from "@/assets/assets";
+import GoogleIcon from "@/assets/google.svg";
+import SideBG from "@/assets/SideBGSignIn.jpg";
+import Input from "@/components/elements/input/Input";
+import { TailwindStyle } from "@/utils/Enum";
 
 export default function Signin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +17,7 @@ export default function Signin() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -59,7 +59,11 @@ export default function Signin() {
         <div className="w-full md:w-1/2 p-8 bg-white">
           <div className="flex items-center justify-center mb-6">
             <Link to="/">
-              <img className="h-16" src={assets.artjourney_logo} alt="Logo" />
+              <img
+                className="h-16"
+                src={assets.main_logo.artjourney_logo}
+                alt="Logo"
+              />
             </Link>
             <div className="border-l border-primary-yellow mx-5 h-10"></div>
             <span className="text-primary-yellow font-bold text-2xl">
