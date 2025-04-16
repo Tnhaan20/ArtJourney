@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout';
 import HomePage from '../pages/HomePage';
 import AboutPage from '../pages/AboutPage';
 import CommunityPage from '../pages/CommunityPage';
+import SurveyPage from '../pages/SurveyPage';
 import Signin from "../components/layout/Signin/Signin";
 import Signup from "../components/layout/Signup/Signup";
 import Error from "../components/layout/Error/404Error";
@@ -14,6 +15,7 @@ export default function AppRoutes() {
       {/* Auth routes without layout */}
       <Route path="/signin" element={<Signin />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/survey" element={<SurveyPage />} />
 
       {/* Routes with MainLayout */}
       <Route

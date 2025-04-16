@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { useAppTranslation } from '../../../contexts/TranslationContext';
-import { TailwindStyle } from '../../../utils/Enum';
+import { useAppTranslation } from '@/contexts/TranslationContext';
+import { TailwindStyle } from '@/utils/Enum';
 
 export default function LanguageSwitcher() {
   const { t, i18n, changeLanguage } = useAppTranslation();

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import Logo from "../../../assets/ArtJourney-Logo.png";
-import GoogleIcon from "../../../assets/google.svg";
-import SideBG from "../../../assets/SideBGSignIn.jpg";
-import Input from "../../elements/input/Input";
-import { TailwindStyle } from '../../../utils/Enum';
+import { assets } from "@/assets/assets";
+import GoogleIcon from "@/assets/google.svg";
+import SideBG from "@/assets/SideBGSignIn.jpg";
+import Input from "@/components/elements/input/Input";
+import Checkbox from "@/components/elements/checkbox/Checkbox";
+import { TailwindStyle } from "@/utils/Enum";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +38,7 @@ export default function Signup() {
         <div className="w-full md:w-1/2 p-8 bg-white">
           <div className="flex items-center justify-center mb-6">
             <Link to="/">
-              <img className="h-16" src={Logo} alt="Logo" />
+              <img className="h-16" src={assets.artjourney_logo} alt="Logo" />
             </Link>
             <div className="border-l border-primary-yellow mx-5 h-10"></div>
             <span className="text-primary-yellow font-bold text-2xl">
@@ -115,21 +116,14 @@ export default function Signup() {
             </div>
 
             <div className="flex items-start">
-              <input
-                id="terms"
-                name="terms"
-                type="checkbox"
+              <Checkbox
                 checked={agreeToTerms}
                 onChange={() => setAgreeToTerms(!agreeToTerms)}
-                className="h-4 w-4 text-primary-yellow focus:ring-secondary border-gray-300 rounded mt-1"
-              />
-              <label
-                htmlFor="terms"
-                className="ml-2 block text-sm text-gray-600"
+                color="primary-yellow"
               >
                 You accept our Terms of Use, Privacy Policy, and agree that your
                 data will be shared.
-              </label>
+              </Checkbox>
             </div>
 
             <button

@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Logo from "../../../assets/ArtJourney-Logo.png";
 import FacebookIcon from "../../../assets/icons/facebook.png";
 import InstagramIcon from "../../../assets/icons/instagram.png";
 import TiktokIcon from "../../../assets/icons/tiktok.png";
 import YoutubeIcon from "../../../assets/icons/youtube.png";
+import { assets } from "@/assets/assets";
 
 export default function Footer() {
   return (
@@ -13,7 +13,7 @@ export default function Footer() {
         
         {/* Column 1: Logo & Address */}
         <div className="flex flex-col space-y-4">
-          <img src={Logo} alt="Logo" className="w-20 h-auto" />
+          <img src={assets.artjourney_logo} alt="Logo" className="w-20 h-auto" />
           <p>610 Nguyen Thuong Hien, District 10 Ho Chi Minh city</p>
         </div>
 

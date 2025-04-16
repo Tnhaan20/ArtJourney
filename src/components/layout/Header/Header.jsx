@@ -1,13 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import logo from "../../../assets/ArtJourney-Logo.png";
 import { useState, useEffect } from "react";
 import MobileMenu from "./MobileMenu";
 import LanguageSwitcher from "../../elements/LanguageSwitcher/LanguageSwitcher";
 import { useAppTranslation } from "../../../contexts/TranslationContext";
 import "./Header.css"; // Import the CSS file
-import { TailwindStyle } from "../../../utils/Enum";
+import { TailwindStyle } from "@/utils/Enum";
 import HightlightText from "../../elements/hightlight-text/Text";
+import { assets } from "@/assets/assets";
 
 export default function Header() {
   const { t } = useAppTranslation();
@@ -60,7 +60,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo with text */}
           <Link to="/" className={`px-3 ${TailwindStyle.GLASSMORPHISM}`}>
-            <img src={logo} alt="ArtJourney Logo" className="h-8 w-auto mr-2" />
+            <img src={assets.artjourney_logo} alt="ArtJourney Logo" className="h-8 w-auto mr-2" />
             <span className="font-medium text-primary-yellow">ArtJourney</span>
           </Link>
 

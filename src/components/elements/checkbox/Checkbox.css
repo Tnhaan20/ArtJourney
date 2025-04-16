@@ -1,0 +1,50 @@
+.custom-checkbox {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-checkbox input {
+  display: none;
+}
+
+.custom-checkbox svg {
+  overflow: visible;
+}
+
+.custom-checkbox .checkbox-path {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease;
+  stroke-dasharray: 241 9999999;
+  stroke-dashoffset: 0;
+}
+
+.custom-checkbox input:checked ~ .checkbox-container .checkbox-path {
+  stroke-dasharray: 70.5096664428711 9999999;
+  stroke-dashoffset: -262.2723388671875;
+}
+
+.custom-checkbox.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.custom-checkbox .checkbox-label {
+  margin-left: 0.5rem;
+}
+
+/* Color variants */
+.custom-checkbox.primary-yellow .checkbox-path {
+  stroke: #e0c068;
+}
+
+.custom-checkbox.secondary .checkbox-path {
+  stroke: #6b7280;
+}
+
+.custom-checkbox.white .checkbox-path {
+  stroke: #ffffff;
+}

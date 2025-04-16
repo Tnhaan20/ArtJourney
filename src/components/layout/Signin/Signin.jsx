@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import Logo from "../../../assets/ArtJourney-Logo.png";
+import { assets } from "../../../assets/assets";
 import GoogleIcon from "../../../assets/google.svg";
 import SideBG from "../../../assets/SideBGSignIn.jpg";
 import Input from "../../elements/input/Input";
@@ -59,7 +59,7 @@ export default function Signin() {
         <div className="w-full md:w-1/2 p-8 bg-white">
           <div className="flex items-center justify-center mb-6">
             <Link to="/">
-              <img className="h-16" src={Logo} alt="Logo" />
+              <img className="h-16" src={assets.artjourney_logo} alt="Logo" />
             </Link>
             <div className="border-l border-primary-yellow mx-5 h-10"></div>
             <span className="text-primary-yellow font-bold text-2xl">
