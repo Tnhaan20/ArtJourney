@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout';
 import HomePage from '../pages/HomePage';
 import AboutPage from '../pages/AboutPage';
 import CommunityPage from '../pages/CommunityPage';
+import PaymentPage from '../pages/PaymentPage';
 import SurveyPage from '../pages/SurveyPage';
 import Signin from "../components/layout/Signin/Signin";
 import Signup from "../components/layout/Signup/Signup";
@@ -41,6 +42,15 @@ export default function AppRoutes() {
         element={
           <MainLayout>
             <CommunityPage />
+          </MainLayout>
+        }
+      />
+
+      <Route
+        path="/pay/:paymentType?"
+        element={
+          <MainLayout>
+            <PaymentPage />
           </MainLayout>
         }
       />

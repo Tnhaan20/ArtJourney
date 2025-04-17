@@ -59,7 +59,7 @@ export default function HomePrice() {
 
             <div className="mt-6 text-center">
               <Link
-                to="/pay"
+                to="/pay/per-course"
                 className="w-full py-2 border border-primary-yellow text-primary-yellow rounded font-medium hover:bg-primary-yellow hover:text-white transition-colors duration-300 inline-flex items-center justify-center"
               >
                 Continue
@@ -112,7 +112,7 @@ export default function HomePrice() {
 
             <div className="mt-6 text-center">
               <Link
-                to="/pay"
+                to="/pay/monthly"
                 className="w-full py-2 border border-primary-yellow text-primary-yellow rounded font-medium hover:bg-primary-yellow hover:text-white transition-colors duration-300 inline-flex items-center justify-center"
               >
                 Continue
@@ -165,7 +165,7 @@ export default function HomePrice() {
 
             <div className="mt-6 text-center">
               <Link
-                to="/pay"
+                to="/pay/annual"
                 className="w-full py-2 border border-primary-yellow text-primary-yellow rounded font-medium hover:bg-primary-yellow hover:text-white transition-colors duration-300 inline-flex items-center justify-center"
               >
                 Continue
