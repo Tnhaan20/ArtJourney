@@ -9,6 +9,7 @@ import Signin from "../components/layout/Signin/Signin";
 import Signup from "../components/layout/Signup/Signup";
 import Error from "../components/layout/Error/404Error";
 import ServerError from "../components/layout/Error/500Error";
+import LearnPage from '@/pages/LearnPage';
 
 export default function AppRoutes() {
   return (
@@ -27,7 +28,14 @@ export default function AppRoutes() {
           </MainLayout>
         }
       />
-
+      <Route
+        path="/learn"
+        element={
+          <MainLayout>
+            <LearnPage />
+          </MainLayout>
+        }
+      />
       <Route
         path="/about"
         element={
