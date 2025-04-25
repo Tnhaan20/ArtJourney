@@ -29,7 +29,7 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="/learn"
+        path="/learn/*"
         element={
           <MainLayout>
             <LearnPage />

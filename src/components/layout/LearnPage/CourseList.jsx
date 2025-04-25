@@ -274,7 +274,7 @@ export default function CourseList() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                 {periodFilteredCourses.map(course => (
                   <Link 
-                    to={`/learn/course/${course.id}`} 
+                    to={`/learn/course/${course.id}`}
                     key={course.id}
                     className="group"
                   >
