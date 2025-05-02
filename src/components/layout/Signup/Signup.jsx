@@ -1,34 +1,28 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { Controller } from 'react-hook-form';
 import { assets } from "@/assets/assets";
 import GoogleIcon from "@/assets/google.svg";
 import SideBG from "@/assets/SideBGSignIn.jpg";
 import Input from "@/components/elements/input/Input";
 import Checkbox from "@/components/elements/checkbox/Checkbox";
 import { TailwindStyle } from "@/utils/Enum";
+import { useAuthForm } from "@/hooks/Auth/use-auth-form";
+import { AuthServices } from "@/domains/services/Auth/auth.services";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const { form, onSubmit, isLoading } = useAuthForm({ type: "register" });
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle signup logic here
-  };
-
-  const handleGoogleSignIn = () => {
-    // Handle Google sign in logic here
+  const handleGoogleSignIn = async () => {
+    try {
+      const response = await AuthServices.loginWithGoogle();
+      window.location.href = response.url;
+    } catch (error) {
+      console.error("Google sign in error:", error);
+    }
   };
 
   return (
@@ -50,44 +44,79 @@ export default function Signup() {
             </span>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              type="email"
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Controller
               name="email"
-              label="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <div>
+                  <Input
+                    type="email"
+                    name="email"
+                    label="Email Address"
+                    value={field.value}
+                    onChange={field.onChange}
+                    required
+                  />
+                  {fieldState.error && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
             />
 
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                label="Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
+            <Controller
+              name="password"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    label="Password"
+                    value={field.value}
+                    onChange={field.onChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                  {fieldState.error && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
 
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                name="confirmPassword"
-                label="Confirm Password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Controller
+              name="confirmPassword"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    value={field.value}
+                    onChange={field.onChange}
+                    required
+                  />
+                  {fieldState.error && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
 
             <div className="text-right">
               <p className="text-sm text-gray-600">
@@ -132,9 +161,10 @@ export default function Signup() {
 
             <button
               type="submit"
-              className={`cursor-pointer w-full flex justify-center rounded-lg py-2 px-4 ${TailwindStyle.HIGHLIGHT_FRAME}`}
+              disabled={isLoading || !agreeToTerms}
+              className={`cursor-pointer w-full flex justify-center rounded-lg py-2 px-4 ${TailwindStyle.HIGHLIGHT_FRAME} ${(isLoading || !agreeToTerms) ? 'opacity-70' : ''}`}
             >
-              Sign up
+              {isLoading ? "Signing up..." : "Sign up"}
             </button>
           </form>
         </div>

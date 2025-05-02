@@ -10,56 +10,66 @@ import Signup from "../components/layout/Signup/Signup";
 import Error from "../components/layout/Error/404Error";
 import ServerError from "../components/layout/Error/500Error";
 import LearnPage from '@/pages/LearnPage';
+import ProtectedRoute from '@/routes/ProtectedRoute';
+import UnauthorizedPage from '@/pages/UnauthorizedPage';
 
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Auth routes without layout */}
+      {/* Public routes - accessible to everyone */}
+      <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
+      <Route path="/about" element={<MainLayout><AboutPage /></MainLayout>} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/survey" element={<SurveyPage />} />
+      <Route path="/server-error" element={<ServerError />} />
+      <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-      {/* Routes with MainLayout */}
-      <Route
-        path="/"
-        element={
-          <MainLayout>
-            <HomePage />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/learn/*"
-        element={
-          <MainLayout>
-            <LearnPage />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/about"
-        element={
-          <MainLayout>
-            <AboutPage />
-          </MainLayout>
-        }
-      />
-
+      {/* Protected routes - require authentication */}
+      // Change the Learn route to be public
+      <Route path="/learn/*" element={<MainLayout><LearnPage /></MainLayout>} />
+      
+      // Keep other protected routes as they are
       <Route
         path="/community"
         element={
-          <MainLayout>
-            <CommunityPage />
-          </MainLayout>
+          <ProtectedRoute>
+            <MainLayout>
+              <CommunityPage />
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
 
       <Route
         path="/pay/:paymentType?"
         element={
-          <MainLayout>
-            <PaymentPage />
-          </MainLayout>
+          <ProtectedRoute>
+            <MainLayout>
+              <PaymentPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/survey"
+        element={
+          <ProtectedRoute>
+            <SurveyPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin-only routes */}
+      <Route
+        path="/admin/*"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <MainLayout>
+              {/* Admin component here */}
+              <div>Admin Dashboard</div>
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
 

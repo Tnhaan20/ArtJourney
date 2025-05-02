@@ -1,40 +1,45 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { assets } from "@/assets/assets";
 import GoogleIcon from "@/assets/google.svg";
 import SideBG from "@/assets/SideBGSignIn.jpg";
 import Input from "@/components/elements/input/Input";
 import { TailwindStyle } from "@/utils/Enum";
+import { useAuthForm } from "@/hooks/Auth/use-auth-form";
+import { AuthServices } from "@/domains/services/Auth/auth.services";
+import { Controller } from "react-hook-form";
+import Loading from "@/components/elements/loading/loading";
 
 export default function Signin() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [error, setError] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  // Get the redirect path from location state or default to home
+  const from = location.state?.from || "/";
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login
-  };
+  // Use the auth form hook for login
+  const { form, onSubmit, isLoading } = useAuthForm({ type: "login" });
 
-  const handleGoogleSignIn = () => {
-    // Handle Google sign in
+  const handleGoogleSignIn = async () => {
+    try {
+      // Call the Google login service
+      const response = await AuthServices.loginWithGoogle();
+      // Handle the response - typically redirects to Google auth page
+      if (response?.data?.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      setError("Google sign-in failed. Please try again.");
+      console.error("Google sign-in error:", error);
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-primary-white">
       <div className="flex w-full max-w-6xl rounded-lg shadow-lg overflow-hidden">
-        {/* Form section (left) */}
-
         {/* Welcome section (right) */}
         <div className="hidden md:block w-1/2 p-8">
           <div className="h-full flex flex-col items-center justify-center">
@@ -71,32 +76,64 @@ export default function Signin() {
             </span>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              type="email"
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Controller
               name="email"
-              label="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <div>
+                  <Input
+                    type="email"
+                    name="email"
+                    label="Email Address"
+                    value={field.value}
+                    onChange={field.onChange}
+                    required
+                  />
+                  {fieldState.error && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
             />
 
             <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
+              <Controller
                 name="password"
-                label="Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      label="Password"
+                      value={field.value}
+                      onChange={field.onChange}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                    {fieldState.error && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
             </div>
 
             <div className="flex items-center justify-between">
@@ -140,9 +177,12 @@ export default function Signin() {
 
             <button
               type="submit"
-              className={`cursor-pointer w-full flex justify-center rounded-lg py-2 px-4 ${TailwindStyle.HIGHLIGHT_FRAME}`}
+              disabled={isLoading}
+              className={`w-full flex justify-center rounded-lg py-2 px-4 ${
+                isLoading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+              } ${TailwindStyle.HIGHLIGHT_FRAME}`}
             >
-              Log in
+              {isLoading ? "Logging in" : "Log in"}
             </button>
           </form>
         </div>

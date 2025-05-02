@@ -1,0 +1,15 @@
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 13px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #343434;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e8ba70; /* Primary blue color */
+  transition: background 0.3s ease;
+}
+
