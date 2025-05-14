@@ -3,8 +3,7 @@ import teamMember1 from '@/assets/team-member-1.png';
 import fireIcon from '@/assets/icons/Fire.png';
 import courseHeaderBg from '@/assets/course/course-header.png';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { useAuthCheck } from '@/utils/authCheck';
+
 
 export default function CourseHeader({ courseId }) {
   const [courseData, setCourseData] = useState(null);

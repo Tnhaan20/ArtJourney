@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import CompletedBox from '@/components/elements/completedbox/Completed';
 
 export default function CoursePath({ courseId }) {
   const [courseParts, setCourseParts] = useState([]);
@@ -10,10 +11,6 @@ export default function CoursePath({ courseId }) {
     const fetchCourseParts = async () => {
       try {
         setLoading(true);
-        // Simulated API call - replace with actual API call
-        // const response = await fetch(`/api/courses/${courseId}/parts`);
-        // const data = await response.json();
-        
         // Simulated data for now - in the future this will come from an API
         const mockParts = [
           {
@@ -33,28 +30,7 @@ export default function CoursePath({ courseId }) {
               }
             ]
           },
-          {
-            id: 2,
-            partNumber: "PART 2",
-            title: "Early Medieval Art",
-            modules: [
-              {
-                id: 3,
-                title: "The Middle Ages: General",
-                completed: false
-              },
-              {
-                id: 4,
-                title: "Carolingian Art",
-                completed: false
-              },
-              {
-                id: 5,
-                title: "Ottonian Art",
-                completed: false
-              }
-            ]
-          }
+          // Rest of your mock data
         ];
         
         setCourseParts(mockParts);
@@ -68,21 +44,15 @@ export default function CoursePath({ courseId }) {
     fetchCourseParts();
   }, [courseId]);
 
-  // Course item rendering function (formerly CourseItem component)
+  // Course item rendering function
   const renderCourseItem = (module) => {
-    const { title, completed } = module;
+    const { id, title, completed } = module;
     
     return (
-      <Link to="#course-content" className="block" key={module.id}>
+      <Link to={`/learn/course/${courseId}/module/${id}`} className="block" key={id}>
         <div className="border border-gray-200 rounded-md flex items-center justify-between p-4 hover:bg-gray-50">
           <div className="flex items-center">
-            <div className={`w-5 h-5 rounded-full mr-4 flex items-center justify-center ${completed ? 'bg-green-500' : 'border border-gray-300'}`}>
-              {completed && (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                </svg>
-              )}
-            </div>
+            <CompletedBox isCompleted={completed} className="mr-4" size={20} />
             <span className="text-base font-medium">{title}</span>
           </div>
           <div>
@@ -130,4 +100,4 @@ export default function CoursePath({ courseId }) {
       </div>
     </div>
   );
-} 
+}

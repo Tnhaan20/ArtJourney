@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { jwtDecode } from "jwt-decode";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 
 export const useAuthStore = create(
@@ -9,44 +8,61 @@ export const useAuthStore = create(
       isAuthenticated: false,
       user: null,
       role: null,
-      
-      login: async (token) => {
+
+      login: async (userData) => {
         try {
-          // Decode the token to extract user information
-          const decoded = jwtDecode(token);
-          
           set({
             isAuthenticated: true,
             user: {
-              id: decoded.userId,
-              email: decoded.email,
-              name: decoded.fullname,
-              avatar: decoded.avatar,
-              status: decoded.status,
-              token: token
+              id: userData.userId,
+              email: userData.email,
+              name: userData.fullName || "",
+              avatar: userData.avatarUrl,
+              status: userData.status,
+              gender: userData.gender,
+              birthday: userData.birthday,
             },
-            role: decoded.role,
+            role: userData.role,
           });
         } catch (error) {
           console.error("Login error", error);
         }
       },
-      
-      // Get current user data
+
       getCurrentUser: () => {
         const state = get();
         return {
           isAuthenticated: state.isAuthenticated,
           user: state.user,
-          role: state.role
+          role: state.role,
         };
       },
-      
+
       checkAuth: async () => {
         try {
           // Validate the current session
-          await AuthServices.validate();
-         
+          const response = await AuthServices.get.me();
+          console.log("checkAuth response:", response);
+
+          // Based on the API response structure where user data is in the data field
+          const userData = response?.data;
+
+          if (userData) {
+            set({
+              user: {
+                id: userData.userId,
+                email: userData.email,
+                name: userData.fullName || "",
+                avatar: userData.avatarUrl,
+                status: userData.status,
+                gender: userData.gender,
+                birthday: userData.birthday,
+              },
+              role: userData.role,
+              isAuthenticated: true,
+            });
+            console.log("User authenticated:", userData);
+          }
         } catch (error) {
           // If validation fails, reset auth state
           console.error("Auth validation failed", error);
@@ -57,12 +73,10 @@ export const useAuthStore = create(
           });
         }
       },
-      
+
       logout: async () => {
         try {
-          // Call logout API if needed
-          await AuthServices.logout();
-          // The cookie will be cleared by the server
+          await AuthServices.post.logout();
         } catch (error) {
           console.error("Logout error", error);
         } finally {

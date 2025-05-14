@@ -1,11 +1,10 @@
 import { AuthServices } from "@/domains/services/Auth/auth.services";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/utils/Toast";
 import { QueryKey } from "@/domains/store/query-key";
 import { useAuthStore } from "@/domains/store/use-auth-store";
-import { jwtDecode } from "jwt-decode";
-import Cookies from "js-cookie";
+import { useRoleStore, USER_ROLES } from "@/domains/store/use-role-store";
 
 export const useAuth = () => {
   const { toast } = useToast();
@@ -14,55 +13,42 @@ export const useAuth = () => {
   const location = useLocation();
 
   const push = (path) => navigate(path);
-  const replace = (path) => navigate(path, { replace: true });
-
-  
 
   const loginMutation = useMutation({
     mutationKey: [QueryKey.LOGIN],
-    mutationFn: async (payload) =>
-      await AuthServices.login(payload),
-    onSuccess: (data) => {
-      // Use the message from the response if available
-      const successMessage = data?.message || "Welcome back";
-      
+    mutationFn: async (payload) => await AuthServices.post.login(payload),
+    onSuccess: async (data) => {
+      const successMessage = data?.message;
+
       toast({
         title: "Login success",
         description: successMessage,
         variant: "success",
       });
-      
-      // Try to get the token using our custom function
-      const accessToken = Cookies.get("TK");
-      
-      if (!accessToken) {
-        toast({
-          title: "Login error",
-          description: "Could not retrieve authentication token",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      try {
-        // Decode the token from cookies
-        const decoded = jwtDecode(accessToken);
 
-        // Store token in auth store
-        login(accessToken);
-        
+      try {
+        // Get user data from response
+        const userData = data?.data?.userDTO;
+        if (!userData) {
+          throw new Error("User data not found in response");
+        }
+
+        // Store user data in auth store
+        login(userData);
+
         // Check for redirect path from location state
         const redirectPath = location.state?.from;
-        
-        // Handle role-based redirects
-        if (decoded.role === "ADMIN") {
+
+        // Get role name using our new role store
+        const roleName = useRoleStore.getState().getRoleName(userData.role);
+        console.log("User role:", roleName);
+
+        // Handle role-based redirects using the role store
+        if (useRoleStore.getState().hasRole(userData, USER_ROLES.ADMIN)) {
           push("/dashboard");
           return;
-        } else if (decoded.role === "DESIGNER") {
-          push("/task-designer");
-          return;
-        } else if (decoded.role === "MANAGER") {
-          push("/dashboard");
+        } else if (useRoleStore.getState().hasRole(userData, USER_ROLES.INSTRUCTOR)) {
+          push("/dashboard"); // Instructors also go to dashboard
           return;
         } else if (redirectPath) {
           // Redirect to the page the user was trying to access
@@ -70,33 +56,37 @@ export const useAuth = () => {
           return;
         }
 
-        // Default for CUSTOMER
+        // Default redirect to home
         push("/");
       } catch (error) {
-        console.error("Error decoding token:", error);
+        console.error("Authentication error:", error);
         toast({
           title: "Authentication error",
-          description: "There was a problem with your authentication token",
+          description:
+            error.message || "There was a problem with your authentication",
           variant: "destructive",
         });
       }
     },
     onError: (error) => {
       // More detailed error message based on the error response
-      let errorMessage = "Invalid email, password or your account is not active";
-      
+      let errorMessage =
+        "Invalid email, password or your account is not active";
+
       if (error.response) {
         if (error.response.status === 401) {
-          errorMessage = "Invalid credentials. Please check your email and password.";
+          errorMessage =
+            "Invalid credentials. Please check your email and password.";
         } else if (error.response.status === 403) {
           errorMessage = "Your account is not active or has been suspended.";
         } else if (error.response.data?.message) {
           errorMessage = error.response.data.message;
         }
       } else if (error.request) {
-        errorMessage = "Network error. Please check your connection and try again.";
+        errorMessage =
+          "Network error. Please check your connection and try again.";
       }
-      
+
       toast({
         title: "Login failed",
         description: errorMessage,
@@ -105,14 +95,12 @@ export const useAuth = () => {
     },
   });
 
-  // Add the registerMutation implementation to navigate to signin after success
-  
   const registerMutation = useMutation({
     mutationKey: [QueryKey.REGISTER],
     mutationFn: async (payload) => {
       // Remove confirmPassword before sending to API
       const { confirmPassword, ...registerData } = payload;
-      return await AuthServices.register(registerData);
+      return await AuthServices.post.register(registerData);
     },
     onSuccess: (data) => {
       toast({
@@ -120,21 +108,104 @@ export const useAuth = () => {
         description: "Your account has been created. Please sign in.",
         variant: "success",
       });
-      
+
       // Navigate to signin page after successful registration
       push("/signin");
     },
     onError: (error) => {
       toast({
         title: "Registration failed",
-        description: error.response?.data || "Something went wrong. Please try again.",
+        description:
+          error.response?.data || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     },
   });
 
+  // Google login implementation
+  const googleLogin = () => {
+    const initiateGoogleLogin = () => {
+      try {
+        const callbackUrl = `${window.location.origin}/signin-google`;
+        const redirectUri = encodeURIComponent(callbackUrl);
+
+        const googleAuthUrl = `${
+          import.meta.env.VITE_PUBLIC_API_URL
+          }/Authentication/google-signin?redirect_uri=${redirectUri}&issignin=true`;
+        
+        window.location.href = googleAuthUrl;
+      } catch (error) {
+        window.location.href = "/signin";
+      }
+    };
+
+    return { initiateGoogleLogin };
+  };
+
+  // Google callback implementation
+  const useGoogleCallback = () => {
+    return useQuery({
+      queryKey: [QueryKey.GOOGLE_CALLBACK],
+      queryFn: async () => {
+        return await AuthServices.get.googleCallback();
+      },
+      enabled: false,
+      onSuccess: async (response) => {
+        try {
+          const successMessage = response?.message || "Google login successful";
+
+          // Extract user data from response
+          const userData = response?.data;
+
+          // If we don't have user data, try to fetch it
+          if (!userData) {
+            console.error("No user data found in response", response);
+            throw new Error("User data not found in response");
+          }
+
+
+          console.log("Setting user data in auth store:", userData);
+          // Store user data in auth store
+          login(userData);
+
+          // Get role name using our role store
+          const roleName = useRoleStore.getState().getRoleName(userData.role);
+          console.log("User role:", roleName);
+
+          if (useRoleStore.getState().hasRole(userData, USER_ROLES.ADMIN)) {
+            push("/dashboard");
+          } else if (useRoleStore.getState().hasRole(userData, USER_ROLES.INSTRUCTOR)) {
+            push("/dashboard");
+          } else {
+            push("/");
+          }
+        } catch (error) {
+          console.error("Authentication error:", error);
+          toast({
+            title: "Authentication error",
+            description:
+              error.message || "There was a problem with your authentication",
+            variant: "destructive",
+          });
+        }
+      },
+      onError: (error) => {
+        toast({
+          title: "Google login failed",
+          description:
+            error.message || "Failed to complete Google authentication",
+          variant: "destructive",
+        });
+        push("/signin");
+      },
+    });
+  };
+
+  // Make sure to include this in your return statement
   return {
     loginMutation,
     registerMutation,
+    googleLogin,
+    useGoogleCallback,
   };
 };

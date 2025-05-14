@@ -9,32 +9,19 @@ import { TailwindStyle } from "@/utils/Enum";
 import { useAuthForm } from "@/hooks/Auth/use-auth-form";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { Controller } from "react-hook-form";
-import Loading from "@/components/elements/loading/loading";
+import { useAuth } from "@/hooks/Auth/use-auth";
 
 export default function Signin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // Get the redirect path from location state or default to home
-  const from = location.state?.from || "/";
-
+  
   // Use the auth form hook for login
   const { form, onSubmit, isLoading } = useAuthForm({ type: "login" });
-
-  const handleGoogleSignIn = async () => {
-    try {
-      // Call the Google login service
-      const response = await AuthServices.loginWithGoogle();
-      // Handle the response - typically redirects to Google auth page
-      if (response?.data?.url) {
-        window.location.href = response.data.url;
-      }
-    } catch (error) {
-      setError("Google sign-in failed. Please try again.");
-      console.error("Google sign-in error:", error);
-    }
+  const { googleLogin } = useAuth();
+  const { initiateGoogleLogin } = googleLogin();
+  
+  const handleGoogleSignIn = () => {
+    initiateGoogleLogin();
   };
 
   return (

@@ -1,142 +1,89 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import { useAuthStore } from "@/domains/store/use-auth-store";
+import { useSearchParams } from "react-router-dom";
+import { AuthServices } from "@/domains/services/Auth/auth.services";
+import { useToast } from "@/utils/Toast";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  // Check if user is already logged in (on app load)
+  const { checkAuth, isAuthenticated, user, role } = useAuthStore();
+
+  // Check authentication status on app load
   useEffect(() => {
-    const checkAuthStatus = async () => {
+    const verifyAuthStatus = async () => {
       try {
         setIsLoading(true);
-        // Get token from localStorage
-        const token = localStorage.getItem("authToken");
+        // Check for issignin=true in URL - indicates we're coming from Google login
+        const isSignIn = searchParams.get("issignin") === "true";
+        const currentPath = window.location.pathname;
 
-        if (!token) {
-          setIsAuthenticated(false);
-          setUser(null);
+        if (currentPath === "/signin-google") {
+          setIsLoading(false);
           return;
         }
 
-        // Verify token with backend
-        const response = await axios.get("/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // Use the checkAuth method from useAuthStore
+        await checkAuth();
 
-        if (response.data.user) {
-          setUser(response.data.user);
-          setIsAuthenticated(true);
-        } else {
-          // Token invalid or expired
-          localStorage.removeItem("authToken");
-          setIsAuthenticated(false);
-          setUser(null);
+        // Only try to handle Google sign-in if we're NOT on the callback route
+        // This prevents duplicate handling of the Google flow
+        if (isSignIn && currentPath !== "/signin-google") {
+          setIsGoogleLoading(true);
+
+          try {
+            
+            const response = await AuthServices.get.me();
+
+            const userData = response?.data;
+
+            if (userData) {
+              await useAuthStore.getState().login(userData);
+              
+            } else {
+              console.error("No user data found in Google sign-in response");
+              
+            }
+          } catch (googleError) {
+            console.error(
+              "Failed to fetch user data after Google sign-in:",
+              googleError
+            );
+            
+          } finally {
+            setIsGoogleLoading(false);
+          }
         }
       } catch (err) {
         console.error("Auth check failed:", err);
-        localStorage.removeItem("authToken");
-        setIsAuthenticated(false);
-        setUser(null);
         setError(err.message);
       } finally {
         setIsLoading(false);
       }
     };
 
-    checkAuthStatus();
-  }, []);
+    verifyAuthStatus();
+  }, [checkAuth, searchParams, toast]);
 
-  // Login function
-  const login = async (email, password) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.post("/api/auth/login", { email, password });
-
-      const { token, user } = response.data;
-
-      // Save token to localStorage
-      localStorage.setItem("authToken", token);
-
-      // Update state
-      setUser(user);
-      setIsAuthenticated(true);
-      setError(null);
-
-      return { success: true };
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-      return {
-        success: false,
-        error: err.response?.data?.message || "Login failed",
-      };
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Logout function
-  const logout = async () => {
-    try {
-      // Call logout API if needed
-      // await axios.post('/api/auth/logout');
-
-      // Clear local storage
-      localStorage.removeItem("authToken");
-
-      // Update state
-      setUser(null);
-      setIsAuthenticated(false);
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
-  };
-
-  // Register function
-  const register = async (userData) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.post("/api/auth/register", userData);
-
-      const { token, user } = response.data;
-
-      // Save token to localStorage
-      localStorage.setItem("authToken", token);
-
-      // Update state
-      setUser(user);
-      setIsAuthenticated(true);
-      setError(null);
-
-      return { success: true };
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
-      return {
-        success: false,
-        error: err.response?.data?.message || "Registration failed",
-      };
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const value = {
-    user,
-    isAuthenticated,
+  // Provide authentication state and user information
+  const contextValue = {
     isLoading,
+    isGoogleLoading,
     error,
-    login,
-    logout,
-    register,
+    isAuthenticated,
+    user,
+    role,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 }
 
 export const useAuth = () => useContext(AuthContext);

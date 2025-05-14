@@ -1,15 +1,10 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import CourseList from "@/components/layout/LearnPage/CourseList";
-import CoursePage from "./CoursePage";
+import { Outlet } from 'react-router-dom';
 
 export default function LearnPage() {
-    return (
-        <div className="py-10">
-            <Routes>
-                <Route path="/" element={<CourseList />} />
-                <Route path="/course/:courseId" element={<CoursePage />} />
-            </Routes>
-        </div>   
-    );
+  return (
+    <div className="py-10">
+      <Outlet />
+    </div>   
+  );
 }

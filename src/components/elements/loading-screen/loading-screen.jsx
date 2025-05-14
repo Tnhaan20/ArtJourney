@@ -8,7 +8,7 @@ const LoadingScreen = () => {
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        class="loader"
+        className="loader"
       >
         <path
           pathLength="360"

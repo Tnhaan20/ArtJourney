@@ -12,9 +12,9 @@ export default function App() {
   return (
     <AuthProvider>
       <TranslationProvider>
-        <RouteTransition>
+        {/* <RouteTransition> */}
           <AppRoutes />
-        </RouteTransition>
+        {/* </RouteTransition> */}
       </TranslationProvider>
       <Toaster />
     </AuthProvider>

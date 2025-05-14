@@ -11,9 +11,9 @@ export default function MainLayout({ children }) {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "instant", // Use 'instant' instead of default 'smooth' for immediate scroll
+      behavior: "instant",
     });
-  }, [location.pathname]); // Only re-run when pathname changes
+  }, [location.pathname]);
 
   return (
     <div className="flex flex-col min-h-screen">

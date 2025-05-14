@@ -107,19 +107,11 @@ export default function Header() {
                       <img
                         src={user.avatar}
                         alt="Profile"
-                        className="w-6 h-6 object-cover "
+                        className="w-6 h-6 object-cover rounded-full"
                       />
                     ) : (
-                      <UserCircle size={2} className="text-primary-yellow" />
+                      <UserCircle size={24} className="text-primary-yellow" />
                     )}
-                    {/* <div className="flex flex-col">
-                      <span className="text-sm font-medium text-primary-blue">
-                        {user?.name || "User"}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {role}
-                      </span>
-                    </div> */}
                     <ChevronDown
                       size={16}
                       className={`text-gray-500 transition-transform ${

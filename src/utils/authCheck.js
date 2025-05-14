@@ -1,9 +1,9 @@
-import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/utils/Toast";
+import { useAuthStore } from "@/domains/store/use-auth-store";
 
 export const useAuthCheck = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -16,10 +16,10 @@ export const useAuthCheck = () => {
         description: "Please sign in to continue",
         variant: "warning",
       });
-      
+
       // Redirect to sign-in with the return path
-      navigate("/signin", { 
-        state: { from: targetPath || location.pathname } 
+      navigate("/signin", {
+        state: { from: targetPath || location.pathname },
       });
       return false;
     }
