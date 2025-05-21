@@ -251,16 +251,20 @@ export default function CourseList() {
           return (
             <div key={region.id} className="mb-12">
               <h2 className="text-2xl font-bold mb-6">{region.name}</h2>
-              
+
               {/* Period filters */}
               <div className="flex flex-wrap gap-2 mb-6">
-                {region.periods.map(period => {
-                  const isActive = (activePeriods[region.id] || []).includes(period);
+                {region.periods.map((period) => {
+                  const isActive = (activePeriods[region.id] || []).includes(
+                    period
+                  );
                   return (
-                    <span 
-                      key={period} 
+                    <span
+                      key={period}
                       className={`px-3 py-1 text-sm rounded-full cursor-pointer transition-all duration-300 ${
-                        isActive ? TailwindStyle.HIGHLIGHT_FRAME : 'bg-gray-100 hover:bg-gray-200'
+                        isActive
+                          ? TailwindStyle.HIGHLIGHT_FRAME
+                          : "bg-gray-100 hover:bg-gray-200"
                       }`}
                       onClick={() => togglePeriod(region.id, period)}
                     >
@@ -269,19 +273,20 @@ export default function CourseList() {
                   );
                 })}
               </div>
-              
+
               {/* Course cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                {periodFilteredCourses.map(course => (
-                  <Link 
+                {periodFilteredCourses.map((course) => (
+                  <Link
                     to={`/learn/course/${course.id}`}
                     key={course.id}
                     className="group"
                   >
                     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
                       <div className="h-48 overflow-hidden">
-                        <img 
-                          src={course.image} 
+                        <img
+                          loading="lazy"
+                          src={course.image}
                           alt={course.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />

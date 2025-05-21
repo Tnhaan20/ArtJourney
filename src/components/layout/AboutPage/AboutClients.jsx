@@ -86,12 +86,13 @@ export default function AboutClients() {
       <div className="container mx-auto px-4">
         <div className="mb-6 mt-10">
           <h3 className="text-xl font-medium text-left">
-            <span className="text-[#DDA853]">HOW</span> <span className="font-bold text-black">CLIENTS SAID</span>
+            <span className="text-[#DDA853]">HOW</span>{" "}
+            <span className="font-bold text-black">CLIENTS SAID</span>
           </h3>
         </div>
-        
+
         <div className="relative">
-          <div 
+          <div
             ref={sliderRef}
             className="overflow-x-auto hide-scrollbar"
             onMouseDown={handleMouseDown}
@@ -99,29 +100,32 @@ export default function AboutClients() {
             onMouseLeave={handleMouseUp}
             onMouseMove={handleMouseMove}
             style={{
-              cursor: isDragging ? 'grabbing' : 'grab',
-              userSelect: 'none'
+              cursor: isDragging ? "grabbing" : "grab",
+              userSelect: "none",
             }}
           >
             <div className="flex gap-6 w-max">
               {testimonials.map((testimonial, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="w-[calc(30%-1rem)] min-w-[280px] flex-shrink-0"
                 >
                   <div className="bg-[#F7F7F7] p-6 rounded-lg shadow-sm h-full">
                     <div className="flex items-center">
                       <div className="w-16 h-16 rounded-full overflow-hidden mr-4 flex-shrink-0">
-                        <img 
-                          src={testimonial.image} 
-                          alt={testimonial.name} 
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
                           className="w-full h-full object-cover"
                           draggable="false"
                           onDragStart={(e) => e.preventDefault()}
+                          loading="lazy"
                         />
                       </div>
                       <div>
-                        <h4 className="font-bold text-lg text-2xl">{testimonial.name}</h4>
+                        <h4 className="font-bold text-lg text-2xl">
+                          {testimonial.name}
+                        </h4>
                         <p className="text-[#0A0A0A] text-xl">
                           "{testimonial.quote}"
                         </p>

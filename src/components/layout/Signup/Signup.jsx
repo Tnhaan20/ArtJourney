@@ -32,6 +32,7 @@ export default function Signup() {
           <div className="flex items-center justify-center mb-6">
             <Link to="/">
               <img
+                loading="lazy"
                 className="h-16"
                 src={assets.main_logo.artjourney_logo}
                 alt="Logo"
@@ -143,7 +144,12 @@ export default function Signup() {
                 disabled={googleLoginQuery.isFetching}
                 className="w-full mt-2 flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
-                <img src={GoogleIcon} alt="Google" className="w-5 h-5" />
+                <img
+                  loading="lazy"
+                  src={GoogleIcon}
+                  alt="Google"
+                  className="w-5 h-5"
+                />
                 Sign up with Google
               </button>
             </div>
@@ -180,6 +186,7 @@ export default function Signup() {
 
             <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
               <img
+                loading="lazy"
                 src={SideBG}
                 alt="Art Journey"
                 className="w-full h-auto object-cover"

@@ -16,6 +16,7 @@ export default function Footer() {
             src={assets.main_logo.artjourney_logo}
             alt="Logo"
             className="w-20 h-auto"
+            loading="lazy"
           />
           <p>610 Nguyen Thuong Hien, District 10 Ho Chi Minh city</p>
         </div>

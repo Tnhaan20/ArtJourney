@@ -21,9 +21,10 @@ export default function Community() {
     <div className="container mx-auto px-4 py-6">
       {/* Post Creation Box */}
       <div className="mb-6 flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-        <img 
-          src={DefaultAvatar} 
-          alt="Your avatar" 
+        <img
+          loading="lazy"
+          src={DefaultAvatar}
+          alt="Your avatar"
           className="w-10 h-10 rounded-full object-cover"
         />
         <div className="flex-grow">
@@ -34,12 +35,12 @@ export default function Community() {
           />
         </div>
       </div>
-      
+
       {/* Discussion Header */}
       <div className="mb-4 bg-[#ebd2ab] py-4 px-4">
         <h2 className="text-[#DDA853] text-lg uppercase">DISCUSSIONS</h2>
       </div>
-      
+
       {/* Filtering and Search Bar */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         {/* Sort dropdown */}
@@ -53,7 +54,7 @@ export default function Community() {
             </select>
           </div>
         </div>
-        
+
         {/* Search and actions */}
         <div className="flex items-center gap-2 w-full md:w-auto">
           <div className="relative flex-grow">
@@ -66,38 +67,41 @@ export default function Community() {
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-md w-full"
             />
           </div>
-          
+
           <button className="p-2 bg-amber-50 rounded-md hover:bg-amber-100">
             <Filter size={20} className="text-amber-500" />
           </button>
-          
+
           <button className="p-2 bg-gray-100 rounded-md hover:bg-gray-200">
             <RefreshCw size={20} className="text-gray-500" />
           </button>
         </div>
       </div>
-      
+
       {/* Posts/Discussion Feed */}
       <div className="space-y-4">
-        {posts.map(post => (
+        {posts.map((post) => (
           <div key={post.id} className="bg-gray-50 rounded-lg p-4 shadow-sm">
             <div className="flex items-start gap-3 mb-3">
-              <img 
-                src={post.avatar} 
-                alt={`${post.author}'s avatar`} 
+              <img
+                loading="lazy"
+                src={post.avatar}
+                alt={`${post.author}'s avatar`}
                 className="w-10 h-10 rounded-full object-cover"
               />
               <div>
                 <div className="flex items-center">
                   <h3 className="font-medium">{post.author}</h3>
                   {post.isQuestion && (
-                    <span className="ml-1 text-sm text-gray-500">asked a question.</span>
+                    <span className="ml-1 text-sm text-gray-500">
+                      asked a question.
+                    </span>
                   )}
                 </div>
                 <p className="text-sm text-gray-500">{post.timeAgo}</p>
               </div>
             </div>
-            
+
             <h4 className="font-medium mb-2">{post.title}</h4>
             <p className="text-gray-700">{post.content}</p>
           </div>

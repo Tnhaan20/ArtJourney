@@ -201,11 +201,50 @@ export const useAuth = () => {
     });
   };
 
-  // Make sure to include this in your return statement
+  const useSendVerifyEmail = () => {
+    return useQuery({
+      queryKey: [QueryKey.VERIFY.SEND],
+      queryFn: async () => {
+        return await AuthServices.get.sendVerifyEmail();
+      },
+      
+      enabled: false,
+      onSuccess: (data) => {
+        toast({
+          title: "Verification email sent",
+          description: data?.message || "Please check your inbox.",
+          variant: "success",
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Failed to send verification email",
+          description:
+            error.response?.data || "Something went wrong. Please try again.",
+          variant: "destructive",
+        });
+      },
+    });
+  }
+   
+  const getVerifyEmail = (token) => {
+    return useQuery({
+      queryKey: [QueryKey.VERIFY.GET],
+      queryFn: async () => {
+        return await AuthServices.get.getVerifyEmail(token);
+      },
+      retry: 1,
+      enabled: false,
+    });
+  }
+
+  // Make sure to include this in your return sta tement
   return {
     loginMutation,
     registerMutation,
     googleLogin,
     useGoogleCallback,
+    useSendVerifyEmail,
+    getVerifyEmail,
   };
 };

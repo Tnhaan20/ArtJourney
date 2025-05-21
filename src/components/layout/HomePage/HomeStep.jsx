@@ -32,6 +32,7 @@ export default function HomeStep() {
         {/* Right side - Image */}
         <div className="lg:w-1/2 mt-8 lg:mt-0">
           <img
+            loading="lazy"
             src={step1Image}
             alt="Step 1"
             className="w-full rounded-lg shadow-md"
@@ -66,6 +67,7 @@ export default function HomeStep() {
         {/* Left side - Image */}
         <div className="lg:w-1/2 mt-8 lg:mt-0">
           <img
+            loading="lazy"
             src={step2Image}
             alt="Step 2"
             className="w-full rounded-lg shadow-md"

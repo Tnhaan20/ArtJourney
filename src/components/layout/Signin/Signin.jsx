@@ -36,6 +36,7 @@ export default function Signin() {
 
             <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
               <img
+                loading="lazy"
                 src={SideBG}
                 alt="Art Journey"
                 className="w-full h-auto object-cover"
@@ -52,6 +53,7 @@ export default function Signin() {
           <div className="flex items-center justify-center mb-6">
             <Link to="/">
               <img
+                loading="lazy"
                 className="h-16"
                 src={assets.main_logo.artjourney_logo}
                 alt="Logo"
@@ -126,7 +128,7 @@ export default function Signin() {
             <div className="flex items-center justify-between">
               <Link
                 to="/forgot-password"
-                className="text-sm font-medium text-primary-yellow hover:text-secondary"
+                className="text-sm font-medium text-primary-yellow hover:text-secondary-yellow"
               >
                 Forgot your password?
               </Link>
@@ -136,7 +138,7 @@ export default function Signin() {
                   Don't have an account?{" "}
                   <Link
                     to="/signup"
-                    className="font-medium text-primary-yellow hover:text-secondary"
+                    className="font-medium text-primary-yellow hover:text-secondary-yellow"
                   >
                     Sign up
                   </Link>
@@ -155,9 +157,14 @@ export default function Signin() {
               <button
                 type="button"
                 onClick={handleGoogleSignIn}
-                className="w-full mt-2 flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="w-full mt-2 cursor-pointer flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
-                <img src={GoogleIcon} alt="Google" className="w-5 h-5" />
+                <img
+                  loading="lazy"
+                  src={GoogleIcon}
+                  alt="Google"
+                  className="w-5 h-5"
+                />
                 Sign in with Google
               </button>
             </div>
@@ -177,3 +184,5 @@ export default function Signin() {
     </div>
   );
 }
+
+

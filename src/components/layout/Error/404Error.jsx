@@ -32,7 +32,12 @@ export default function Error() {
 
           {/* Image */}
           <div className="w-full max-w-md">
-            <img src={errorImage} alt="404 Error" className="w-full mx-auto" />
+            <img
+              loading="lazy"
+              src={errorImage}
+              alt="404 Error"
+              className="w-full mx-auto"
+            />
           </div>
         </div>
       </div>

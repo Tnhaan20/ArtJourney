@@ -51,5 +51,30 @@
     "testimonials": {
       "title": "Người dùng nói gì về chúng tôi"
     }
+  },
+  "emailVerify": {
+    "title": "Xác nhận Email",
+    "verifying": "Đang xác thực email của bạn...",
+    "success": {
+      "title": "Xác thực thành công!",
+      "message": "Xác thực email thành công! Bạn có thể đăng nhập vào tài khoản của mình.",
+      "fullAccess": "Giờ đây bạn có thể sử dụng đầy đủ các tính năng của ArtJourney."
+    },
+    "error": {
+      "title": "Xác thực thất bại",
+      "invalidToken": "Không tìm thấy mã xác thực email. Vui lòng kiểm tra lại đường dẫn hoặc yêu cầu gửi lại email xác thực.",
+      "expiredToken": "Không thể xác thực email. Mã xác thực có thể đã hết hạn hoặc không hợp lệ.",
+      "generalError": "Đã xảy ra lỗi khi xác thực email. Vui lòng thử lại sau."
+    },
+    "buttons": {
+      "goToProfile": "Đi đến trang cá nhân",
+      "backToProfile": "Quay lại trang cá nhân",
+      "resendEmail": "Gửi lại email xác thực",
+      "sending": "Đang gửi..."
+    },
+    "help": {
+      "problem": "Gặp vấn đề?",
+      "supportCenter": "Trung tâm hỗ trợ"
+    }
   }
 }

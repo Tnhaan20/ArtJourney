@@ -18,7 +18,8 @@ export default function MainLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">{children}</main>
+      {/* Thêm padding-top để tránh header che mất nội dung */}
+      <main className="flex-grow py-10">{children}</main>
       <Footer />
     </div>
   );

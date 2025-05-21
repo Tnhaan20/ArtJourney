@@ -16,6 +16,8 @@ import CourseDetailPage from "@/pages/LearnPage/ModulePage";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import GoogleCallback from "@/components/layout/GoogleCallback/GoogleCallback";
+import ProfilePage from "@/pages/ProfilePage";
+import EmailVerifyPage from '@/pages/EmailVerifyPage';
 
 export default function AppRoutes() {
   return (
@@ -34,6 +36,14 @@ export default function AppRoutes() {
         element={
           <MainLayout>
             <AboutPage />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <MainLayout>
+            <ProfilePage />
           </MainLayout>
         }
       />
@@ -102,6 +112,8 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      {/* Email Verification Route */}
+      <Route path="/authentication/verify-email" element={<EmailVerifyPage />} />
       {/* Error route - will catch all unmatched paths */}
       <Route path="*" element={<Error />} />
       <Route path="/server-error" element={<ServerError />} />

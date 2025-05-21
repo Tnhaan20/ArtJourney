@@ -62,14 +62,15 @@ export default function Header() {
   };
 
   return (
-    <header className="absolute z-50 w-full px-4 md:px-10">
-      <div className="container mx-auto">
+    <header className="absolute z-50 w-full px-4 mb-10 md:px-10">
+      <div className="container mx-auto ">
         <div className="flex items-center justify-between h-16">
           {/* Logo with text */}
           <Link to="/" className={`px-3 ${TailwindStyle.GLASSMORPHISM}`}>
             <img
               src={assets.main_logo.artjourney_logo}
               alt="ArtJourney Logo"
+              loading="lazy"
               className="h-8 w-auto mr-2"
             />
             <span className="font-medium text-primary-yellow">ArtJourney</span>
@@ -105,6 +106,7 @@ export default function Header() {
                   <div className="flex items-center">
                     {user?.avatar ? (
                       <img
+                        loading="lazy"
                         src={user.avatar}
                         alt="Profile"
                         className="w-6 h-6 object-cover rounded-full"

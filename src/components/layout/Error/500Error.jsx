@@ -31,6 +31,7 @@ export default function ServerError() {
               src={errorImage}
               alt="500 Error"
               className="w-full max-w-md mx-auto"
+              loading="lazy"
             />
           </div>
         </div>

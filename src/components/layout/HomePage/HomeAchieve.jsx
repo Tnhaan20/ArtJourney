@@ -118,6 +118,7 @@ export default function HomeAchieve() {
           {/* Left User (Top 2) - slightly behind/lower */}
           <div className="relative w-80 h-70 mx-[-35px] z-0 bottom-[-220px] overflow-hidden">
             <img
+              loading="lazy"
               src={user2}
               alt="User 2"
               className="w-full h-full object-cover"
@@ -128,12 +129,14 @@ export default function HomeAchieve() {
           <div className="relative z-10 flex flex-col items-center">
             {/* Crown Positioned on Top */}
             <img
+              loading="lazy"
               src={crownImage}
               alt="Crown"
               className="absolute top-[-75px] right-[-65px] w-48 z-20"
             />
             <div className="relative w-110 h-80 z-10 overflow-hidden">
               <img
+                loading="lazy"
                 src={user1}
                 alt="Top User"
                 className="w-full h-full object-cover"
@@ -144,6 +147,7 @@ export default function HomeAchieve() {
           {/* Right User (Top 3) - slightly behind/lower */}
           <div className="relative w-80 h-70 mx-[-35px] z-0 bottom-[-220px] overflow-hidden">
             <img
+              loading="lazy"
               src={user3}
               alt="User 3"
               className="w-full h-full object-cover"
@@ -158,7 +162,8 @@ export default function HomeAchieve() {
           Top 3 Users with the Highest Achievements
         </h2>
         <button
-          className={`inline-block bg-primary-yellow text-white px-6 py-3 rounded-md text-lg font-semibold mt-5 cursor-pointer ${TailwindStyle.HIGHLIGHT_FRAME}`}>
+          className={`inline-block bg-primary-yellow text-white px-6 py-3 rounded-md text-lg font-semibold mt-5 cursor-pointer ${TailwindStyle.HIGHLIGHT_FRAME}`}
+        >
           Join the Challenge
         </button>
       </div>
@@ -188,6 +193,7 @@ export default function HomeAchieve() {
               {/* Image block */}
               <div className="w-110 h-74 overflow-hidden">
                 <img
+                  loading="lazy"
                   src={testimonials[currentIndex].image}
                   alt={testimonials[currentIndex].name}
                   className="w-full h-full object-cover"

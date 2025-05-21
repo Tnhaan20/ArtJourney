@@ -28,12 +28,13 @@ export default function HomeTopic() {
       {/* INTRO TEXT */}
       <div className="max-w-6xl mx-auto text-center mt-20 px-4">
         <img
+          loading="lazy"
           src={FirstImgTopic}
           alt=""
           className="w-full h-full max-h-[60vh] object-contain"
         />
         <p className="text-base leading-relaxed pt-5">
-          {t('home.topics.description')}
+          {t("home.topics.description")}
         </p>
       </div>
 
@@ -42,16 +43,17 @@ export default function HomeTopic() {
         id="featured-topics"
         className="max-w-5xl mx-auto text-center px-4 py-12"
       >
-        <h2 className="text-3xl font-bold mb-10">{t('home.topics.title')}</h2>
+        <h2 className="text-3xl font-bold mb-10">{t("home.topics.title")}</h2>
 
         {/* Region Grid - 3x2 layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {regions.map((region) => (
             <div key={region.name} className="flex flex-col items-center">
               <div className="overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                <img 
-                  src={region.image} 
-                  alt={region.name} 
+                <img
+                  loading="lazy"
+                  src={region.image}
+                  alt={region.name}
                   className="w-full h-48 object-cover"
                 />
               </div>

@@ -11,6 +11,7 @@ export default function HomeGuide() {
     <div className="relative min-h-[calc(100vh-64px)] w-full overflow-hidden py-10">
       <div className="absolute inset-x-0 top-0 h-[78vh] overflow-hidden">
         <img
+          loading="lazy"
           src={BG1}
           alt="background"
           className="w-full h-full object-cover"
@@ -46,6 +47,7 @@ export default function HomeGuide() {
           {/* Right column (artwork image) */}
           <div className="hidden md:flex md:justify-center">
             <img
+              loading="lazy"
               src={sideBG}
               alt="Art masterpiece"
               className="w-full h-auto max-h-[60vh] object-contain rounded-lg"

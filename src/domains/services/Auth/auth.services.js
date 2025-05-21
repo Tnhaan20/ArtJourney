@@ -1,4 +1,5 @@
 import axiosInstance from "@/configs/axios.config";
+import { get } from "react-hook-form";
 
 export const AuthServices = {
   get: {
@@ -22,6 +23,28 @@ export const AuthServices = {
         throw error;
       }
     },
+    sendVerifyEmail: async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/Authentication/email-verification`
+        );
+        console.log(response.data);
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    getVerifyEmail: async (token) => {
+      try {
+        const response = await axiosInstance.get(
+          `/Authentication/verify-email?v=${token}`
+        );
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    }
+      
   },
   post: {
     login: async (payload) => {

@@ -4,8 +4,8 @@
     "ranking": "Ranking",
     "aboutUs": "About Us",
     "community": "Community",
-    "signUp": "Sign up",
-    "logIn": "Log in"
+    "signUp": "Sign Up",
+    "logIn": "Log In"
   },
   "language": {
     "english": "English",
@@ -50,6 +50,31 @@
     },
     "testimonials": {
       "title": "What Our Users Say"
+    }
+  },
+  "emailVerify": {
+    "title": "Email Verification",
+    "verifying": "Verifying your email...",
+    "success": {
+      "title": "Verification Successful!",
+      "message": "Your email has been successfully verified! You can now log in to your account.",
+      "fullAccess": "You now have full access to all ArtJourney features."
+    },
+    "error": {
+      "title": "Verification Failed",
+      "invalidToken": "Email verification token not found. Please check the link or request a new verification email.",
+      "expiredToken": "Unable to verify email. The verification code may have expired or is invalid.",
+      "generalError": "An error occurred during email verification. Please try again later."
+    },
+    "buttons": {
+      "goToProfile": "Go to Profile",
+      "backToProfile": "Back to Profile",
+      "resendEmail": "Resend Verification Email",
+      "sending": "Sending..."
+    },
+    "help": {
+      "problem": "Having issues?",
+      "supportCenter": "Support Center"
     }
   }
 }
