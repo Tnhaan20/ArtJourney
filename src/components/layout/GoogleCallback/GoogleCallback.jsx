@@ -1,19 +1,11 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/Auth/use-auth";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/domains/store/use-auth-store";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { useToast } from "@/utils/Toast";
 
 export default function GoogleCallback() {
-  const { useGoogleCallback } = useAuth();
-  const {
-    refetch,
-    isLoading: googleCallbackLoading,
-    isError: googleRefetchError,
-    error: googleRefetchErrorData,
-    isSuccess,
-  } = useGoogleCallback();
+  
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { isAuthenticated, user, login } = useAuthStore();
@@ -43,34 +35,6 @@ export default function GoogleCallback() {
 
           // Remove the pending flag since we're handling it now
           sessionStorage.removeItem("google_auth_pending");
-
-          try {
-            const callbackResponse = await AuthServices.get.googleCallback();
-            console.log("Google callback API response:", callbackResponse);
-
-            // Kiểm tra status code từ response
-            if (callbackResponse.code !== 200) {
-              throw new Error(
-                callbackResponse.message || "Failed to verify Google account"
-              );
-            }
-          } catch (callbackErr) {
-            // Nếu có lỗi từ callback API, hiển thị lỗi và dừng luồng đăng nhập
-            console.error("Google callback API error:", callbackErr);
-            setIsError(true);
-            setError(callbackErr);
-            setIsLoading(false);
-            setProcessingAuth(false);
-
-            toast({
-              title: "Authentication error",
-              description:
-                callbackErr.message || "Failed to verify your Google account",
-              variant: "destructive",
-            });
-
-            return; // Dừng xử lý và không gọi /me nếu callback thất bại
-          }
 
           try {
             // Call the /me endpoint to get the user data
@@ -152,7 +116,7 @@ export default function GoogleCallback() {
     };
 
     handleGoogleCallback();
-  }, [refetch, searchParams, login, toast]);
+  }, [searchParams, login, toast]);
 
   // Check if authentication was successful after the Google callback is processed
   useEffect(() => {
