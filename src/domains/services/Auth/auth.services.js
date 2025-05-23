@@ -1,5 +1,4 @@
 import axiosInstance from "@/configs/axios.config";
-import { get } from "react-hook-form";
 
 export const AuthServices = {
   get: {

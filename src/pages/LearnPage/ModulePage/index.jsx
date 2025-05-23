@@ -11,11 +11,12 @@ export default function CourseDetailPage() {
   };
 
   return (
-    <div className="w-full px-4 py-8 mt-16 bg-[#ffffff]">
+    <div className="w-full px-4">
       <div className="max-w-7xl mx-auto flex flex-col gap-6">
-        <CourseDetailContent 
-          moduleId={parseInt(moduleId)} 
-          onBack={handleBack} 
+        <CourseDetailContent
+          moduleId={parseInt(moduleId)}
+          courseId={courseId}
+          onBack={handleBack}
         />
       </div>
     </div>

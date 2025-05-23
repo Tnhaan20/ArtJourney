@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function AboutClients() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -6,23 +7,26 @@ export default function AboutClients() {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const sliderRef = useRef(null);
-  
+
   const testimonials = [
     {
       name: "Leslie Alexander",
       image: "https://randomuser.me/api/portraits/women/68.jpg",
-      quote: "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
+      quote:
+        "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...",
     },
     {
       name: "Mayor Danloy",
       image: "https://randomuser.me/api/portraits/men/32.jpg",
-      quote: "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
+      quote:
+        "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...",
     },
     {
       name: "Sarah Johnson",
       image: "https://randomuser.me/api/portraits/women/45.jpg",
-      quote: "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
-    }
+      quote:
+        "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...",
+    },
   ];
 
   const handleMouseDown = (e) => {
@@ -46,16 +50,17 @@ export default function AboutClients() {
     let newScrollLeft = scrollLeft - walk;
 
     // Calculate the correct maximum scroll position
-    const testimonialsContainer = slider.querySelector('.w-max'); // Find the flex container
+    const testimonialsContainer = slider.querySelector(".w-max"); // Find the flex container
     const lastTestimonial = testimonialsContainer?.lastElementChild;
     let maxScrollLeft = 0; // Default to 0 if calculation fails
 
     if (lastTestimonial && slider.clientWidth) {
       // Calculate the position where the right edge of the last card aligns with the right edge of the container
-      const lastCardRightEdge = lastTestimonial.offsetLeft + lastTestimonial.offsetWidth;
+      const lastCardRightEdge =
+        lastTestimonial.offsetLeft + lastTestimonial.offsetWidth;
       maxScrollLeft = lastCardRightEdge - slider.clientWidth;
 
-      // It's possible we need to account for the gap as well. 
+      // It's possible we need to account for the gap as well.
       // If the cards have a gap-6, the effective right edge for alignment might be slightly different.
       // Let's try adding half the gap to the calculation for potentially better alignment.
       // Assuming gap-6 corresponds to 1.5rem (24px), we add 12px.
@@ -65,12 +70,12 @@ export default function AboutClients() {
 
       // Ensure maxScrollLeft is not negative (happens if content is narrower than container)
       maxScrollLeft = Math.max(0, maxScrollLeft);
-      
+
       // Also ensure it doesn't exceed the absolute maximum possible scroll
       const absoluteMaxScroll = slider.scrollWidth - slider.clientWidth;
       maxScrollLeft = Math.min(maxScrollLeft, absoluteMaxScroll);
     }
-    
+
     // Clamp the newScrollLeft value between 0 and the calculated maxScrollLeft
     if (newScrollLeft < 0) {
       newScrollLeft = 0;
@@ -143,7 +148,7 @@ export default function AboutClients() {
 }
 
 // Add this to your global CSS file
-const style = document.createElement('style');
+const style = document.createElement("style");
 style.textContent = `
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
@@ -153,4 +158,4 @@ style.textContent = `
     scrollbar-width: none;
   }
 `;
-document.head.appendChild(style); 
+document.head.appendChild(style);

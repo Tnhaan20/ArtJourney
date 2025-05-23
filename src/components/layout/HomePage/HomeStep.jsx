@@ -3,6 +3,7 @@ import step1Image from "@/assets/step1-image.png";
 import step2Image from "@/assets/step2-image.png";
 import { Link } from "react-router-dom";
 import { TailwindStyle } from "@/utils/Enum";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function HomeStep() {
   const { t } = useAppTranslation();

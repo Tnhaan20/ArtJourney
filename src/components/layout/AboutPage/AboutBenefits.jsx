@@ -1,5 +1,6 @@
 import React from 'react';
 import BestChoiceImage from "@/assets/aboutus-bestchoice.png";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function AboutBenefits() {
   return (

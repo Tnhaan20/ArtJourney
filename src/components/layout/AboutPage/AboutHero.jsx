@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import RightImage from "@/assets/about-us-circle3.png";
 import MiddleImage from "@/assets/about-us-circle2.png";
 import LeftImage from "@/assets/about-us-circle1.png";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function AboutHero() {
   return (

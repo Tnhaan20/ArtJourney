@@ -1,28 +1,31 @@
 import { Link } from 'react-router-dom';
 import { useAppTranslation } from "@/contexts/TranslationContext";
+import { useAuthStore } from "@/domains/store/use-auth-store";
 import BG1 from "@/assets/Home-BG-1.jpg";
 import sideBG from "@/assets/Side-BG.jpg";
 import { TailwindStyle } from "@/utils/Enum";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function HomeGuide() {
   const { t } = useAppTranslation();
-  
+  const { isAuthenticated } = useAuthStore();
+
   return (
     <div className="relative min-h-[calc(100vh-64px)] w-full overflow-hidden py-10">
-      <div className="absolute inset-x-0 top-0 h-[78vh] overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-[78vh] overflow-hidden ">
         <img
           loading="lazy"
           src={BG1}
           alt="background"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover "
         />
         {/* Glass overlay for the background image */}
-        <div className="absolute inset-0 bg-opacity-20 backdrop-filter backdrop-blur-[4px]"></div>
+        <div className="absolute inset-0 bg-opacity-20 backdrop-filter backdrop-blur-[4px] "></div>
       </div>
 
       {/* Main content container */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col">
-        <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-center py-12">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col ">
+        <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-center py-12 ">
           {/* Left column (content) */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
@@ -35,12 +38,14 @@ export default function HomeGuide() {
               {t("home.hero.description")}
             </p>
 
-            {/* Sign up button */}
+            {/* Conditional button based on authentication status */}
             <Link
-              to="/signup"
+              to={isAuthenticated ? "/learn" : "/signup"}
               className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-3 font-medium rounded-lg`}
             >
-              {t("home.hero.signUp")}
+              {isAuthenticated
+                ? t("home.hero.goToLearn")
+                : t("home.hero.signUp")}
             </Link>
           </div>
 
@@ -92,7 +97,7 @@ export default function HomeGuide() {
 
         {/* Double down arrow indicator with subtle animation and smooth scroll */}
         <div
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 cursor-pointer transition-transform hover:translate-y-1 duration-300"
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 cursor-pointer transition-transform hover:translate-y-1 duration-300 "
           onClick={() => {
             document.getElementById("featured-topics").scrollIntoView({
               behavior: "smooth",

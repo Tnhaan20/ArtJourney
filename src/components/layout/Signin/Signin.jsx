@@ -10,6 +10,7 @@ import { useAuthForm } from "@/hooks/Auth/use-auth-form";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { Controller } from "react-hook-form";
 import { useAuth } from "@/hooks/Auth/use-auth";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Signin() {
   const [showPassword, setShowPassword] = useState(false);

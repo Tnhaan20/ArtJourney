@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DefaultAvatar from "@/assets/team-member-1.png";
 import { Search, Filter, RefreshCw } from 'lucide-react';
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 // Main Community Component
 export default function Community() {

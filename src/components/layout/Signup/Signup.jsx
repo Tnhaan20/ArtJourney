@@ -11,6 +11,7 @@ import { TailwindStyle } from "@/utils/Enum";
 import { useAuthForm } from "@/hooks/Auth/use-auth-form";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { useAuth } from '@/hooks/Auth/use-auth';
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);

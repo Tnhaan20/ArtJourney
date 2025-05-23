@@ -1,5 +1,6 @@
 import React from 'react';
 import AchivedImage from "@/assets/aboout-achieved.png";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function AboutStories() {
   return (

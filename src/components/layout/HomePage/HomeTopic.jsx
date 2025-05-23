@@ -9,6 +9,7 @@ import northAmericaImage from "@/assets/HomePage/Topic/NA-Topic.png"; // Using m
 import southAmericaImage from "@/assets/HomePage/Topic/SouthAmerica-Topic.png"; // Using ancient art
 import africaImage from "@/assets/HomePage/Topic/Africa-Topic.png"; // Using Nefertiti bust
 import oceaniaImage from "@/assets/HomePage/Topic/Oceania-Topic.png"; // Using aboriginal art
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function HomeTopic() {
   const { t } = useAppTranslation();

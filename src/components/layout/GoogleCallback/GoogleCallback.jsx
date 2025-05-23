@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/domains/store/use-auth-store";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { useToast } from "@/utils/Toast";
+import Cookies from "js-cookie";
 
 export default function GoogleCallback() {
   
@@ -19,7 +20,9 @@ export default function GoogleCallback() {
   useEffect(() => { 
     const isPendingGoogleAuth =
       sessionStorage.getItem("google_auth_pending") === "true";
-
+      const cookie = Cookies.get('TK')
+      console.log("Cookie 1 value:", cookie);
+      
     // Process the callback as soon as the component mounts
     const handleGoogleCallback = async () => {
       try {
@@ -32,12 +35,19 @@ export default function GoogleCallback() {
           console.log(
             "Processing Google sign-in flow with direct user data fetch"
           );
+          console.log("Cookie 2 value:", cookie);
+
 
           // Remove the pending flag since we're handling it now
           sessionStorage.removeItem("google_auth_pending");
 
-          try {
-            // Call the /me endpoint to get the user data
+           try {
+             // Call the /me endpoint to get the user data
+
+             console.log("Cookie 3 value:", cookie);
+             
+            console.log(2);
+            
             const userResponse = await AuthServices.get.me();
             console.log("User response from /me API:", userResponse);
 

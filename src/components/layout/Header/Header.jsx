@@ -17,6 +17,7 @@ import { TailwindStyle } from "@/utils/Enum";
 import HightlightText from "@/components/elements/hightlight-text/Text";
 import { assets } from "@/assets/assets";
 import { useAuthStore } from "@/domains/store/use-auth-store";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Header() {
   const { t } = useAppTranslation();
@@ -52,7 +53,7 @@ export default function Header() {
   const getLinkClass = (path) => {
     return `text-sm font-medium relative group ${
       isActive(path)
-        ? "text-primary-blue font-semibold nav-link-active"
+        ? "text-primary-yellow font-semibold nav-link-active"
         : "text-primary-blue hover:text-secondary-blue"
     } transition-all duration-300 px-4 py-2`;
   };
@@ -62,10 +63,9 @@ export default function Header() {
   };
 
   return (
-    <header className="absolute z-50 w-full px-4 mb-10 md:px-10">
+    <header className="absolute z-50 w-full px-4 mb-10 md:px-10 ">
       <div className="container mx-auto ">
         <div className="flex items-center justify-between h-16">
-          {/* Logo with text */}
           <Link to="/" className={`px-3 ${TailwindStyle.GLASSMORPHISM}`}>
             <img
               src={assets.main_logo.artjourney_logo}
@@ -105,7 +105,7 @@ export default function Header() {
                 >
                   <div className="flex items-center">
                     {user?.avatar ? (
-                      <img
+                      <LazyImage
                         loading="lazy"
                         src={user.avatar}
                         alt="Profile"

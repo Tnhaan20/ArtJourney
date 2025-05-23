@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import errorImage from "@/assets/error/404.png";
 import { TailwindStyle } from "@/utils/Enum";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Error() {
   return (

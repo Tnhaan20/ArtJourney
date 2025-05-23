@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import errorImage from "@/assets/error/500.png"; // Make sure you have this image in your assets folder
 import { TailwindStyle } from "@/utils/Enum";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function ServerError() {
   return (

@@ -1,3 +1,4 @@
+import LazyImage from '@/components/elements/LazyImg/LazyImg';
 import React, { useState, useEffect } from 'react';
 
 export default function PaymentForm({ paymentType = 'monthly', onPaymentMethodSelect }) {
@@ -59,7 +60,7 @@ export default function PaymentForm({ paymentType = 'monthly', onPaymentMethodSe
                 }`}
                 onClick={() => handlePaymentMethodSelect(method.id)}
               >
-                <img
+                <LazyImage
                   loading="lazy"
                   src={method.logo}
                   alt={method.name}

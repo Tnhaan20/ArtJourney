@@ -5,6 +5,7 @@ import InstagramIcon from "@/assets/icons/instagram.png";
 import TiktokIcon from "@/assets/icons/tiktok.png";
 import YoutubeIcon from "@/assets/icons/youtube.png";
 import { assets } from "@/assets/assets";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Footer() {
   return (
@@ -12,7 +13,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-x-12 gap-y-8">
         {/* Column 1: Logo & Address */}
         <div className="flex flex-col space-y-4">
-          <img
+          <LazyImage
             src={assets.main_logo.artjourney_logo}
             alt="Logo"
             className="w-20 h-auto"

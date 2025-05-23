@@ -5,6 +5,7 @@ import { Search } from 'lucide-react';
 // Import images from assets (assuming they're organized there)
 import { assets } from '@/assets/assets';
 import { TailwindStyle } from '@/utils/Enum';
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function CourseList() {
   const [searchTerm, setSearchTerm] = useState('');

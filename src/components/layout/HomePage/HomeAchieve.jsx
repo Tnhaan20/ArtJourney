@@ -13,6 +13,7 @@ import commentUser2 from "@/assets/comment-user2.png";
 import commentUser3 from "@/assets/comment-user3.png";
 import commentUser4 from "@/assets/comment-user4.png";
 import { TailwindStyle } from "@/utils/Enum";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 const testimonials = [
   {

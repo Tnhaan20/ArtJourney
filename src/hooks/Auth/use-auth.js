@@ -227,16 +227,21 @@ export const useAuth = () => {
     });
   }
    
-  const getVerifyEmail = (token) => {
+  const useVerifyEmail = (token, options = {}) => {
     return useQuery({
-      queryKey: [QueryKey.VERIFY.GET],
+      queryKey: [QueryKey.VERIFY.GET, token],
       queryFn: async () => {
+        if (!token) {
+          throw new Error("No verification token provided");
+        }
         return await AuthServices.get.getVerifyEmail(token);
       },
-      retry: 1,
-      enabled: false,
+      enabled: !!token && options.enabled !== false,
+      retry: options.retry ?? 0,
+      refetchOnWindowFocus: options.refetchOnWindowFocus ?? false,
+      ...options,
     });
-  }
+  };
 
   // Make sure to include this in your return sta tement
   return {
@@ -245,6 +250,6 @@ export const useAuth = () => {
     googleLogin,
     useGoogleCallback,
     useSendVerifyEmail,
-    getVerifyEmail,
+    useVerifyEmail,
   };
 };

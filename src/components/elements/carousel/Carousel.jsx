@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Icons } from '../../elements/Icons';
+import LazyImage from '../LazyImg/LazyImg';
 
 // Carousel component with better reusability
 const Carousel = ({
@@ -121,13 +122,13 @@ const Carousel = ({
 
   // Default slide renderer
   const defaultSlideRender = (slide, index) => (
-    <div 
+    <div
       key={`${slide.id}-${index}`}
       className="relative h-full w-full flex-shrink-0"
     >
-      <img
+      <LazyImage
         src={slide.image}
-        alt={slide.title || ''}
+        alt={slide.title || ""}
         className={`h-full w-full object-${imageSize}`}
         loading={index <= 2 ? "eager" : "lazy"}
       />
@@ -139,14 +140,12 @@ const Carousel = ({
           )}
         </div>
       )}
-      {slide.overlay && (
-        <div className="absolute inset-0">{slide.overlay}</div>
-      )}
+      {slide.overlay && <div className="absolute inset-0">{slide.overlay}</div>}
       {slide.link && (
-        <a 
+        <a
           href={slide.link}
           className="absolute inset-0 z-20"
-          aria-label={`Go to ${slide.title || 'slide destination'}`}
+          aria-label={`Go to ${slide.title || "slide destination"}`}
         />
       )}
     </div>

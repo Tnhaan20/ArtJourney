@@ -4,6 +4,7 @@ import { TailwindStyle } from "@/utils/Enum";
 import SideBG from "@/assets/SideBGSignIn.jpg";
 import confetti from 'canvas-confetti';
 import Checkbox from "@/components/elements/checkbox/Checkbox";
+import LazyImage from '@/components/elements/LazyImg/LazyImg';
 
 export default function Survey() {
   const [step, setStep] = useState(1);
@@ -107,7 +108,7 @@ export default function Survey() {
       {step === 1 && (
         <div className="fixed inset-0 flex items-center justify-center">
           <div className="absolute inset-0">
-            <img
+            <LazyImage
               loading="lazy"
               src={SideBG}
               alt="Art Journey Welcome"

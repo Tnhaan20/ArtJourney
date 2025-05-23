@@ -7,52 +7,80 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { motion } from "framer-motion";
 import { assets } from "@/assets/assets";
 import { useAppTranslation } from "@/contexts/TranslationContext";
-import { use } from "i18next";
+import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 const EmailVerify = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const verifyToken = searchParams.get("v");
-  const { getVerifyEmail, useSendVerifyEmail } = useAuth();
   const { t } = useAppTranslation();
-  
-  const [status, setStatus] = useState("loading"); // loading, success, error
+
+  const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
-  const resendEmailMutation = useSendVerifyEmail();
 
+  // Fix: Use the hook properly at component level
+  const resendEmailMutation = useAuth().useSendVerifyEmail();
+
+  // Fix: Use the verify email query hook properly
+  const {
+    data: verifyData,
+    isLoading: isVerifying,
+    isError: isVerifyError,
+    error: verifyError,
+    refetch: refetchVerify,
+  } = useAuth().useVerifyEmail(verifyToken, {
+    enabled: !!verifyToken,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  // Handle verification result
   useEffect(() => {
-    const verifyEmail = async () => {
-      if (!verifyToken) {
-        setStatus("error");
-        setMessage(t("emailVerify.error.invalidToken"));
-        return;
-      }
+    if (!verifyToken) {
+      setStatus("error");
+      setMessage(t("emailVerify.error.invalidToken"));
+      return;
+    }
 
-      try {
-        const dataVerify = await getVerifyEmail(verifyToken);
-        console.log(dataVerify.data);
-        
-        if (dataVerify.code === 200) {
-          setStatus("success");
-          setMessage(dataVerify.message || t("emailVerify.success.message"));
-        } else {
-          setStatus("error");
-          setMessage(
-            dataVerify.error?.message || t("emailVerify.error.expiredToken")
-          );
-        }
-      } catch (error) {
+    if (isVerifying) {
+      setStatus("loading");
+      return;
+    }
+
+    if (isVerifyError) {
+      setStatus("error");
+      setMessage(
+        verifyError?.response?.data?.message ||
+          t("emailVerify.error.generalError")
+      );
+      return;
+    }
+
+    if (verifyData) {
+      if (verifyData.code === 200) {
+        setStatus("success");
+        setMessage(verifyData.message || t("emailVerify.success.message"));
+      } else {
         setStatus("error");
         setMessage(
-          error.response?.data?.message || t("emailVerify.error.generalError")
+          verifyData.error?.message || t("emailVerify.error.expiredToken")
         );
       }
-    };
+    }
+  }, [verifyToken, isVerifying, isVerifyError, verifyData, verifyError, t]);
 
-  }, [verifyToken, t]);
-
-  const handleResendEmail = async () => {
-    await useSendVerifyEmail();
+  // Fix: Proper handler for resend email
+  const handleResendEmail = () => {
+    resendEmailMutation.mutate(undefined, {
+      onSuccess: (response) => {
+        console.log("Resend email success:", response);
+        // Optionally show success message
+      },
+      onError: (error) => {
+        console.error("Resend email error:", error);
+        // Optionally show error message
+      },
+    });
   };
 
   return (
@@ -64,9 +92,9 @@ const EmailVerify = () => {
           transition={{ duration: 0.5 }}
         >
           <div className="flex justify-center mb-8">
-            <img 
+            <LazyImage
               src={assets.main_logo.artjourney_logo}
-              alt="ArtJourney Logo" 
+              alt="ArtJourney Logo"
               className="h-12"
             />
           </div>
@@ -80,7 +108,9 @@ const EmailVerify = () => {
           <Card className="border-none shadow-lg overflow-hidden">
             <div className="h-2 bg-gradient-to-r from-primary-yellow via-secondary-yellow to-third-yellow"></div>
             <CardHeader className="bg-white pt-6 pb-4">
-              <h1 className="text-2xl font-bold text-center text-gray-800">{t("emailVerify.title")}</h1>
+              <h1 className="text-2xl font-bold text-center text-gray-800">
+                {t("emailVerify.title")}
+              </h1>
             </CardHeader>
             <CardContent className="bg-white px-6 pt-4 pb-6">
               {status === "loading" && (
@@ -143,13 +173,14 @@ const EmailVerify = () => {
               >
                 {status === "success" ? (
                   <span className="flex items-center">
-                    {t("emailVerify.buttons.goToProfile")} <ArrowRight className="ml-2 h-4 w-4" />
+                    {t("emailVerify.buttons.goToProfile")}{" "}
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </span>
                 ) : (
                   t("emailVerify.buttons.backToProfile")
                 )}
               </Button>
-              
+
               {status === "error" && (
                 <Button
                   variant="outline"
@@ -178,10 +209,13 @@ const EmailVerify = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-8 text-sm text-gray-500"
+          className="text-center mt-8 text-sm text-primary-black"
         >
           <p>
-            {t("emailVerify.help.problem")} <Link to="/help" className="text-primary-black hover:underline">{t("emailVerify.help.supportCenter")}</Link>
+            {t("emailVerify.help.problem")}{" "}
+            <Link to="/help" className="text-gray-500 hover:underline">
+              {t("emailVerify.help.supportCenter")}
+            </Link>
           </p>
         </motion.div>
       </div>
