@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { motion } from "framer-motion";
 import { assets } from "@/assets/assets";
 import { useAppTranslation } from "@/contexts/TranslationContext";
+import { use } from "i18next";
 
 const EmailVerify = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +18,6 @@ const EmailVerify = () => {
   
   const [status, setStatus] = useState("loading"); // loading, success, error
   const [message, setMessage] = useState("");
-  const verifyEmailMutation = getVerifyEmail(verifyToken);
   const resendEmailMutation = useSendVerifyEmail();
 
   useEffect(() => {
@@ -29,29 +29,30 @@ const EmailVerify = () => {
       }
 
       try {
-        const dataVerify = await verifyEmailMutation.refetch();
+        const dataVerify = await getVerifyEmail(verifyToken);
+        console.log(dataVerify.data);
         
         if (dataVerify.code === 200) {
           setStatus("success");
           setMessage(dataVerify.message || t("emailVerify.success.message"));
         } else {
           setStatus("error");
-          setMessage(verifyEmailMutation.error?.message || t("emailVerify.error.expiredToken"));
+          setMessage(
+            dataVerify.error?.message || t("emailVerify.error.expiredToken")
+          );
         }
       } catch (error) {
         setStatus("error");
         setMessage(
-          error.response?.data?.message || 
-          t("emailVerify.error.generalError")
+          error.response?.data?.message || t("emailVerify.error.generalError")
         );
       }
     };
 
-    verifyEmail();
-  }, [verifyToken, verifyEmailMutation, t]);
+  }, [verifyToken, t]);
 
   const handleResendEmail = async () => {
-    await resendEmailMutation.refetch();
+    await useSendVerifyEmail();
   };
 
   return (
