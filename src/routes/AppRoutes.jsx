@@ -5,6 +5,7 @@ import { Suspense, lazy } from "react";
 import MainLayout from "@/layouts/MainLayout";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import LoadingScreen from "@/components/elements/loading-screen/loading-screen";
+import ArtJourneyAdminDashboard from "@/pages/AdminDashboardPage";
 
 // Convert all page components to lazy imports
 const HomePage = lazy(() => import("@/pages/HomePage"));
@@ -229,11 +230,9 @@ export default function AppRoutes() {
         path="/admin/*"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <MainLayout>
               <Suspense fallback={<PageLoader />}>
-                <div>Admin Dashboard</div>
+                <ArtJourneyAdminDashboard />
               </Suspense>
-            </MainLayout>
           </ProtectedRoute>
         }
       />

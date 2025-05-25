@@ -17,7 +17,6 @@ import { TailwindStyle } from "@/utils/Enum";
 import HightlightText from "@/components/elements/hightlight-text/Text";
 import { assets } from "@/assets/assets";
 import { useAuthStore } from "@/domains/store/use-auth-store";
-import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Header() {
   const { t } = useAppTranslation();
@@ -105,7 +104,7 @@ export default function Header() {
                 >
                   <div className="flex items-center">
                     {user?.avatar ? (
-                      <LazyImage
+                      <img
                         loading="lazy"
                         src={user.avatar}
                         alt="Profile"
