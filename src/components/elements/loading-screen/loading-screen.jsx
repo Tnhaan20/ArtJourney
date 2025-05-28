@@ -72,7 +72,6 @@ const LoadingScreen = () => {
         ></path>
       </svg>
 
-      <p className="mt-4 text-lg font-medium text-primary-blue">Did u know: TUng tung sahur is father of capuchino assassino</p>
     </div>
   );
 };

@@ -1,31 +1,39 @@
-
-import { Trash2, Video } from "lucide-react"
-
+import { Trash2, Video } from "lucide-react";
 
 export const ModuleModal = ({ module, courseId, onClose, onSave }) => (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white rounded-xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto">
+    <div className="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-gray-900">{module ? "Edit Module" : "Create New Module"}</h3>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-          <Trash2 className="w-5 h-5" />
+        <h2 className="text-2xl font-bold text-primary-black">
+          {module ? "Edit Module" : "Create New Module"}
+        </h2>
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-primary-black"
+        >
+          <Trash2 className="w-6 h-6" />
         </button>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Module Title</label>
+          <label className="block text-sm font-medium text-primary-black mb-2">
+            Module Title
+          </label>
           <input
             type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            placeholder="Enter module title"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow"
             defaultValue={module?.title || ""}
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
-            <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+            <label className="block text-sm font-medium text-primary-black mb-2">
+              Type
+            </label>
+            <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow">
               <option>video</option>
               <option>interactive</option>
               <option>assignment</option>
@@ -34,21 +42,27 @@ export const ModuleModal = ({ module, courseId, onClose, onSave }) => (
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+            <label className="block text-sm font-medium text-primary-black mb-2">
+              Duration
+            </label>
             <input
               type="text"
               placeholder="e.g., 45 min"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow"
               defaultValue={module?.duration || ""}
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-            <Video className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">Upload video, documents, or interactive content</p>
+          <label className="block text-sm font-medium text-primary-black mb-2">
+            Content
+          </label>
+          <div className="border-2 border-dashed border-primary-yellow border-opacity-50 rounded-lg p-6 text-center hover:border-primary-yellow hover:bg-primary-yellow hover:bg-opacity-5 transition-colors">
+            <Video className="w-8 h-8 text-primary-yellow mx-auto mb-2" />
+            <p className="text-sm text-gray-600">
+              Upload video, documents, or interactive content
+            </p>
           </div>
         </div>
 
@@ -63,7 +77,7 @@ export const ModuleModal = ({ module, courseId, onClose, onSave }) => (
           <button
             type="button"
             onClick={onSave}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+            className="px-4 py-2 bg-primary-yellow text-primary-black rounded-lg hover:bg-secondary-yellow"
           >
             Save Module
           </button>
@@ -71,4 +85,4 @@ export const ModuleModal = ({ module, courseId, onClose, onSave }) => (
       </form>
     </div>
   </div>
-)
+);

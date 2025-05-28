@@ -4,6 +4,7 @@ import { useAuthStore } from "@/domains/store/use-auth-store";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { useToast } from "@/utils/Toast";
 import Cookies from "js-cookie";
+import { Loader2 } from "lucide-react";
 
 export default function GoogleCallback() {
   
@@ -182,7 +183,7 @@ export default function GoogleCallback() {
 
           {(isLoading || (!isError && !authCheckComplete)) && (
             <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-yellow mb-4"></div>
+              <Loader2 className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-yellow mb-4"></Loader2>
               <p className="text-gray-600 mt-2">
                 {isLoading
                   ? "Verifying your Google account..."
