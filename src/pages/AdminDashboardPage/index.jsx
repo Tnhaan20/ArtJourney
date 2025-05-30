@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Sidebar } from "@/components/layout/Dashboard/Sidebar";
-import { Header } from "@/components/layout/Dashboard/header";
+import { Header } from "@/components/layout/Dashboard/Header";
 import { CourseModal } from "@/components/layout/Dashboard/Modals/CourseModal";
 import { ModuleModal } from "@/components/layout/Dashboard/Modals/ModuleModal";
 import { OverviewTab } from "@/components/layout/Dashboard/Tabs/Overview-tab";
