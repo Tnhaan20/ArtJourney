@@ -1,5 +1,5 @@
 import { ImageIcon, Star, MessageSquare, Plus, Eye } from "lucide-react";
-import { StatCard } from "../stat-card";
+import { StatCard } from "@/components/layout/Dashboard/Stat-card";
 
 export const ContentTab = () => (
   <div className="space-y-6">

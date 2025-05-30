@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "recharts";
 import { DollarSign, TrendingUp, Users, Download } from "lucide-react";
-import { StatCard } from "../stat-card";
+import { StatCard } from "@/components/layout/Dashboard/Stat-card-card";
 import { revenueData } from "@/lib/dashboard-data";
 
 export const FinancialTab = () => (
