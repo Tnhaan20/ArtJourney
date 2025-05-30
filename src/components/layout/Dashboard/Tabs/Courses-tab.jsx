@@ -15,7 +15,7 @@ import {
   Users,
   Star,
 } from "lucide-react"
-import { StatCard } from "@/components/layout/Dashboard/Stat-card-card";
+import { StatCard } from "@/components/layout/Dashboard/Stat-card";
 import { courses } from "@/lib/dashboard-data"
 
 export const CoursesTab = ({
