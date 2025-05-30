@@ -1,0 +1,82 @@
+{
+  "header": {
+    "learn": "Learn",
+    "ranking": "Ranking",
+    "aboutUs": "About Us",
+    "community": "Community",
+    "signUp": "Sign Up",
+    "logIn": "Log In"
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Vietnamese"
+  },
+  "home": {
+    "hero": {
+      "title": "STUDY WITH",
+      "subtitle": "ART JOURNEY",
+      "description": "Learn art history & Discover the stories behind masterpieces and enhance your understanding of art.",
+      "signUp": "LET'S SIGN UP",
+      "goToLearn": "Let's Learn"
+
+    },
+    "stats": {
+      "customers": "CUSTOMERS",
+      "experience": "YEARS EXPERIENCE",
+      "lessons": "TOTAL LESSONS",
+      "reviews": "STAR REVIEWS"
+    },
+    "topics": {
+      "title": "Featured Topics",
+      "description": "We offer an interactive learning experience that helps users not only absorb art history knowledge effectively but also stay engaged through immersive activities. Learners can take exciting quizzes, earn badges, and climb the leaderboard to track their progress."
+    },
+    "regions": {
+      "northAmerica": "North America",
+      "southAmerica": "South America",
+      "oceania": "Oceania",
+      "europe": "Europe",
+      "africa": "Africa",
+      "asia": "Asia"
+    },
+    "steps": {
+      "title": "The Formula of the Top 5% Art History Masters",
+      "step1": {
+        "title": "Step 1 - Read",
+        "description": "Begin your journey by exploring carefully curated content that dives deep into art history. From ancient civilizations to modern masterpieces, gain insights into the evolution of artistic expression. Discover how cultural movements shaped artistic styles, and how legendary artists revolutionized techniques and perspectives over time."
+      },
+      "step2": {
+        "title": "Step 2 - Practice",
+        "description": "Learning goes beyond theory—put your knowledge to the test with interactive exercises, engaging quizzes, and hands-on activities designed to reinforce your understanding of art history.",
+        "button": "Challenge Now"
+      }
+    },
+    "testimonials": {
+      "title": "What Our Users Say"
+    }
+  },
+  "emailVerify": {
+    "title": "Email Verification",
+    "verifying": "Verifying your email...",
+    "success": {
+      "title": "Verification Successful!",
+      "message": "Your email has been successfully verified! You can now log in to your account.",
+      "fullAccess": "You now have full access to all ArtJourney features."
+    },
+    "error": {
+      "title": "Verification Failed",
+      "invalidToken": "Email verification token not found. Please check the link or request a new verification email.",
+      "expiredToken": "Unable to verify email. The verification code may have expired or is invalid.",
+      "generalError": "An error occurred during email verification. Please try again later."
+    },
+    "buttons": {
+      "goToProfile": "Go to Profile",
+      "backToProfile": "Back to Profile",
+      "resendEmail": "Resend Verification Email",
+      "sending": "Sending..."
+    },
+    "help": {
+      "problem": "Having issues?",
+      "supportCenter": "Support Center"
+    }
+  }
+}
