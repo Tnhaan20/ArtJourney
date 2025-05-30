@@ -3,7 +3,7 @@ import { useAppTranslation } from '@/contexts/TranslationContext';
 import FirstImgTopic from "@/assets/HomePage/Topic/FirstTopic.jpg";
 
 // Import region representative images
-import europeImage from "@/assets/HomePage/Topic/europe-topic.jpg"; // Using renaissance as representative
+import europeImage from "@/assets/HomePage/Topic/Europe-Topic.jpg"; // Using renaissance as representative
 import asiaImage from "@/assets/HomePage/Topic/Asia-Topic.png"; // Using The Great Wave
 import northAmericaImage from "@/assets/HomePage/Topic/NA-Topic.png"; // Using modern art
 import southAmericaImage from "@/assets/HomePage/Topic/SouthAmerica-Topic.png"; // Using ancient art
