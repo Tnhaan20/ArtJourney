@@ -11,7 +11,7 @@ import {
   Cell,
 } from "recharts";
 import { DollarSign, Users, GraduationCap, CheckCircle } from "lucide-react";
-import { StatCard } from "../stat-card";
+import { StatCard } from "@/components/layout/Dashboard/Stat-card";
 import { revenueData, subscriptionData } from "@/lib/dashboard-data";
 
 export const OverviewTab = () => (
