@@ -19,7 +19,7 @@ const CoursePage = lazy(() => import("@/pages/LearnPage/CoursePage"));
 const CourseDetailPage = lazy(() => import("@/pages/LearnPage/ModulePage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const EmailVerifyPage = lazy(() => import("@/pages/EmailVerifyPage"));
-const UnauthorizedPage = lazy(() => import("@/pages/UnauthorizedPage"));
+const UnauthorizedPage = lazy(() => import("@/pages/UnauthorizedPage/Index"));
 const QuizPage = lazy(() => import("@/pages/LearnPage/QuizPage/QuizPage"));
 const ChallengePage = lazy(() =>
   import("@/pages/LearnPage/ChallengePage/ChallengePage")
