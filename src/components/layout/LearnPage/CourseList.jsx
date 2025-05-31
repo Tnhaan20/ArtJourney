@@ -194,8 +194,10 @@ export default function CourseList() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">COURSES</h1>
-      
+      <h1 className="text-3xl font-bold text-center mb-8 equila-bold">
+        COURSES
+      </h1>
+
       {/* Search bar */}
       <div className="max-w-md mx-auto mb-10 relative">
         <input
@@ -213,41 +215,59 @@ export default function CourseList() {
       {/* Region tabs */}
       <div className="flex flex-wrap justify-center gap-4 mb-8">
         <button
-          className={`px-4 py-2 rounded-md ${activeRegion === 'all' ? 'bg-primary-yellow text-white' : 'bg-gray-100'}`}
-          onClick={() => setActiveRegion('all')}
+          className={`px-4 py-2 rounded-md ${
+            activeRegion === "all"
+              ? "bg-primary-yellow text-white"
+              : "bg-gray-100"
+          }`}
+          onClick={() => setActiveRegion("all")}
         >
           All Regions
         </button>
-        {regions.map(region => (
+        {regions.map((region) => (
           <button
             key={region.id}
-            className={`px-4 py-2 rounded-md ${activeRegion === region.id ? 'bg-primary-yellow text-white' : 'bg-gray-100'}`}
+            className={`px-4 py-2 rounded-md ${
+              activeRegion === region.id
+                ? "bg-primary-yellow text-white"
+                : "bg-gray-100"
+            }`}
             onClick={() => setActiveRegion(region.id)}
           >
-            {region.name.split(' ')[0]}
+            {region.name.split(" ")[0]}
           </button>
         ))}
       </div>
 
       {/* Course listings by region */}
       <div className="space-y-16">
-        {filteredRegions.map(region => {
+        {filteredRegions.map((region) => {
           // Filter courses by search term if one exists
-          const filteredCourses = searchTerm 
-            ? region.courses.filter(course => 
-                course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                course.period.toLowerCase().includes(searchTerm.toLowerCase())
+          const filteredCourses = searchTerm
+            ? region.courses.filter(
+                (course) =>
+                  course.title
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                  course.period.toLowerCase().includes(searchTerm.toLowerCase())
               )
             : region.courses;
 
           // Filter by active periods if any are selected
           const regionActivePeriods = activePeriods[region.id] || [];
-          const periodFilteredCourses = regionActivePeriods.length > 0
-            ? filteredCourses.filter(course => regionActivePeriods.includes(course.period))
-            : filteredCourses;
+          const periodFilteredCourses =
+            regionActivePeriods.length > 0
+              ? filteredCourses.filter((course) =>
+                  regionActivePeriods.includes(course.period)
+                )
+              : filteredCourses;
 
           // Only show regions with matching courses when searching
-          if ((searchTerm || regionActivePeriods.length > 0) && periodFilteredCourses.length === 0) return null;
+          if (
+            (searchTerm || regionActivePeriods.length > 0) &&
+            periodFilteredCourses.length === 0
+          )
+            return null;
 
           return (
             <div key={region.id} className="mb-12">

@@ -13,10 +13,10 @@ export default function Error() {
         <div className="flex flex-col items-center justify-center">
           {/* Text content */}
           <div className="text-center mb-8 max-w-2xl">
-            <h1 className="text-5xl md:text-6xl font-bold text-[#F2B866] mb-4">
+            <h1 className="text-5xl md:text-6xl font-bold equila-bold text-[#F2B866] mb-4">
               OPPS!
             </h1>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#F2B866] mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold equila-bold text-[#F2B866] mb-6">
               Page Not Found
             </h2>
             <p className="text-gray-700 mb-8 max-w-md mx-auto">

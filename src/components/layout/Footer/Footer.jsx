@@ -1,159 +1,157 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import FacebookIcon from "@/assets/icons/facebook.png";
-import InstagramIcon from "@/assets/icons/instagram.png";
-import TiktokIcon from "@/assets/icons/tiktok.png";
-import YoutubeIcon from "@/assets/icons/youtube.png";
+import "./Footer.css";
 import { assets } from "@/assets/assets";
-import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-[#dda853] py-10">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-x-12 gap-y-8">
-        {/* Column 1: Logo & Address */}
-        <div className="flex flex-col space-y-4">
-          <LazyImage
-            src={assets.main_logo.artjourney_logo}
-            alt="Logo"
-            className="w-20 h-auto"
-            loading="lazy"
-          />
-          <p>610 Nguyen Thuong Hien, District 10 Ho Chi Minh city</p>
+    <>
+      {/* Gradient Divider */}
+      <div className="footer-divider"></div>
+
+      <footer className="footer">
+        <div className="floating-brushes">
+          <div className="brush">🖌️</div>
+          <div className="brush">🎨</div>
+          <div className="brush">✏️</div>
         </div>
 
-        {/* Column 2: About Us */}
-        <div className="flex flex-col space-y-2">
-          <h3 className="font-semibold uppercase">About Us</h3>
-          <ul className="space-y-2">
-            <li>
-              <Link to="/about" className="hover:underline">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="hover:underline">
-                Promotion
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="hover:underline">
-                Founder
-              </Link>
-            </li>
-            <li>
-              <Link to="#" className="hover:underline">
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </div>
+        <div className="footer-content">
+          <div className="footer-header">
+            <div className="footer-logo-container">
+              <img
+                src={assets.main_logo.artjourney_logo}
+                alt="ArtJourney Logo"
+                className="w-10 h-10"
+              />
+              <div className="footer-logo">Art Journey</div>
+            </div>
+            <div className="footer-tagline">
+              Discover Art History Through the Ages
+            </div>
+            <div className="footer-motto">
+              "Every brushstroke tells a story, every masterpiece carries a
+              soul. Join us in exploring humanity's artistic heritage."
+            </div>
+          </div>
+          <div className="divider"></div>
+          <div className="footer-top">
+            {/* About ArtJourney - Moved to left */}
+            <div className="footer-section about-section">
+              <h3>About ArtJourney</h3>
+              <p>
+                ArtJourney is a premier online learning platform dedicated to
+                art history education, offering immersive and comprehensive
+                learning experiences from ancient to contemporary art.
+              </p>
 
-        {/* Column 3: Featured Topics */}
-        <div className="flex flex-col space-y-2">
-          <h3 className="font-semibold uppercase">Featured Topics</h3>
-          <ul className="space-y-2">
-            <li>
-              <a href="#" className="hover:underline">
-                North America
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                South America
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Oceania
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Europe
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Africa
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Asia
-              </a>
-            </li>
-          </ul>
-        </div>
+              <div className="contact-info">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                <span>
+                  610 Nguyen Thuong Hien, District 10 Ho Chi Minh city
+                </span>
+              </div>
 
-        {/* Column 4: Get Started */}
-        <div>
-          <h3 className="font-semibold uppercase">Get Started</h3>
-          <ul className="space-y-2 mt-2">
-            <li>
-              <a href="#" className="hover:underline">
-                Pricing
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Free Trial
-              </a>
-            </li>
-          </ul>
-        </div>
+              <div className="contact-info">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                </svg>
+                <span>+84 98 174 5930</span>
+              </div>
 
-        {/* Column 5: Follow Us */}
-        <div>
-          <h3 className="font-semibold uppercase">Follow Us</h3>
-          <div className="flex flex-col space-y-4 mt-2">
-            {/* Facebook SVG */}
-            <a href="https://facebook.com" className="cursor-pointer">
-              <svg
-                className="w-8 h-8"
-                fill="#DDA853"
-                viewBox="0 0 35 35"
-                aria-hidden="true"
-              >
-                <path d="M16.59 0C7.43 0 0 7.43 0 16.59C0 25.75 7.43 33.18 16.59 33.18C25.75 33.18 33.18 25.75 33.18 16.59C33.18 7.43 25.75 0 16.59 0ZM23.12 8.38H21.18C19.27 8.38 18.67 9.57 18.67 10.79V13.68H22.94L22.26 18.13H18.67V28.9H13.85V18.13H9.94V13.68H13.85V10.29C13.85 6.43 16.15 4.3 19.67 4.3C21.36 4.3 23.12 4.6 23.12 4.6V8.38Z"></path>
-              </svg>
-            </a>
-            {/* Instagram SVG */}
-            <a href="https://instagram.com" className="cursor-pointer">
-              <svg
-                className="w-8 h-8"
-                fill="#DDA853"
-                viewBox="0 0 35 35"
-                aria-hidden="true"
-              >
-                <path d="M16.67 13.6001C14.92 13.6001 13.5 15.0201 13.5 16.7701C13.5 18.5201 14.92 19.9401 16.67 19.9401C18.42 19.9401 19.84 18.5201 19.84 16.7701C19.84 15.0201 18.42 13.6001 16.67 13.6001Z M20.6 8.61035H12.57C10.28 8.61035 8.41998 10.4704 8.41998 12.7604V20.7904C8.41998 23.0804 10.28 24.9404 12.57 24.9404H20.6C22.89 24.9404 24.75 23.0804 24.75 20.7904V12.7604C24.75 10.4704 22.89 8.61035 20.6 8.61035ZM16.67 21.7204C13.94 21.7204 11.72 19.5003 11.72 16.7703C11.72 14.0403 13.94 11.8204 16.67 11.8204C19.4 11.8204 21.62 14.0403 21.62 16.7703C21.62 19.5003 19.4 21.7204 16.67 21.7204ZM21.91 12.6703C21.26 12.6703 20.73 12.1403 20.73 11.4903C20.73 10.8403 21.26 10.3103 21.91 10.3103C22.56 10.3103 23.09 10.8403 23.09 11.4903C23.09 12.1403 22.56 12.6703 21.91 12.6703ZM16.59 0.180176C7.43 0.180176 0 7.61017 0 16.7702C0 25.9302 7.43 33.3602 16.59 33.3602C25.75 33.3602 33.18 25.9302 33.18 16.7702C33.18 7.61017 25.75 0.180176 16.59 0.180176ZM26.64 20.7902C26.64 24.1202 23.93 26.8302 20.6 26.8302H12.57C9.24 26.8302 6.53 24.1202 6.53 20.7902V12.7602C6.53 9.43018 9.24 6.72017 12.57 6.72017H20.6C23.93 6.72017 26.64 9.43018 26.64 12.7602V20.7902Z"></path>
-              </svg>
-            </a>
-            {/* Tiktok SVG */}
-            <a href="https://tiktok.com" className="cursor-pointer">
-              <svg
-                className="w-8 h-8"
-                fill="#DDA853"
-                viewBox="0 0 35 35"
-                aria-hidden="true"
-              >
-                <path d="M26.78 13.0199C26.52 13.0399 26.27 13.0599 26.01 13.0599C23.19 13.0599 20.56 11.6399 19.02 9.27986V22.1399C19.02 27.3899 14.76 31.6499 9.50999 31.6499C4.25999 31.6499 0 27.3899 0 22.1399C0 16.8899 4.25999 12.6299 9.50999 12.6299C9.70999 12.6299 9.89999 12.6499 10.1 12.6599V17.3399C9.90999 17.3199 9.70999 17.2799 9.50999 17.2799C6.82999 17.2799 4.65999 19.4499 4.65999 22.1299C4.65999 24.8099 6.82999 26.9799 9.50999 26.9799C12.19 26.9799 14.56 24.8699 14.56 22.1899L14.61 0.359863H19.09C19.51 4.37986 22.75 7.51986 26.78 7.80986V13.0199Z"></path>
-              </svg>
-            </a>
-            {/* Youtube SVG */}
-            <a href="https://youtube.com" className="cursor-pointer">
-              <svg
-                className="w-8 h-8"
-                fill="#DDA853"
-                viewBox="0 0 35 35"
-                aria-hidden="true"
-              >
-                <path d="M30.43 7.3299C30.43 3.6399 27.44 0.649902 23.75 0.649902H6.68002C2.99002 0.649902 0 3.6399 0 7.3299V15.2699C0 18.9599 2.99002 21.9499 6.68002 21.9499H23.75C27.44 21.9499 30.43 18.9599 30.43 15.2699V7.3299ZM20.39 11.8999L12.74 15.6899C12.44 15.8499 11.42 15.6299 11.42 15.2899V7.5199C11.42 7.1699 12.45 6.9599 12.75 7.1299L20.08 11.1199C20.38 11.2899 20.7 11.7299 20.39 11.8999Z"></path>
-              </svg>
-            </a>
+              <div className="contact-info">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+                <span>contact.artjourney01@gmail.com</span>
+              </div>
+
+              <div className="social-links">
+                <Link
+                  to="https://www.facebook.com/artjourney123/"
+                  className="social-link facebook"
+                  title="Facebook"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </Link>
+                <Link
+                  to="https://www.instagram.com/artjourney_midnightmeowers/"
+                  className="social-link instagram"
+                  title="Instagram"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* Featured Courses */}
+            <div className="footer-section">
+              <h3>Featured Topics</h3>
+              <div className="course-highlight">
+                <h4>🎓 Art History Periods</h4>
+                <div className="course-list">
+                  <div className="course-item">
+                    <span className="course-era">Ancient</span>
+                    <span>Egyptian & Greek Art</span>
+                  </div>
+                  <div className="course-item">
+                    <span className="course-era">Medieval</span>
+                    <span>Gothic & Byzantine</span>
+                  </div>
+                  <div className="course-item">
+                    <span className="course-era">Renaissance</span>
+                    <span>Leonardo & Michelangelo</span>
+                  </div>
+                  <div className="course-item">
+                    <span className="course-era">Modern</span>
+                    <span>Impressionism & Cubism</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <div className="footer-section">
+              <h3>Navigation</h3>
+              <ul>
+                <li>
+                  <Link to="/about">About Us</Link>
+                </li>
+                <li>
+                  <Link to="/pricing">Pricing</Link>
+                </li>
+                <li>
+                  <Link to="/learn">Courses</Link>
+                </li>
+                
+              </ul>
+
+              <p style={{ marginTop: "20px", fontStyle: "italic" }}>
+                "Art is not what you see, but what you make others see." - Edgar
+                Degas
+              </p>
+            </div>
+          </div>
+
+          <div className="footer-bottom">
+            <p>
+              &copy; 2025 ArtJourney. All rights reserved.
+            </p>
+            <div className="footer-links">
+              <Link to="/privacy">Privacy Policy</Link>
+              <Link to="/terms">Terms of Service</Link>
+              <Link to="/support">Student Support</Link>
+              <Link to="/contact">Contact Us</Link>
+            </div>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </>
   );
 }

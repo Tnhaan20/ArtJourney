@@ -5,7 +5,8 @@
     "aboutUs": "About Us",
     "community": "Community",
     "signUp": "Sign Up",
-    "logIn": "Log In"
+    "logIn": "Log In",
+    "pricing": "Pricing"
   },
   "language": {
     "english": "English",
@@ -77,6 +78,180 @@
     "help": {
       "problem": "Having issues?",
       "supportCenter": "Support Center"
+    }
+  },
+  "support": {
+    "hero": {
+      "title": "Support Center",
+      "description": "Find answers to frequently asked questions, support documentation and system error code information."
+    },
+    "search": {
+      "placeholder": "Search questions, error codes or support content..."
+    },
+    "tabs": {
+      "faq": "FAQ",
+      "codes": "Error & Success Codes"
+    },
+    "categories": {
+      "all": "All",
+      "account": "Account",
+      "course": "Course",
+      "payment": "Payment",
+      "certificate": "Certificate",
+      "technical": "Technical"
+    },
+    "faq": {
+      "questions": [
+        {
+          "category": "account",
+          "question": "How to create a new account?",
+          "answer": "You can create an account by clicking the 'Sign Up' button in the top right corner. Fill in your personal information and valid email, then check your email to verify your account."
+        },
+        {
+          "category": "account",
+          "question": "I forgot my password, how to recover it?",
+          "answer": "Click 'Forgot Password' on the login page, enter your email. We will send a password reset link to your email."
+        },
+        {
+          "category": "course",
+          "question": "How to enroll in a course?",
+          "answer": "Browse the course list, select the course you want and click 'Enroll'. You can preview some free lessons before deciding."
+        },
+        {
+          "category": "course",
+          "question": "Can I access courses on mobile?",
+          "answer": "Yes! Our platform works smoothly on all devices including smartphones and tablets."
+        },
+        {
+          "category": "payment",
+          "question": "What payment methods are supported?",
+          "answer": "We support payments via credit cards, debit cards, e-wallets and bank transfers."
+        },
+        {
+          "category": "certificate",
+          "question": "How to receive certificates?",
+          "answer": "After completing the course and passing the tests, you will receive a downloadable digital certificate."
+        },
+        {
+          "category": "technical",
+          "question": "Website won't load, what should I do?",
+          "answer": "Try refreshing the page, clearing browser cache, or try a different browser. If the problem persists, please contact us."
+        },
+        {
+          "category": "technical",
+          "question": "Lesson videos won't play?",
+          "answer": "Check your internet connection, make sure your browser supports HTML5, and try reloading the page. If still having issues, contact technical support."
+        }
+      ],
+      "noResults": {
+        "title": "No results found",
+        "description": "Try changing search keywords or categories."
+      }
+    },
+    "codes": {
+      "errorSection": {
+        "title": "🚨 System Error Codes"
+      },
+      "successSection": {
+        "title": "✅ Success Codes"
+      },
+      "labels": {
+        "vietnamese": "🇻🇳 Vietnamese:",
+        "english": "🇺🇸 English:",
+        "description": "📝 Detailed Description:"
+      },
+      "errors": [
+        {
+          "code": "1001",
+          "description": "Error occurs when the system cannot find a user account with the provided email. Check the email again or create a new account."
+        },
+        {
+          "code": "1002", 
+          "description": "Email does not exist in the system. Make sure you entered the correct email address."
+        },
+        {
+          "code": "1003",
+          "description": "Server error when updating user information. Try again later or contact support."
+        },
+        {
+          "code": "1004",
+          "description": "Error occurred during Gmail login process. Try logging in again or use another method."
+        },
+        {
+          "code": "1005",
+          "description": "Data has been processed but the system did not return a response. Check login status."
+        },
+        {
+          "code": "1006",
+          "description": "Email already exists in the system. Use a different email or log in with existing account."
+        },
+        {
+          "code": "1007",
+          "description": "Login information is incorrect. Check your email and password again."
+        },
+        {
+          "code": "1008",
+          "description": "Account has been locked due to violation of terms of use. Contact admin for support."
+        },
+        {
+          "code": "1009",
+          "description": "Account ID does not exist in the system. Check the information again."
+        },
+        {
+          "code": "1010",
+          "description": "System error when recording login history. Does not affect login functionality."
+        },
+        {
+          "code": "1011",
+          "description": "Database query error. Contact technical support."
+        },
+        {
+          "code": "1012",
+          "description": "Login data statistics error. Does not affect main functionality."
+        },
+        {
+          "code": "1013",
+          "description": "Email has been verified. You can log in normally."
+        },
+        {
+          "code": "1014",
+          "description": "Verification link has expired. Request to resend verification email."
+        },
+        {
+          "code": "1015",
+          "description": "System error during verification process. Try again or contact support."
+        }
+      ],
+      "success": [
+        {
+          "code": "2001",
+          "description": "User has successfully logged into the system."
+        },
+        {
+          "code": "2002",
+          "description": "Account information has been successfully retrieved from the system."
+        },
+        {
+          "code": "2003",
+          "description": "Login history has been successfully recorded."
+        },
+        {
+          "code": "2004",
+          "description": "Email has been successfully verified. Account has been activated."
+        }
+      ],
+      "noResults": {
+        "title": "No codes found",
+        "description": "Try changing search keywords."
+      }
+    },
+    "contactSection": {
+      "title": "Still need support?",
+      "description": "If you can't find the answer you're looking for, our support team is always ready to help you.",
+      "buttons": {
+        "contact": "📧 Contact Support",
+        "email": "✉️ Send Email"
+      }
     }
   }
 }

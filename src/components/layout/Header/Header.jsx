@@ -72,7 +72,9 @@ export default function Header() {
               loading="lazy"
               className="h-8 w-auto mr-2"
             />
-            <span className="font-medium text-primary-yellow">ArtJourney</span>
+            <span className="equila-bold font-extrabold text-primary-yellow">
+              ArtJourney
+            </span>
           </Link>
 
           {/* Navigation - centered */}
@@ -85,6 +87,9 @@ export default function Header() {
             </HightlightText>
             <HightlightText to="/about" className={getLinkClass("/about")}>
               {t("header.aboutUs")}
+            </HightlightText>
+            <HightlightText to="/pricing" className={getLinkClass("/pricing")}>
+              {t("header.pricing")}
             </HightlightText>
             <HightlightText
               to="/community"

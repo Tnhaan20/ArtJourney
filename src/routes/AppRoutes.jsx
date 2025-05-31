@@ -24,7 +24,8 @@ const QuizPage = lazy(() => import("@/pages/LearnPage/QuizPage/QuizPage"));
 const ChallengePage = lazy(() =>
   import("@/pages/LearnPage/ChallengePage/ChallengePage")
 );
-
+const PricingPage = lazy(() => import("@/pages/PricingPage"));
+const ContactPage = lazy(() => import("@/pages/ContactPage"));
 // Auth and Error components - these can be lazy too since they're not always shown
 const Signin = lazy(() => import("@/components/layout/Signin/Signin"));
 const Signup = lazy(() => import("@/components/layout/Signup/Signup"));
@@ -33,7 +34,9 @@ const ServerError = lazy(() => import("@/components/layout/Error/500Error"));
 const GoogleCallback = lazy(() =>
   import("@/components/layout/GoogleCallback/GoogleCallback")
 );
-
+const SupportPage = lazy(() =>
+  import("@/pages/SupportPage/SupportPage"));
+const TermsPage = lazy(() => import("@/pages/TermsPage/TermsPage"));
 // Learn page components
 const CourseList = lazy(() =>
   import("@/components/layout/LearnPage/CourseList")
@@ -62,31 +65,72 @@ export default function AppRoutes() {
       <Route
         path="/"
         element={
-            <Suspense fallback={<PageLoader />}>
+          <Suspense fallback={<PageLoader />}>
             <MainLayout>
               <HomePage />
-          </MainLayout>
-            </Suspense>
+            </MainLayout>
+          </Suspense>
         }
       />
       <Route
         path="/about"
         element={
           <Suspense fallback={<PageLoader />}>
-          <MainLayout>
+            <MainLayout>
               <AboutPage />
-          </MainLayout>
-            </Suspense>
+            </MainLayout>
+          </Suspense>
         }
       />
       <Route
         path="/profile"
         element={
           <Suspense fallback={<PageLoader />}>
-          <MainLayout>
+            <MainLayout>
               <ProfilePage />
-          </MainLayout>
-            </Suspense>
+            </MainLayout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/contact"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
+              <ContactPage />
+            </MainLayout>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/support"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
+              <SupportPage />
+            </MainLayout>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/terms"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
+              <TermsPage />
+            </MainLayout>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/pricing"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
+              <PricingPage />
+            </MainLayout>
+          </Suspense>
         }
       />
 
@@ -140,11 +184,11 @@ export default function AppRoutes() {
       <Route
         path="/learn"
         element={
-            <Suspense fallback={<PageLoader />}>
-          <MainLayout>
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
               <LearnPage />
-          </MainLayout>
-            </Suspense>
+            </MainLayout>
+          </Suspense>
         }
       >
         <Route
@@ -196,11 +240,11 @@ export default function AppRoutes() {
         path="/community"
         element={
           <ProtectedRoute>
-              <Suspense fallback={<PageLoader />}>
-            <MainLayout>
+            <Suspense fallback={<PageLoader />}>
+              <MainLayout>
                 <CommunityPage />
-            </MainLayout>
-              </Suspense>
+              </MainLayout>
+            </Suspense>
           </ProtectedRoute>
         }
       />
@@ -208,11 +252,11 @@ export default function AppRoutes() {
         path="/pay/:paymentType?"
         element={
           <ProtectedRoute>
-              <Suspense fallback={<PageLoader />}>
-            <MainLayout>
+            <Suspense fallback={<PageLoader />}>
+              <MainLayout>
                 <PaymentPage />
-            </MainLayout>
-              </Suspense>
+              </MainLayout>
+            </Suspense>
           </ProtectedRoute>
         }
       />
@@ -232,9 +276,9 @@ export default function AppRoutes() {
         path="/admin/*"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-              <Suspense fallback={<PageLoader />}>
-                <ArtJourneyAdminDashboard />
-              </Suspense>
+            <Suspense fallback={<PageLoader />}>
+              <ArtJourneyAdminDashboard />
+            </Suspense>
           </ProtectedRoute>
         }
       />

@@ -12,9 +12,10 @@ export default function AboutHero() {
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 mb-8 md:mb-0 md:pl-0 lg:pl-0">
             <h1 className="text-5xl md:text-2xl lg:text-4xl font-bold mb-8">
-              <span className="text-[#DDA853]">ABOUT</span> ART JOURNEY
+              <span className="text-[#DDA853]">ABOUT</span>{" "}
+              <span className="equila-bold">ART JOURNEY</span>
             </h1>
-            <p className="text-[#0A0A0A] mb-10 text-xl md:text-2xl max-w-lg leading-relaxed">
+            <p className="text-primary-black equila-normal italic mb-10 text-xl md:text-2xl max-w-lg leading-relaxed">
               "There is no one who loves pain itself, who seeks after it and
               wants to have it, simply because it is pain..."
             </p>

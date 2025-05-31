@@ -5,7 +5,8 @@
     "aboutUs": "Về chúng tôi",
     "community": "Cộng đồng",
     "signUp": "Đăng ký",
-    "logIn": "Đăng nhập"
+    "logIn": "Đăng nhập",
+    "pricing": "Giá học"
   },
   "language": {
     "english": "Tiếng Anh",
@@ -52,6 +53,180 @@
     },
     "testimonials": {
       "title": "Người dùng nói gì về chúng tôi"
+    }
+  },
+  "support": {
+    "hero": {
+      "title": "Trung tâm hỗ trợ",
+      "description": "Tìm câu trả lời cho các câu hỏi thường gặp, tài liệu hỗ trợ và thông tin về mã lỗi hệ thống."
+    },
+    "search": {
+      "placeholder": "Tìm kiếm câu hỏi, mã lỗi hoặc nội dung hỗ trợ..."
+    },
+    "tabs": {
+      "faq": "FAQ",
+      "codes": "Mã lỗi & Thành công"
+    },
+    "categories": {
+      "all": "Tất cả",
+      "account": "Tài khoản",
+      "course": "Khóa học",
+      "payment": "Thanh toán",
+      "certificate": "Chứng chỉ",
+      "technical": "Kỹ thuật"
+    },
+    "faq": {
+      "questions": [
+        {
+          "category": "account",
+          "question": "Làm thế nào để tạo tài khoản mới?",
+          "answer": "Bạn có thể tạo tài khoản bằng cách click vào nút 'Đăng ký' ở góc trên bên phải. Điền thông tin cá nhân và email hợp lệ, sau đó kiểm tra email để xác thực tài khoản."
+        },
+        {
+          "category": "account",
+          "question": "Tôi quên mật khẩu, làm sao để lấy lại?",
+          "answer": "Nhấp vào 'Quên mật khẩu' ở trang đăng nhập, nhập email của bạn. Chúng tôi sẽ gửi link đặt lại mật khẩu đến email của bạn."
+        },
+        {
+          "category": "course",
+          "question": "Làm thế nào để ghi danh khóa học?",
+          "answer": "Duyệt danh sách khóa học, chọn khóa học bạn muốn và nhấp 'Ghi danh'. Bạn có thể xem trước một số bài học miễn phí trước khi quyết định."
+        },
+        {
+          "category": "course",
+          "question": "Tôi có thể truy cập khóa học trên điện thoại không?",
+          "answer": "Có! Nền tảng của chúng tôi hoạt động mượt mà trên tất cả thiết bị bao gồm smartphone và tablet."
+        },
+        {
+          "category": "payment",
+          "question": "Các phương thức thanh toán nào được hỗ trợ?",
+          "answer": "Chúng tôi hỗ trợ thanh toán qua thẻ tín dụng, thẻ ghi nợ, ví điện tử và chuyển khoản ngân hàng."
+        },
+        {
+          "category": "certificate",
+          "question": "Làm thế nào để nhận chứng chỉ?",
+          "answer": "Sau khi hoàn thành khóa học và vượt qua các bài kiểm tra, bạn sẽ nhận được chứng chỉ điện tử có thể tải xuống."
+        },
+        {
+          "category": "technical",
+          "question": "Website không tải được, tôi phải làm gì?",
+          "answer": "Thử làm mới trang, xóa cache trình duyệt, hoặc thử trình duyệt khác. Nếu vấn đề vẫn tiếp tục, hãy liên hệ với chúng tôi."
+        },
+        {
+          "category": "technical",
+          "question": "Video bài học không phát được?",
+          "answer": "Kiểm tra kết nối internet, đảm bảo trình duyệt hỗ trợ HTML5, và thử tải lại trang. Nếu vẫn lỗi, liên hệ hỗ trợ kỹ thuật."
+        }
+      ],
+      "noResults": {
+        "title": "Không tìm thấy kết quả",
+        "description": "Thử thay đổi từ khóa tìm kiếm hoặc danh mục."
+      }
+    },
+    "codes": {
+      "errorSection": {
+        "title": "🚨 Mã lỗi hệ thống"
+      },
+      "successSection": {
+        "title": "✅ Mã thành công"
+      },
+      "labels": {
+        "vietnamese": "🇻🇳 Tiếng Việt:",
+        "english": "🇺🇸 English:",
+        "description": "📝 Mô tả chi tiết:"
+      },
+      "errors": [
+        {
+          "code": "1001",
+          "description": "Lỗi xảy ra khi hệ thống không thể tìm thấy tài khoản người dùng với email được cung cấp. Kiểm tra lại email hoặc tạo tài khoản mới."
+        },
+        {
+          "code": "1002",
+          "description": "Email không tồn tại trong hệ thống. Đảm bảo bạn đã nhập đúng địa chỉ email."
+        },
+        {
+          "code": "1003",
+          "description": "Lỗi máy chủ khi cập nhật thông tin người dùng. Thử lại sau hoặc liên hệ hỗ trợ."
+        },
+        {
+          "code": "1004",
+          "description": "Lỗi xảy ra trong quá trình đăng nhập bằng Gmail. Thử đăng nhập lại hoặc sử dụng phương thức khác."
+        },
+        {
+          "code": "1005",
+          "description": "Dữ liệu đã được xử lý nhưng hệ thống không trả về phản hồi. Kiểm tra trạng thái đăng nhập."
+        },
+        {
+          "code": "1006",
+          "description": "Email đã tồn tại trong hệ thống. Sử dụng email khác hoặc đăng nhập với tài khoản hiện có."
+        },
+        {
+          "code": "1007",
+          "description": "Thông tin đăng nhập không chính xác. Kiểm tra lại email và mật khẩu."
+        },
+        {
+          "code": "1008",
+          "description": "Tài khoản đã bị khóa do vi phạm điều khoản sử dụng. Liên hệ admin để được hỗ trợ."
+        },
+        {
+          "code": "1009",
+          "description": "ID tài khoản không tồn tại trong hệ thống. Kiểm tra lại thông tin."
+        },
+        {
+          "code": "1010",
+          "description": "Lỗi hệ thống khi ghi nhận lịch sử đăng nhập. Không ảnh hưởng đến việc đăng nhập."
+        },
+        {
+          "code": "1011",
+          "description": "Lỗi truy vấn cơ sở dữ liệu. Liên hệ kỹ thuật viên."
+        },
+        {
+          "code": "1012",
+          "description": "Lỗi thống kê dữ liệu đăng nhập. Không ảnh hưởng chức năng chính."
+        },
+        {
+          "code": "1013",
+          "description": "Email đã được xác thực. Bạn có thể đăng nhập bình thường."
+        },
+        {
+          "code": "1014",
+          "description": "Link xác thực đã hết hạn. Yêu cầu gửi lại email xác thực."
+        },
+        {
+          "code": "1015",
+          "description": "Lỗi hệ thống trong quá trình xác thực. Thử lại hoặc liên hệ hỗ trợ."
+        }
+      ],
+      "success": [
+        {
+          "code": "2001",
+          "description": "Người dùng đã đăng nhập thành công vào hệ thống."
+        },
+        {
+          "code": "2002",
+          "description": "Thông tin tài khoản đã được lấy thành công từ hệ thống."
+        },
+        {
+          "code": "2003",
+          "description": "Lịch sử đăng nhập đã được ghi nhận thành công."
+        },
+        {
+          "code": "2004",
+          "description": "Email đã được xác thực thành công. Tài khoản đã kích hoạt."
+        }
+      ],
+      "noResults": {
+        "title": "Không tìm thấy mã nào",
+        "description": "Thử thay đổi từ khóa tìm kiếm."
+      }
+    },
+    "contactSection": {
+      "title": "Vẫn cần hỗ trợ?",
+      "description": "Nếu bạn không tìm thấy câu trả lời mong muốn, đội ngũ hỗ trợ của chúng tôi luôn sẵn sàng giúp đỡ bạn.",
+      "buttons": {
+        "contact": "📧 Liên hệ hỗ trợ",
+        "email": "✉️ Gửi Email"
+      }
     }
   },
   "emailVerify": {

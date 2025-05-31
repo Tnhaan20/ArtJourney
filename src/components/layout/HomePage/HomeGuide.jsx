@@ -30,7 +30,7 @@ export default function HomeGuide() {
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
               {t("home.hero.title")}{" "}
-              <span className="block text-4xl font-bold">
+              <span className="levaus-bold block text-6xl font-bold">
                 {t("home.hero.subtitle")}
               </span>
             </h1>
