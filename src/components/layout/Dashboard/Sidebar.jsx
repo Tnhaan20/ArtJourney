@@ -11,9 +11,26 @@ import {
   Settings,
   BarChart3,
   User,
+  LogOut,
 } from "lucide-react";
+import { useAuthStore } from "@/domains/store/use-auth-store";
+import { useNavigate } from "react-router-dom";
 
 export const Sidebar = ({ sidebarOpen, activeTab, setActiveTab }) => {
+  const { logout, user } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      navigate("/signin");
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Navigate anyway in case of error
+      navigate("/signin");
+    }
+  };
+
   const menuSections = [
     {
       title: "Dashboard",
@@ -108,22 +125,44 @@ export const Sidebar = ({ sidebarOpen, activeTab, setActiveTab }) => {
         ))}
       </nav>
 
-      {/* Footer (Optional - User Profile or Sign Out) */}
+      {/* Footer - User Profile and Sign Out */}
       {sidebarOpen && (
         <div className="p-4 border-t border-gray-600 border-opacity-30">
+          {/* User Profile and Sign Out in same row */}
           <div className="flex items-center space-x-3 px-3 py-2">
             <div className="w-8 h-8 bg-gradient-to-r from-primary-yellow to-secondary-yellow rounded-full flex items-center justify-center">
               <User className="w-4 h-4 text-primary-black" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">
-                Admin User
+                {user?.name || "Admin"}
               </p>
               <p className="text-xs text-gray-400 truncate">
-                admin@artjourney.com
+                {user?.email || "contact.artjourney01@gmail.com"}
               </p>
             </div>
+            {/* Sign Out Button */}
+            <button
+              onClick={handleSignOut}
+              className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors hover:bg-red-600 hover:bg-opacity-20 text-red-400 hover:text-red-300"
+              title="Sign Out"
+            >
+              <LogOut className="w-4 h-4 flex-shrink-0" />
+            </button>
           </div>
+        </div>
+      )}
+
+      {/* Collapsed Sign Out Button */}
+      {!sidebarOpen && (
+        <div className="p-4 border-t border-gray-600 border-opacity-30">
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center justify-center py-2 rounded-lg transition-colors hover:bg-red-600 hover:bg-opacity-20 text-red-400 hover:text-red-300"
+            title="Sign Out"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
       )}
     </div>

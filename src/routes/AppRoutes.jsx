@@ -26,7 +26,7 @@ const ChallengePage = lazy(() =>
 );
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
-// Auth and Error components - these can be lazy too since they're not always shown
+// Auth and Error components
 const Signin = lazy(() => import("@/components/layout/Signin/Signin"));
 const Signup = lazy(() => import("@/components/layout/Signup/Signup"));
 const Error = lazy(() => import("@/components/layout/Error/404Error"));
@@ -61,14 +61,19 @@ const ComponentLoader = () => (
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Public routes - accessible to everyone */}
+      {/* 
+        PUBLIC ROUTES - Accessible to guests and regular users, but NOT admin 
+        Admin will be redirected to /unauthorized if they try to access these
+      */}
       <Route
         path="/"
         element={
           <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <HomePage />
-            </MainLayout>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+              <MainLayout>
+                <HomePage />
+              </MainLayout>
+            </ProtectedRoute>
           </Suspense>
         }
       />
@@ -76,30 +81,23 @@ export default function AppRoutes() {
         path="/about"
         element={
           <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <AboutPage />
-            </MainLayout>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+              <MainLayout>
+                <AboutPage />
+              </MainLayout>
+            </ProtectedRoute>
           </Suspense>
         }
       />
-      <Route
-        path="/profile"
-        element={
-          <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <ProfilePage />
-            </MainLayout>
-          </Suspense>
-        }
-      />
-
       <Route
         path="/contact"
         element={
           <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <ContactPage />
-            </MainLayout>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+              <MainLayout>
+                <ContactPage />
+              </MainLayout>
+            </ProtectedRoute>
           </Suspense>
         }
       />
@@ -107,9 +105,11 @@ export default function AppRoutes() {
         path="/support"
         element={
           <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <SupportPage />
-            </MainLayout>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+              <MainLayout>
+                <SupportPage />
+              </MainLayout>
+            </ProtectedRoute>
           </Suspense>
         }
       />
@@ -117,9 +117,11 @@ export default function AppRoutes() {
         path="/terms"
         element={
           <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <TermsPage />
-            </MainLayout>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+              <MainLayout>
+                <TermsPage />
+              </MainLayout>
+            </ProtectedRoute>
           </Suspense>
         }
       />
@@ -127,14 +129,19 @@ export default function AppRoutes() {
         path="/pricing"
         element={
           <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <PricingPage />
-            </MainLayout>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+              <MainLayout>
+                <PricingPage />
+              </MainLayout>
+            </ProtectedRoute>
           </Suspense>
         }
       />
 
-      {/* Auth routes */}
+      {/* 
+        AUTH ROUTES - Accessible to everyone (no restrictions)
+        These are needed for authentication flow
+      */}
       <Route
         path="/signin"
         element={
@@ -151,8 +158,19 @@ export default function AppRoutes() {
           </Suspense>
         }
       />
+      <Route
+        path="/signin-google"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <GoogleCallback />
+          </Suspense>
+        }
+      />
 
-      {/* Error routes */}
+      {/* 
+        ERROR ROUTES - Accessible to everyone (no restrictions)
+        These are needed for error handling
+      */}
       <Route
         path="/server-error"
         element={
@@ -170,24 +188,70 @@ export default function AppRoutes() {
         }
       />
 
-      {/* Google Auth Callback Route */}
+      {/* 
+        PROTECTED ROUTES - Require authentication and restrict admin access
+        Only authenticated non-admin users can access these
+      */}
       <Route
-        path="/signin-google"
+        path="/profile"
         element={
           <Suspense fallback={<PageLoader />}>
-            <GoogleCallback />
+            <ProtectedRoute restrictAdmin={true}>
+              <MainLayout>
+                <ProfilePage />
+              </MainLayout>
+            </ProtectedRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/community"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute restrictAdmin={true}>
+              <MainLayout>
+                <CommunityPage />
+              </MainLayout>
+            </ProtectedRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/pay/:paymentType?"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute restrictAdmin={true}>
+              <MainLayout>
+                <PaymentPage />
+              </MainLayout>
+            </ProtectedRoute>
+          </Suspense>
+        }
+      />
+      <Route
+        path="/survey"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute restrictAdmin={true}>
+              <SurveyPage />
+            </ProtectedRoute>
           </Suspense>
         }
       />
 
-      {/* Learn routes */}
+      {/* 
+        LEARN ROUTES - Require authentication and restrict admin access
+        Only authenticated non-admin users can access these
+      */}
       <Route
         path="/learn"
         element={
           <Suspense fallback={<PageLoader />}>
-            <MainLayout>
-              <LearnPage />
-            </MainLayout>
+            <ProtectedRoute restrictAdmin={true}>
+              <MainLayout>
+                <LearnPage />
+              </MainLayout>
+            </ProtectedRoute>
           </Suspense>
         }
       >
@@ -217,12 +281,17 @@ export default function AppRoutes() {
         />
       </Route>
 
-      {/* Quiz and Challenge routes */}
+      {/* 
+        QUIZ AND CHALLENGE ROUTES - Require authentication and restrict admin access
+        Only authenticated non-admin users can access these
+      */}
       <Route
         path="quiz/course/:courseId/module/:moduleId"
         element={
           <Suspense fallback={<PageLoader />}>
-            <QuizPage />
+            <ProtectedRoute restrictAdmin={true}>
+              <QuizPage />
+            </ProtectedRoute>
           </Suspense>
         }
       />
@@ -230,60 +299,32 @@ export default function AppRoutes() {
         path="challenge/course/:courseId/module/:moduleId"
         element={
           <Suspense fallback={<PageLoader />}>
-            <ChallengePage />
+            <ProtectedRoute restrictAdmin={true}>
+              <ChallengePage />
+            </ProtectedRoute>
           </Suspense>
         }
       />
 
-      {/* Protected routes - require authentication */}
-      <Route
-        path="/community"
-        element={
-          <ProtectedRoute>
-            <Suspense fallback={<PageLoader />}>
-              <MainLayout>
-                <CommunityPage />
-              </MainLayout>
-            </Suspense>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/pay/:paymentType?"
-        element={
-          <ProtectedRoute>
-            <Suspense fallback={<PageLoader />}>
-              <MainLayout>
-                <PaymentPage />
-              </MainLayout>
-            </Suspense>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/survey"
-        element={
-          <ProtectedRoute>
-            <Suspense fallback={<PageLoader />}>
-              <SurveyPage />
-            </Suspense>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Admin-only routes */}
+      {/* 
+        ADMIN-ONLY ROUTES - Only accessible by admin (role = 2)
+        Non-admin users will be redirected to /unauthorized
+      */}
       <Route
         path="/admin/*"
         element={
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <Suspense fallback={<PageLoader />}>
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute adminOnly={true}>
               <ArtJourneyAdminDashboard />
-            </Suspense>
-          </ProtectedRoute>
+            </ProtectedRoute>
+          </Suspense>
         }
       />
 
-      {/* Email Verification Route */}
+      {/* 
+        EMAIL VERIFICATION ROUTE - Accessible to everyone
+        This is needed for email verification flow
+      */}
       <Route
         path="/authentication/verify-email"
         element={
@@ -293,7 +334,10 @@ export default function AppRoutes() {
         }
       />
 
-      {/* Error route - will catch all unmatched paths */}
+      {/* 
+        CATCH-ALL ROUTE - 404 Error for unmatched paths
+        Accessible to everyone
+      */}
       <Route
         path="*"
         element={

@@ -45,7 +45,7 @@ export const useAuth = () => {
 
         // Handle role-based redirects using the role store
         if (useRoleStore.getState().hasRole(userData, USER_ROLES.ADMIN)) {
-          push("/dashboard");
+          push("/admin");
           return;
         } else if (useRoleStore.getState().hasRole(userData, USER_ROLES.INSTRUCTOR)) {
           push("/dashboard"); // Instructors also go to dashboard
