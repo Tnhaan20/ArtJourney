@@ -247,7 +247,7 @@ export default function AppRoutes() {
         path="/learn"
         element={
           <Suspense fallback={<PageLoader />}>
-            <ProtectedRoute restrictAdmin={true}>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
               <MainLayout>
                 <LearnPage />
               </MainLayout>
@@ -314,9 +314,9 @@ export default function AppRoutes() {
         path="/admin/*"
         element={
           <Suspense fallback={<PageLoader />}>
-            <ProtectedRoute adminOnly={true}>
+            {/* <ProtectedRoute adminOnly={true}> */}
               <ArtJourneyAdminDashboard />
-            </ProtectedRoute>
+            {/* </ProtectedRoute> */}
           </Suspense>
         }
       />

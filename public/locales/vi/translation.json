@@ -53,6 +53,76 @@
     },
     "testimonials": {
       "title": "Người dùng nói gì về chúng tôi"
+    },
+    "achievements": {
+      "title": "Top 3 Người dùng có Thành tích Cao nhất",
+      "joinChallenge": "Tham gia Thử thách",
+      "testimonials": {
+        "title": "Gặp gỡ Học viên và Nghe câu chuyện của họ",
+        "users": [
+          {
+            "name": "Nguyễn Thị Vân Anh",
+            "text": "Là một nghệ sĩ đầy tham vọng, tôi thấy ArtJourney vô cùng truyền cảm hứng. Nó không chỉ dạy lịch sử nghệ thuật mà còn khuyến khích sự sáng tạo. Việc điều hướng liền mạch và những bài thuyết trình ấn tượng về mặt thị giác khiến việc sử dụng trở thành một niềm vui. Tôi hoàn toàn yêu thích nó!"
+          },
+          {
+            "name": "Đoàn Thái Minh Khang",
+            "text": "ArtJourney là một nền tảng tuyệt vời dành cho những người yêu nghệ thuật! Nó dễ sử dụng, tương tác và khiến việc học lịch sử nghệ thuật trở nên thú vị và cá nhân hóa."
+          },
+          {
+            "name": "Hoàng Minh Quốc",
+            "text": "ArtJourney mang đến trải nghiệm nghệ thuật tuyệt vời! Giao diện thân thiện với người dùng và nội dung phong phú giúp tôi dễ dàng khám phá và tạo ra những tác phẩm nghệ thuật độc đáo. Dịch vụ khách hàng chu đáo và phản hồi nhanh chóng. Chắc chắn đáng để thử!"
+          },
+          {
+            "name": "Tạ Thị Kiều Thi",
+            "text": "Tôi đã ngạc nhiên trước độ sâu kiến thức mà ArtJourney cung cấp. Từ những kiệt tác cổ điển đến các tác phẩm đương đại, mọi chi tiết đều được giải thích rõ ràng. Nền tảng mượt mà, hấp dẫn về mặt thị giác và thu hút. Đây là thứ không thể thiếu đối với bất kỳ ai đam mê nghệ thuật!"
+          }
+        ]
+      }
+    },
+    "pricing": {
+      "title": "Gói thành viên và Bảng giá",
+      "viewFullPlans": "Xem đầy đủ Gói giá",
+      "plans": {
+        "perCourse": {
+          "title": "Chương trình độc đáo",
+          "subtitle": "Học một khóa học và nhận chứng chỉ",
+          "price": "40,000 VND",
+          "period": "/tháng",
+          "description": "Truy cập trang khóa học riêng lẻ hoặc Chuyên môn để mua.",
+          "features": [
+            "Truy cập tất cả khóa học trong chương trình",
+            "Nhận chứng chỉ khi hoàn thành sau khi kết thúc thử nghiệm",
+            "Thời gian hoàn tiền 3 ngày"
+          ],
+          "button": "Tiếp tục"
+        },
+        "monthly": {
+          "title": "Plus Tháng",
+          "subtitle": "Hoàn thành nhiều khóa học và được chứng nhận trong thời gian ngắn",
+          "price": "99,999 VND",
+          "period": "/tháng",
+          "description": "Hủy bất cứ lúc nào",
+          "features": [
+            "Truy cập 10+ khóa học từ Art Journey",
+            "Nhận chứng chỉ khi hoàn thành sau khi kết thúc thử nghiệm",
+            "Thời gian hoàn tiền 3 ngày"
+          ],
+          "button": "Tiếp tục"
+        },
+        "annual": {
+          "title": "Plus Năm",
+          "subtitle": "Kết hợp tính linh hoạt và tiết kiệm với mục tiêu học tập dài hạn",
+          "price": "999,999 VND",
+          "period": "/năm",
+          "description": "Hủy bất cứ lúc nào",
+          "features": [
+            "Truy cập 10+ khóa học từ Art Journey",
+            "Tiết kiệm khi thanh toán trước cho năm",
+            "Thời gian hoàn tiền 7 ngày"
+          ],
+          "button": "Tiếp tục"
+        }
+      }
     }
   },
   "support": {
@@ -252,6 +322,158 @@
     "help": {
       "problem": "Gặp vấn đề?",
       "supportCenter": "Trung tâm hỗ trợ"
+    }
+  },
+  "pricing": {
+    "title": "Gói thành viên và Bảng giá",
+    "subtitle": "Chọn gói phù hợp cho hành trình học tập của bạn",
+    "billing": {
+      "monthly": "Hàng tháng",
+      "yearly": "Hàng năm",
+      "discount": "-17%"
+    },
+    "plans": {
+      "free": {
+        "title": "Miễn phí",
+        "subtitle": "Nội dung cơ bản",
+        "price": "0",
+        "currency": "VND",
+        "period": "/tháng",
+        "description": "Hoàn toàn miễn phí, không cần thẻ tín dụng",
+        "features": [
+          "Truy cập nội dung cơ bản",
+          "Có quảng cáo",
+          "Tính năng giới hạn"
+        ],
+        "button": "Bắt đầu miễn phí"
+      },
+      "monthly": {
+        "title": "Gói tháng",
+        "subtitle": "Truy cập không giới hạn nội dung cao cấp",
+        "price": "99,999",
+        "currency": "VND",
+        "period": "/tháng",
+        "description": "Hủy bất cứ lúc nào",
+        "badge": "Phổ biến nhất",
+        "features": [
+          "Truy cập không giới hạn tất cả khóa học",
+          "Không quảng cáo",
+          "Chứng chỉ hoàn thành",
+          "Hỗ trợ ưu tiên"
+        ],
+        "button": "Đăng ký ngay",
+        "guarantee": "✓ Đảm bảo hoàn tiền trong 7 ngày"
+      },
+      "yearly": {
+        "title": "Gói năm",
+        "subtitle": "Truy cập cao cấp với giá ưu đãi hàng năm",
+        "price": "999,999",
+        "currency": "VND",
+        "period": "/năm",
+        "description": "Tiết kiệm hơn khi thanh toán hàng năm",
+        "badge": "Giá trị tốt nhất",
+        "features": [
+          "Tất cả tính năng gói tháng",
+          "Tiết kiệm 17% so với gói tháng",
+          "Nội dung độc quyền",
+          "Truy cập sớm tính năng mới"
+        ],
+        "button": "Đăng ký gói năm",
+        "guarantee": "✓ Đảm bảo hoàn tiền trong 14 ngày"
+      }
+    },
+    "payPerCourse": {
+      "title": "Thanh toán theo khóa học",
+      "subtitle": "Mua từng khóa học riêng biệt",
+      "basic": {
+        "title": "Khóa học cơ bản",
+        "subtitle": "Giá thấp cho từng khóa học",
+        "price": "20,000",
+        "currency": "VND",
+        "period": "/khóa học",
+        "description": "Truy cập trọn đời",
+        "features": [
+          "Truy cập trọn đời",
+          "Tài liệu khóa học",
+          "Chứng chỉ hoàn thành"
+        ],
+        "button": "Mua ngay"
+      },
+      "advanced": {
+        "title": "Khóa học nâng cao",
+        "subtitle": "Giá cao hơn cho từng khóa học",
+        "price": "40,000",
+        "currency": "VND",
+        "period": "/khóa học",
+        "description": "Truy cập trọn đời với nội dung cao cấp",
+        "features": [
+          "Tất cả tính năng khóa học cơ bản",
+          "Nội dung chuyên sâu",
+          "Hỗ trợ 1-1 với giảng viên",
+          "Dự án thực hành"
+        ],
+        "button": "Mua ngay"
+      }
+    }
+  },
+  "error404": {
+    "title": "RẤT TIẾC!",
+    "heading": "Không Tìm Thấy Trang",
+    "description": "Chúng tôi rất xin lỗi vì sự bất tiện này. Có vẻ như bạn đang cố gắng truy cập một trang đã bị xóa hoặc chưa bao giờ tồn tại.",
+    "button": "QUAY VỀ TRANG CHỦ"
+  },
+  "footer": {
+    "logo": "Art Journey",
+    "tagline": "Khám phá Lịch sử Nghệ thuật qua các Thời đại",
+    "motto": "Mỗi nét vẽ kể một câu chuyện, mỗi kiệt tác mang một tâm hồn. Hãy cùng chúng tôi khám phá di sản nghệ thuật của nhân loại.",
+    "about": {
+      "title": "Về ArtJourney",
+      "description": "ArtJourney là nền tảng học trực tuyến hàng đầu chuyên về giáo dục lịch sử nghệ thuật, cung cấp trải nghiệm học tập đắm chìm và toàn diện từ nghệ thuật cổ đại đến đương đại.",
+      "contact": {
+        "address": "610 Nguyễn Thượng Hiền, Quận 10, TP. Hồ Chí Minh",
+        "phone": "+84 98 174 5930",
+        "email": "contact.artjourney01@gmail.com"
+      }
+    },
+    "featuredTopics": {
+      "title": "Chủ đề Nổi bật",
+      "subtitle": "🎓 Các Thời kỳ Lịch sử Nghệ thuật",
+      "periods": [
+        {
+          "era": "Cổ đại",
+          "description": "Nghệ thuật Ai Cập & Hy Lạp"
+        },
+        {
+          "era": "Trung cổ",
+          "description": "Gothic & Byzantine"
+        },
+        {
+          "era": "Phục Hưng",
+          "description": "Leonardo & Michelangelo"
+        },
+        {
+          "era": "Hiện đại",
+          "description": "Ấn tượng & Lập thể"
+        }
+      ]
+    },
+    "navigation": {
+      "title": "Điều hướng",
+      "links": {
+        "about": "Về chúng tôi",
+        "pricing": "Bảng giá",
+        "courses": "Khóa học"
+      },
+      "quote": "Nghệ thuật không phải là thứ bạn nhìn thấy, mà là thứ bạn khiến người khác nhìn thấy."
+    },
+    "bottom": {
+      "copyright": "© 2025 ArtJourney. Tất cả quyền được bảo lưu.",
+      "links": {
+        "privacy": "Chính sách Bảo mật",
+        "terms": "Điều khoản Dịch vụ",
+        "support": "Hỗ trợ Học viên",
+        "contact": "Liên hệ"
+      }
     }
   }
 }

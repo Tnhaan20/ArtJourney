@@ -1,8 +1,10 @@
 import { TailwindStyle } from "@/utils/Enum";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Pricing() {
+  const { t } = useTranslation();
   const [billingType, setBillingType] = useState("monthly");
 
   const toggleBilling = (type) => {
@@ -14,11 +16,11 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6 equila-bold">
-            Membership and Pricing
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6">
+            {t("pricing.title")}
           </h1>
           <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-            Choose the perfect plan for your learning journey
+            {t("pricing.subtitle")}
           </p>
 
           {/* Billing Toggle */}
@@ -32,7 +34,7 @@ export default function Pricing() {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                Monthly
+                {t("pricing.billing.monthly")}
               </button>
               <button
                 onClick={() => toggleBilling("yearly")}
@@ -42,9 +44,9 @@ export default function Pricing() {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                Yearly
+                {t("pricing.billing.yearly")}
                 <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                  -17%
+                  {t("pricing.billing.discount")}
                 </span>
               </button>
             </div>
@@ -57,67 +59,52 @@ export default function Pricing() {
             {/* Free Plan */}
             <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 text-center relative transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
               <div className="mb-8">
-                <h3 className="text-2xl font-bold text-gray-800 mb-3">Free</h3>
-                <p className="text-gray-600 leading-relaxed">Basic content</p>
+                <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                  {t("pricing.plans.free.title")}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {t("pricing.plans.free.subtitle")}
+                </p>
               </div>
 
-              <div className="text-5xl font-bold text-gray-800 mb-3">0</div>
-              <div className="text-gray-500 mb-8">VND /month</div>
+              <div className="text-5xl font-bold text-gray-800 mb-3">
+                {t("pricing.plans.free.price")}
+              </div>
+              <div className="text-gray-500 mb-8">
+                {t("pricing.plans.free.currency")}{" "}
+                {t("pricing.plans.free.period")}
+              </div>
 
               <div className="text-gray-500 text-sm mb-8 h-12 flex items-center justify-center">
-                Completely free, no credit card required
+                {t("pricing.plans.free.description")}
               </div>
 
               <div className="text-left mb-8 space-y-4">
-                <div className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">Access to basic content</span>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">Ad-supported experience</span>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">Limited features</span>
-                </div>
+                {t("pricing.plans.free.features", { returnObjects: true }).map(
+                  (feature, index) => (
+                    <div key={index} className="flex items-center">
+                      <svg
+                        className="w-5 h-5 text-green-500 mr-3"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="text-gray-700">{feature}</span>
+                    </div>
+                  )
+                )}
               </div>
 
               <Link
                 to="/signup"
                 className="w-full py-4 bg-gray-100 text-gray-800 border-2 border-gray-200 rounded-full text-lg font-semibold transition-all duration-300 hover:bg-gray-200 hover:-translate-y-1 inline-block text-center"
               >
-                Get Started Free
+                {t("pricing.plans.free.button")}
               </Link>
             </div>
 
@@ -127,98 +114,59 @@ export default function Pricing() {
                 <div
                   className={` ${TailwindStyle.HIGHLIGHT_FRAME} absolute -top-4 left-1/2 transform -translate-x-1/2 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg `}
                 >
-                  Most Popular
+                  {t("pricing.plans.monthly.badge")}
                 </div>
 
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                    Monthly Subscription
+                    {t("pricing.plans.monthly.title")}
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Unlimited premium content access
+                    {t("pricing.plans.monthly.subtitle")}
                   </p>
                 </div>
 
                 <div className="text-5xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-3">
-                  99,999
+                  {t("pricing.plans.monthly.price")}
                 </div>
-                <div className="text-gray-500 mb-8">VND /month</div>
+                <div className="text-gray-500 mb-8">
+                  {t("pricing.plans.monthly.currency")}{" "}
+                  {t("pricing.plans.monthly.period")}
+                </div>
 
                 <div className="text-gray-500 text-sm mb-8 h-12 flex items-center justify-center">
-                  Cancel anytime
+                  {t("pricing.plans.monthly.description")}
                 </div>
 
                 <div className="text-left mb-8 space-y-4">
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">
-                      Unlimited access to all courses
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">Ad-free experience</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">
-                      Completion certificates
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">Priority support</span>
-                  </div>
+                  {t("pricing.plans.monthly.features", {
+                    returnObjects: true,
+                  }).map((feature, index) => (
+                    <div key={index} className="flex items-center">
+                      <svg
+                        className="w-5 h-5 text-green-500 mr-3"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="text-gray-700">{feature}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <Link
                   to="/pay/monthly"
                   className={` w-full py-4 ${TailwindStyle.HIGHLIGHT_FRAME} text-white rounded-full text-lg font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block text-center `}
                 >
-                  Subscribe Now
+                  {t("pricing.plans.monthly.button")}
                 </Link>
                 <div className="text-green-600 text-sm mt-4 font-medium">
-                  ✓ 7-day money back guarantee
+                  {t("pricing.plans.monthly.guarantee")}
                 </div>
               </div>
             )}
@@ -229,100 +177,59 @@ export default function Pricing() {
                 <div
                   className={` ${TailwindStyle.HIGHLIGHT_FRAME} absolute -top-4 left-1/2 transform -translate-x-1/2 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg `}
                 >
-                  Best Value
+                  {t("pricing.plans.yearly.badge")}
                 </div>
 
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                    Yearly Subscription
+                    {t("pricing.plans.yearly.title")}
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Discounted annual premium access
+                    {t("pricing.plans.yearly.subtitle")}
                   </p>
                 </div>
 
                 <div className="text-5xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-3">
-                  999,999
+                  {t("pricing.plans.yearly.price")}
                 </div>
-                <div className="text-gray-500 mb-8">VND /year</div>
+                <div className="text-gray-500 mb-8">
+                  {t("pricing.plans.yearly.currency")}{" "}
+                  {t("pricing.plans.yearly.period")}
+                </div>
 
                 <div className="text-gray-500 text-sm mb-8 h-12 flex items-center justify-center">
-                  Save more when you pay annually
+                  {t("pricing.plans.yearly.description")}
                 </div>
 
                 <div className="text-left mb-8 space-y-4">
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">
-                      All monthly plan features
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">
-                      Save 17% compared to monthly
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">Exclusive content</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-green-500 mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-gray-700">
-                      Early access to new features
-                    </span>
-                  </div>
+                  {t("pricing.plans.yearly.features", {
+                    returnObjects: true,
+                  }).map((feature, index) => (
+                    <div key={index} className="flex items-center">
+                      <svg
+                        className="w-5 h-5 text-green-500 mr-3"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="text-gray-700">{feature}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <Link
                   to="/pay/annual"
                   className={` w-full py-4 ${TailwindStyle.HIGHLIGHT_FRAME} text-white rounded-full text-lg font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block text-center `}
                 >
-                  Subscribe Yearly
+                  {t("pricing.plans.yearly.button")}
                 </Link>
                 <div className="text-green-600 text-sm mt-4 font-medium">
-                  ✓ 14-day money back guarantee
+                  {t("pricing.plans.yearly.guarantee")}
                 </div>
               </div>
             )}
@@ -333,10 +240,10 @@ export default function Pricing() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Pay-per-course
+              {t("pricing.payPerCourse.title")}
             </h2>
             <p className="text-xl text-gray-600">
-              Purchase individual courses separately
+              {t("pricing.payPerCourse.subtitle")}
             </p>
           </div>
 
@@ -345,70 +252,51 @@ export default function Pricing() {
             <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 text-center relative transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  Basic Course
+                  {t("pricing.payPerCourse.basic.title")}
                 </h3>
-                <p className="text-gray-600">Individual course lower price</p>
+                <p className="text-gray-600">
+                  {t("pricing.payPerCourse.basic.subtitle")}
+                </p>
               </div>
 
               <div className="text-4xl font-bold text-gray-800 mb-3">
-                20,000
+                {t("pricing.payPerCourse.basic.price")}
               </div>
-              <div className="text-gray-500 mb-6">VND /course</div>
+              <div className="text-gray-500 mb-6">
+                {t("pricing.payPerCourse.basic.currency")}{" "}
+                {t("pricing.payPerCourse.basic.period")}
+              </div>
 
               <div className="text-gray-500 text-sm mb-6 h-8 flex items-center justify-center">
-                Lifetime access
+                {t("pricing.payPerCourse.basic.description")}
               </div>
 
               <div className="text-left mb-6 space-y-3">
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">Lifetime access</span>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">Course materials</span>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">Completion certificate</span>
-                </div>
+                {t("pricing.payPerCourse.basic.features", {
+                  returnObjects: true,
+                }).map((feature, index) => (
+                  <div key={index} className="flex items-center">
+                    <svg
+                      className="w-4 h-4 text-green-500 mr-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </div>
+                ))}
               </div>
 
               <Link
                 to="/pay/per-course-basic"
                 className="w-full py-3 bg-gray-100 text-gray-800 border-2 border-gray-200 rounded-full text-base font-semibold transition-all duration-300 hover:bg-gray-200 hover:-translate-y-1 inline-block text-center"
               >
-                Buy Now
+                {t("pricing.payPerCourse.basic.button")}
               </Link>
             </div>
 
@@ -416,88 +304,51 @@ export default function Pricing() {
             <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 text-center relative transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  Advanced Course
+                  {t("pricing.payPerCourse.advanced.title")}
                 </h3>
-                <p className="text-gray-600">Individual course higher price</p>
+                <p className="text-gray-600">
+                  {t("pricing.payPerCourse.advanced.subtitle")}
+                </p>
               </div>
 
               <div className="text-4xl font-bold text-gray-800 mb-3">
-                40,000
+                {t("pricing.payPerCourse.advanced.price")}
               </div>
-              <div className="text-gray-500 mb-6">VND /course</div>
+              <div className="text-gray-500 mb-6">
+                {t("pricing.payPerCourse.advanced.currency")}{" "}
+                {t("pricing.payPerCourse.advanced.period")}
+              </div>
 
               <div className="text-gray-500 text-sm mb-6 h-8 flex items-center justify-center">
-                Lifetime access with premium content
+                {t("pricing.payPerCourse.advanced.description")}
               </div>
 
               <div className="text-left mb-6 space-y-3">
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">
-                    All basic course features
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">In-depth content</span>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">
-                    1-on-1 instructor support
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-green-500 mr-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">Hands-on projects</span>
-                </div>
+                {t("pricing.payPerCourse.advanced.features", {
+                  returnObjects: true,
+                }).map((feature, index) => (
+                  <div key={index} className="flex items-center">
+                    <svg
+                      className="w-4 h-4 text-green-500 mr-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </div>
+                ))}
               </div>
 
               <Link
                 to="/pay/per-course-advanced"
                 className={` w-full py-4 ${TailwindStyle.HIGHLIGHT_FRAME} text-white rounded-full text-lg font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block text-center `}
               >
-                Buy Now
+                {t("pricing.payPerCourse.advanced.button")}
               </Link>
             </div>
           </div>

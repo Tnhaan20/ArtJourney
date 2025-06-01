@@ -53,6 +53,76 @@
     },
     "testimonials": {
       "title": "What Our Users Say"
+    },
+    "achievements": {
+      "title": "Top 3 Users with the Highest Achievements",
+      "joinChallenge": "Join the Challenge",
+      "testimonials": {
+        "title": "Meet Our Learners and Hear Their Stories",
+        "users": [
+          {
+            "name": "Nguyen Thi Van Anh",
+            "text": "As an aspiring artist, I find ArtJourney incredibly inspiring. It not only teaches art history but also encourages creativity. The seamless navigation and visually stunning presentations make it a joy to use. I absolutely love it!"
+          },
+          {
+            "name": "Doan Thai Minh Khang", 
+            "text": "ArtJourney is a great platform for art lovers! It's easy to use, interactive, and makes learning about art history fun and personal."
+          },
+          {
+            "name": "Hoang Minh Quoc",
+            "text": "ArtJourney offers an amazing art experience! The user-friendly interface and rich content make it easy for me to explore and create unique artworks. The customer service is attentive and responds quickly. Definitely worth trying!"
+          },
+          {
+            "name": "Ta Thi Kieu Thi",
+            "text": "I was amazed by the depth of knowledge ArtJourney provides. From classic masterpieces to contemporary works, every detail is well-explained. The platform is smooth, visually appealing, and engaging. It's a must-have for anyone passionate about art!"
+          }
+        ]
+      }
+    },
+    "pricing": {
+      "title": "Membership and Pricing",
+      "viewFullPlans": "View Full Pricing Plans",
+      "plans": {
+        "perCourse": {
+          "title": "Unique curriculum",
+          "subtitle": "Learn a single course and earn a certificate",
+          "price": "40,000 VND",
+          "period": "/month",
+          "description": "Visit an individual course or Specialization page to purchase.",
+          "features": [
+            "Access all courses in the curriculum",
+            "Earn certificate upon completion after trial ends",
+            "3 day refund period"
+          ],
+          "button": "Continue"
+        },
+        "monthly": {
+          "title": "Plus Monthly",
+          "subtitle": "Complete multiple courses and get certified in a short time",
+          "price": "99,999 VND",
+          "period": "/month",
+          "description": "Cancel anytime",
+          "features": [
+            "Access 10+ courses from Art Journey",
+            "Earn certificate upon completion after trial ends",
+            "3 day refund period"
+          ],
+          "button": "Continue"
+        },
+        "annual": {
+          "title": "Plus Annual",
+          "subtitle": "Combine flexibility and savings with long-term learning goals",
+          "price": "999,999 VND",
+          "period": "/year",
+          "description": "Cancel anytime",
+          "features": [
+            "Access 10+ courses from Art Journey",
+            "Save when you pay in advance for the year",
+            "7 day refund period"
+          ],
+          "button": "Continue"
+        }
+      }
     }
   },
   "emailVerify": {
@@ -251,6 +321,158 @@
       "buttons": {
         "contact": "📧 Contact Support",
         "email": "✉️ Send Email"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Membership and Pricing",
+    "subtitle": "Choose the perfect plan for your learning journey",
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "discount": "-17%"
+    },
+    "plans": {
+      "free": {
+        "title": "Free",
+        "subtitle": "Basic content",
+        "price": "0",
+        "currency": "VND",
+        "period": "/month",
+        "description": "Completely free, no credit card required",
+        "features": [
+          "Access to basic content",
+          "Ad-supported experience",
+          "Limited features"
+        ],
+        "button": "Get Started Free"
+      },
+      "monthly": {
+        "title": "Monthly Subscription",
+        "subtitle": "Unlimited premium content access",
+        "price": "99,999",
+        "currency": "VND",
+        "period": "/month",
+        "description": "Cancel anytime",
+        "badge": "Most Popular",
+        "features": [
+          "Unlimited access to all courses",
+          "Ad-free experience",
+          "Completion certificates",
+          "Priority support"
+        ],
+        "button": "Subscribe Now",
+        "guarantee": "✓ 7-day money back guarantee"
+      },
+      "yearly": {
+        "title": "Yearly Subscription",
+        "subtitle": "Discounted annual premium access",
+        "price": "999,999",
+        "currency": "VND",
+        "period": "/year",
+        "description": "Save more when you pay annually",
+        "badge": "Best Value",
+        "features": [
+          "All monthly plan features",
+          "Save 17% compared to monthly",
+          "Exclusive content",
+          "Early access to new features"
+        ],
+        "button": "Subscribe Yearly",
+        "guarantee": "✓ 14-day money back guarantee"
+      }
+    },
+    "payPerCourse": {
+      "title": "Pay-per-course",
+      "subtitle": "Purchase individual courses separately",
+      "basic": {
+        "title": "Basic Course",
+        "subtitle": "Individual course lower price",
+        "price": "20,000",
+        "currency": "VND",
+        "period": "/course",
+        "description": "Lifetime access",
+        "features": [
+          "Lifetime access",
+          "Course materials",
+          "Completion certificate"
+        ],
+        "button": "Buy Now"
+      },
+      "advanced": {
+        "title": "Advanced Course",
+        "subtitle": "Individual course higher price",
+        "price": "40,000",
+        "currency": "VND",
+        "period": "/course",
+        "description": "Lifetime access with premium content",
+        "features": [
+          "All basic course features",
+          "In-depth content",
+          "1-on-1 instructor support",
+          "Hands-on projects"
+        ],
+        "button": "Buy Now"
+      }
+    }
+  },
+  "error404": {
+    "title": "OOPS!",
+    "heading": "Page Not Found",
+    "description": "We are very sorry for the inconvenience. It looks like you're trying to access a page that has been deleted or never even existed.",
+    "button": "GO BACK HOME"
+  },
+  "footer": {
+    "logo": "Art Journey",
+    "tagline": "Discover Art History Through the Ages",
+    "motto": "Every brushstroke tells a story, every masterpiece carries a soul. Join us in exploring humanity's artistic heritage.",
+    "about": {
+      "title": "About ArtJourney",
+      "description": "ArtJourney is a premier online learning platform dedicated to art history education, offering immersive and comprehensive learning experiences from ancient to contemporary art.",
+      "contact": {
+        "address": "610 Nguyen Thuong Hien, District 10 Ho Chi Minh city",
+        "phone": "+84 98 174 5930",
+        "email": "contact.artjourney01@gmail.com"
+      }
+    },
+    "featuredTopics": {
+      "title": "Featured Topics",
+      "subtitle": "🎓 Art History Periods",
+      "periods": [
+        {
+          "era": "Ancient",
+          "description": "Egyptian & Greek Art"
+        },
+        {
+          "era": "Medieval", 
+          "description": "Gothic & Byzantine"
+        },
+        {
+          "era": "Renaissance",
+          "description": "Leonardo & Michelangelo"
+        },
+        {
+          "era": "Modern",
+          "description": "Impressionism & Cubism"
+        }
+      ]
+    },
+    "navigation": {
+      "title": "Navigation",
+      "links": {
+        "about": "About Us",
+        "pricing": "Pricing",
+        "courses": "Courses"
+      },
+      "quote": "Art is not what you see, but what you make others see."
+    },
+    "bottom": {
+      "copyright": "© 2025 ArtJourney. All rights reserved.",
+      "links": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "support": "Student Support",
+        "contact": "Contact Us"
       }
     }
   }

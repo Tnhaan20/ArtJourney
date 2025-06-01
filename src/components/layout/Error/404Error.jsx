@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 import errorImage from "@/assets/error/404.png";
 import { TailwindStyle } from "@/utils/Enum";
 import LazyImage from "@/components/elements/LazyImg/LazyImg";
 
 export default function Error() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background circle */}
@@ -13,31 +16,30 @@ export default function Error() {
         <div className="flex flex-col items-center justify-center">
           {/* Text content */}
           <div className="text-center mb-8 max-w-2xl">
-            <h1 className="text-5xl md:text-6xl font-bold equila-bold text-[#F2B866] mb-4">
-              OPPS!
+            <h1 className="text-5xl md:text-6xl font-bold  text-[#F2B866] mb-4">
+              {t("error404.title")}
             </h1>
-            <h2 className="text-3xl md:text-4xl font-bold equila-bold text-[#F2B866] mb-6">
-              Page Not Found
+            <h2 className="text-3xl md:text-4xl font-bold  text-[#F2B866] mb-6">
+              {t("error404.heading")}
             </h2>
             <p className="text-gray-700 mb-8 max-w-md mx-auto">
-              We are very sorry for inconvenience. It looks like you're trying
-              to access a page that was has been deleted or never even existed
+              {t("error404.description")}
             </p>
             <Link
               to="/"
-              className={`inline-block px-6 py-3 text-lg font-semibold ${TailwindStyle.HIGHLIGHT_FRAME}`}
+              className={`inline-block px-6 py-3 text-lg font-semibold ${TailwindStyle.HIGHLIGHT_FRAME} text-white rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}
             >
-              GO BACK HOME
+              {t("error404.button")}
             </Link>
           </div>
 
           {/* Image */}
           <div className="w-full max-w-md">
-            <img
-              loading="lazy"
+            <LazyImage
               src={errorImage}
-              alt="404 Error"
+              alt={t("error404.heading")}
               className="w-full mx-auto"
+              loading="lazy"
             />
           </div>
         </div>

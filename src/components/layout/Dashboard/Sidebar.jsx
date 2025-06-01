@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "@/domains/store/use-auth-store";
 import { useNavigate } from "react-router-dom";
+import { TailwindStyle } from "@/utils/Enum";
 
 export const Sidebar = ({ sidebarOpen, activeTab, setActiveTab }) => {
   const { logout, user } = useAuthStore();
@@ -26,7 +27,6 @@ export const Sidebar = ({ sidebarOpen, activeTab, setActiveTab }) => {
       navigate("/signin");
     } catch (error) {
       console.error("Sign out error:", error);
-      // Navigate anyway in case of error
       navigate("/signin");
     }
   };
@@ -77,14 +77,18 @@ export const Sidebar = ({ sidebarOpen, activeTab, setActiveTab }) => {
             </div>
           ) : (
             <div className="flex items-center justify-center w-full">
-              <Palette className="w-8 h-8 text-primary-yellow" />
+              <img
+                src={assets.main_logo.artjourney_logo}
+                className="w-5 h-5"
+                alt="ArtJourney Logo"
+              />
             </div>
           )}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 overflow-y-auto">
+      <nav className="flex-1 px-3 overflow-y-auto">
         {menuSections.map((section, sectionIndex) => (
           <div key={section.title} className="mb-6">
             {/* Section Title */}
@@ -104,7 +108,7 @@ export const Sidebar = ({ sidebarOpen, activeTab, setActiveTab }) => {
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors ${
                     activeTab === item.id
-                      ? "bg-primary-yellow text-primary-black"
+                      ? `{${TailwindStyle.HIGHLIGHT_FRAME}}`
                       : "hover:text-white hover:bg-secondary-yellow hover:bg-opacity-20"
                   }`}
                   title={!sidebarOpen ? item.label : undefined}
