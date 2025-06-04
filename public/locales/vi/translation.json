@@ -43,7 +43,7 @@
       "title": "Công thức của 5% Bậc thầy Lịch sử Nghệ thuật hàng đầu",
       "step1": {
         "title": "Bước 1 - Đọc",
-        "description": "Bắt đầu hành trình của bạn bằng cách khám phá nội dung được tuyển chọn kỹ lưỡng đi sâu vào lịch sử nghệ thuật. Từ các nền văn minh cổ đại đến các kiệt tác hiện đại, hiểu biết sâu sắc về sự phát triển của biểu đạt nghệ thuật. Khám phá cách các phong trào văn hóa định hình phong cách nghệ thuật và cách các nghệ sĩ huyền thoại cách mạng hóa kỹ thuật và quan điểm theo thời gian."
+        "description": "Bắt đầu hành trình của bạn bằng cách khám phá nội dung được tuyển chọn kỹ lưỡng đi sâu vào lịch sử nghệ thuật. Từ các nền văn civilisation cổ đại đến các kiệt tác hiện đại, hiểu biết sâu sắc về sự phát triển của biểu đạt nghệ thuật. Khám phá cách các phong trào văn hóa định hình phong cách nghệ thuật và cách các nghệ sĩ huyền thoại cách mạng hóa kỹ thuật và quan điểm theo thời gian."
       },
       "step2": {
         "title": "Bước 2 - Thực hành",
@@ -473,6 +473,255 @@
         "terms": "Điều khoản Dịch vụ",
         "support": "Hỗ trợ Học viên",
         "contact": "Liên hệ"
+      }
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Chào Mừng Đến Với Thế Giới Của Chúng Tôi",
+      "title": {
+        "about": "VỀ CHÚNG TÔI",
+        "artJourney": "ART JOURNEY"
+      },
+      "description": {
+        "main": "Nơi",
+        "highlight": "sự sáng tạo gặp gỡ khám phá",
+        "ending": ", và mỗi nét cọ kể một câu chuyện kết nối chúng ta qua thời gian và văn hóa.",
+        "secondary": "Chúng tôi tin rằng nghệ thuật không chỉ là thứ bạn quan sát—mà là thứ bạn trải nghiệm. Hãy cùng chúng tôi trong hành trình thay đổi cách bạn nhìn, cảm nhận và kết nối với thế giới."
+      },
+      "stats": {
+        "artLovers": {
+          "count": "2M+",
+          "label": "Người Yêu Nghệ Thuật"
+        },
+        "artworks": {
+          "count": "10K+",
+          "label": "Tác Phẩm Nghệ Thuật"
+        },
+        "rating": {
+          "count": "4.9★",
+          "label": "Đánh Giá Người Dùng"
+        }
+      },
+      "buttons": {
+        "startJourney": "BẮT ĐẦU HÀNH TRÌNH",
+        "exploreGallery": "KHÁM PHÁ GALLERY"
+      },
+      "images": {
+        "contemporary": "Phòng Triển Lãm Nghệ Thuật Đương Đại",
+        "classical": "Kiệt Tác Nghệ Thuật Cổ Điển",
+        "ancient": "Nghệ Thuật & Điêu Khắc Cổ Đại"
+      },
+      "quote": {
+        "text": "Nghệ thuật không phải là những gì bạn nhìn thấy, mà là những gì bạn khiến người khác nhìn thấy. Tại ArtJourney, chúng tôi không chỉ cho bạn thấy nghệ thuật— chúng tôi giúp bạn khám phá những câu chuyện, cảm xúc và kết nối khiến mỗi tác phẩm trở nên vượt thời gian.",
+        "author": "— Đội Ngũ ArtJourney"
+      }
+    },
+    "benefits": {
+      "badge": "Tại Sao Chọn Chúng Tôi",
+      "title": {
+        "main": "LỰA CHỌN TỐT NHẤT CHO",
+        "highlight": "NGƯỜI HỌC NGHỆ THUẬT"
+      },
+      "description": "Trải nghiệm giáo dục nghệ thuật được thiết kế dành riêng cho bạn. Nền tảng của chúng tôi kết hợp công nghệ tiên tiến với kiến thức chuyên môn để mang lại trải nghiệm học tập vượt trội.",
+      "image": {
+        "alt": "Trải Nghiệm Học Nghệ Thuật",
+        "overlay": {
+          "title": "Khám Phá Nghệ Thuật Như Chưa Từng Có",
+          "subtitle": "Tham gia cùng hàng ngàn người đam mê nghệ thuật"
+        }
+      },
+      "floatingStats": {
+        "satisfaction": {
+          "value": "99%",
+          "label": "Hài Lòng"
+        },
+        "available": {
+          "value": "24/7",
+          "label": "Luôn Sẵn Sàng"
+        }
+      },
+      "items": {
+        "flexible": {
+          "title": "Học Tập Linh Hoạt & Tiện Lợi",
+          "description": "Học theo tốc độ riêng của bạn, mọi lúc, mọi nơi. Truy cập khóa học 24/7 từ bất kỳ thiết bị nào."
+        },
+        "quality": {
+          "title": "Nội Dung Chất Lượng Cao",
+          "description": "Được tuyển chọn bởi các chuyên gia và sử gia nghệ thuật. Nội dung cao cấp mang lại giá trị thực sự."
+        },
+        "support": {
+          "title": "Hỗ Trợ Học Tập Hiệu Quả",
+          "description": "Nhận hướng dẫn cá nhân hóa, bài kiểm tra tương tác và công cụ theo dõi tiến độ."
+        },
+        "community": {
+          "title": "Cộng Đồng Học Tập Sôi Động",
+          "description": "Kết nối với những người đam mê nghệ thuật, chia sẻ kiến thức và cùng nhau phát triển."
+        }
+      },
+      "cta": {
+        "button": "Trải Nghiệm Sự Khác Biệt"
+      },
+      "bottomStats": {
+        "learners": {
+          "value": "2M+",
+          "label": "Học Viên Tích Cực"
+        },
+        "courses": {
+          "value": "500+",
+          "label": "Khóa Học Nghệ Thuật"
+        },
+        "success": {
+          "value": "98%",
+          "label": "Tỷ Lệ Thành Công"
+        },
+        "support": {
+          "value": "24/7",
+          "label": "Hỗ Trợ Luôn Sẵn Sàng"
+        }
+      }
+    },
+    "team": {
+      "title": {
+        "who": "CHÚNG TÔI",
+        "weAre": "LÀ AI?"
+      },
+      "members": {
+        "thi": {
+          "name": "Tạ Thị Kiều Thi",
+          "role": "Leader"
+        },
+        "quoc": {
+          "name": "Nguyễn Minh Quốc",
+          "role": "UX/UI"
+        },
+        "nhan": {
+          "name": "Võ Thành Nhân",
+          "role": "Frontend"
+        },
+        "khang": {
+          "name": "Đoàn Thái Minh Khang",
+          "role": "Frontend"
+        },
+        "giap": {
+          "name": "Hoàng Duy Giáp",
+          "role": "Backend"
+        },
+        "hieu": {
+          "name": "Đoàn Phúc Hiếu",
+          "role": "Backend"
+        }
+      },
+      "cta": {
+        "badge": "Tham Gia Cùng Chúng Tôi",
+        "title": "Bạn muốn tham gia đội ngũ của chúng tôi?",
+        "description": "Chúng tôi luôn tìm kiếm những cá nhân tài năng có chung đam mê với nghệ thuật và sự đổi mới.",
+        "button": "Liên Hệ Ngay"
+      }
+    },
+    "stories": {
+      "badge": "Hành Trình Của Chúng Tôi",
+      "title": {
+        "from": "TỪ",
+        "dreams": "GIẤC MƠ",
+        "to": "ĐẾN",
+        "reality": "THỰC TẠI"
+      },
+      "description": "Mọi hành trình vĩ đại đều bắt đầu bằng một bước chân đầu tiên. Câu chuyện của chúng tôi là về đam mê, sự kiên trì và niềm tin không lay chuyển rằng nghệ thuật có sức mạnh thay đổi cuộc sống.",
+      "image": {
+        "alt": "Hành Trình Thành Công Của Chúng Tôi",
+        "overlay": {
+          "subtitle": "Hành Trình Tuyệt Vời",
+          "years": "2025 - 2028"
+        }
+      },
+      "timeline": {
+        "title": "Các Mốc Quan Trọng"
+      },
+      "milestones": {
+        "beginning": {
+          "title": "Khởi Đầu",
+          "description": "Bắt đầu với ước mơ làm cho nghệ thuật trở nên dễ tiếp cận với mọi người",
+          "achievement": "100 Người Dùng Đầu Tiên"
+        },
+        "community": {
+          "title": "Cộng Đồng Phát Triển",
+          "description": "Xây dựng cầu nối giữa những người yêu nghệ thuật trên toàn thế giới",
+          "achievement": "Hơn 10K Thành Viên"
+        },
+        "recognition": {
+          "title": "Được Công Nhận",
+          "description": "Được vinh danh vì những đổi mới trong giáo dục nghệ thuật",
+          "achievement": "Top 3 Nền Tảng Giáo Dục"
+        },
+        "milestone": {
+          "title": "Cột Mốc Quan Trọng",
+          "description": "Tiếp cận hàng triệu người đam mê nghệ thuật trên toàn cầu",
+          "achievement": "Hơn 2 Triệu Học Viên Hài Lòng"
+        }
+      },
+      "cta": {
+        "join": "Tham Gia Câu Chuyện",
+        "learn": "Tìm Hiểu Thêm"
+      }
+    },
+    "clients": {
+      "badge": "Lời Chứng Thực",
+      "title": {
+        "what": "HỌC VIÊN NÓI",
+        "learners": "GÌ VỀ CHÚNG TÔI"
+      },
+      "description": "Tham gia cùng hàng ngàn người đam mê nghệ thuật đã thay đổi hiểu biết về lịch sử nghệ thuật thông qua nền tảng học tập toàn diện của chúng tôi.",
+      "testimonials": {
+        "sarah": {
+          "name": "Sarah Martinez",
+          "role": "Sinh Viên Lịch Sử Nghệ Thuật",
+          "quote": "ArtJourney đã thay đổi hiểu biết của tôi về nghệ thuật Phục Hưng. Dòng thời gian tương tác và những giải thích chi tiết đã làm cho các phong trào nghệ thuật phức tạp trở nên dễ tiếp cận. Tôi chưa bao giờ cảm thấy kết nối với lịch sử nghệ thuật như vậy!"
+        },
+        "michael": {
+          "name": "TS. Michael Chen",
+          "role": "Quản Tuyển Bảo Tàng",
+          "quote": "Là một quản tuyển chuyên nghiệp, tôi rất ấn tượng với độ sâu và tính chính xác của nội dung ArtJourney. Đây đã trở thành tài nguyên chính cho nghiên cứu của tôi và tôi giới thiệu cho tất cả đồng nghiệp và sinh viên."
+        },
+        "emma": {
+          "name": "Emma Thompson",
+          "role": "Giáo Viên Trung Học",
+          "quote": "Học sinh của tôi cuối cùng đã hứng thú với lịch sử nghệ thuật! Nội dung hình ảnh hấp dẫn và phương pháp kể chuyện của ArtJourney đã hoàn toàn thay đổi lớp học của tôi. Điểm kiểm tra cải thiện 40%!"
+        },
+        "roberto": {
+          "name": "Roberto Silva",
+          "role": "Người Đam Mê Nghệ Thuật",
+          "quote": "Tôi không bao giờ nghĩ mình có thể hiểu được nghệ thuật trừu tượng cho đến khi tham gia khóa học nghệ thuật hiện đại của ArtJourney. Cách họ giải thích kỹ thuật nghệ thuật và bối cảnh lịch sử thực sự tuyệt vời!"
+        },
+        "lisa": {
+          "name": "GS. Lisa Wang",
+          "role": "Giáo Sư Đại Học",
+          "quote": "ArtJourney kết nối hoàn hảo giữa tính nghiêm túc học thuật và khả năng tiếp cận. Sinh viên đại học của tôi yêu thích nền tảng này, và tôi sử dụng nó để bổ sung cho các bài giảng thường xuyên."
+        },
+        "james": {
+          "name": "James Rodriguez",
+          "role": "Người Yêu Nghệ Thuật Đã Nghỉ Hưu",
+          "quote": "Ở tuổi 65, tôi nghĩ đã quá muộn để học về nghệ thuật. ArtJourney đã chứng minh tôi sai! Tốc độ học hoàn hảo cho người học trưởng thành, và tôi đã khám phá những nghệ sĩ mà tôi chưa từng biết đến."
+        }
+      },
+      "stats": {
+        "rating": {
+          "value": "4.9/5",
+          "label": "Đánh Giá Trung Bình"
+        },
+        "students": {
+          "value": "15K+",
+          "label": "Học Viên Hài Lòng",
+          "subtitle": "Trên 50+ quốc gia"
+        },
+        "completion": {
+          "value": "98%",
+          "label": "Tỷ Lệ Hoàn Thành",
+          "subtitle": "Học viên hoàn thành khóa học"
+        }
+      },
+      "cta": {
+        "button": "Bắt Đầu Hành Trình Nghệ Thuật Ngay Hôm Nay"
       }
     }
   }

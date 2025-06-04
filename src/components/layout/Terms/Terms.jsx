@@ -1,3 +1,4 @@
+import { TailwindStyle } from "@/utils/Enum";
 import React, { useState, useEffect } from "react";
 
 export default function Terms() {
@@ -27,7 +28,7 @@ export default function Terms() {
             Please read these terms carefully before using ArtJourney's
             educational platform and services.
           </p>
-          <div className="mt-8 bg-white/20 backdrop-blur-sm rounded-xl p-4 inline-block">
+          <div className={`mt-8 ${TailwindStyle.HIGHLIGHT_FRAME} backdrop-blur-sm rounded-xl p-4 inline-block `}>
             <p className="text-sm text-dark-primary font-medium">
               Last Updated: May 30, 2025
             </p>

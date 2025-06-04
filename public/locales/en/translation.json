@@ -475,5 +475,254 @@
         "contact": "Contact Us"
       }
     }
+  },
+  "about": {
+    "hero": {
+      "badge": "Welcome to Our World",
+      "title": {
+        "about": "ABOUT",
+        "artJourney": "ART JOURNEY"
+      },
+      "description": {
+        "main": "Where",
+        "highlight": "creativity meets discovery",
+        "ending": ", and every brushstroke tells a story that connects us across time and culture.",
+        "secondary": "We believe art isn't just something you observe—it's something you experience. Join us on a journey that transforms the way you see, feel, and connect with the world."
+      },
+      "stats": {
+        "artLovers": {
+          "count": "2M+",
+          "label": "Art Lovers"
+        },
+        "artworks": {
+          "count": "10K+",
+          "label": "Artworks"
+        },
+        "rating": {
+          "count": "4.9★",
+          "label": "User Rating"
+        }
+      },
+      "buttons": {
+        "startJourney": "START YOUR JOURNEY",
+        "exploreGallery": "EXPLORE GALLERY"
+      },
+      "images": {
+        "contemporary": "Contemporary Art Gallery",
+        "classical": "Classical Art Masterpiece",
+        "ancient": "Ancient Art & Sculpture"
+      },
+      "quote": {
+        "text": "Art is not what you see, but what you make others see. At ArtJourney, we don't just show you art— we help you discover the stories, emotions, and connections that make each piece timeless.",
+        "author": "— The ArtJourney Team"
+      }
+    },
+    "benefits": {
+      "badge": "Why Choose Us",
+      "title": {
+        "main": "BEST CHOICE FOR",
+        "highlight": "ART LEARNERS"
+      },
+      "description": "Experience art education designed with you in mind. Our platform combines cutting-edge technology with expert knowledge to deliver an unparalleled learning experience.",
+      "image": {
+        "alt": "Art Learning Experience",
+        "overlay": {
+          "title": "Discover Art Like Never Before",
+          "subtitle": "Join thousands of art enthusiasts"
+        }
+      },
+      "floatingStats": {
+        "satisfaction": {
+          "value": "99%",
+          "label": "Satisfaction"
+        },
+        "available": {
+          "value": "24/7",
+          "label": "Available"
+        }
+      },
+      "items": {
+        "flexible": {
+          "title": "Flexible & Convenient Learning",
+          "description": "Learn at your own pace, anytime, anywhere. Access our courses 24/7 from any device."
+        },
+        "quality": {
+          "title": "High-Quality Content",
+          "description": "Curated by art experts and historians. Premium content that delivers real value."
+        },
+        "support": {
+          "title": "Effective Learning Support",
+          "description": "Get personalized guidance, interactive quizzes, and progress tracking tools."
+        },
+        "community": {
+          "title": "Engaging Learning Community",
+          "description": "Connect with fellow art enthusiasts, share insights, and grow together."
+        }
+      },
+      "cta": {
+        "button": "Experience the Difference"
+      },
+      "bottomStats": {
+        "learners": {
+          "value": "2M+",
+          "label": "Active Learners"
+        },
+        "courses": {
+          "value": "500+",
+          "label": "Art Courses"
+        },
+        "success": {
+          "value": "98%",
+          "label": "Success Rate"
+        },
+        "support": {
+          "value": "24/7",
+          "label": "Support Available"
+        }
+      }
+    },
+    "team": {
+      "title": {
+        "who": "WHO",
+        "weAre": "WE ARE?"
+      },
+      "members": {
+        "thi": {
+          "name": "Ta Thi Kieu Thi",
+          "role": "Team Lead"
+        },
+        "quoc": {
+          "name": "Nguyen Minh Quoc",
+          "role": "UX/UI Designer"
+        },
+        "nhan": {
+          "name": "Vo Thanh Nhan",
+          "role": "Frontend Developer"
+        },
+        "khang": {
+          "name": "Doan Thai Minh Khang",
+          "role": "Frontend Developer"
+        },
+        "giap": {
+          "name": "Hoang Duy Giap",
+          "role": "Backend Developer"
+        },
+        "hieu": {
+          "name": "Doan Phuc Hieu",
+          "role": "Backend Developer"
+        }
+      },
+      "cta": {
+        "badge": "Join Us",
+        "title": "Want to join our team?",
+        "description": "We're always looking for talented individuals who share our passion for art and innovation.",
+        "button": "Get In Touch"
+      }
+    },
+    "stories": {
+      "badge": "Our Journey",
+      "title": {
+        "from": "FROM",
+        "dreams": "DREAMS",
+        "to": "TO",
+        "reality": "REALITY"
+      },
+      "description": "Every great journey begins with a single step. Our story is one of passion, perseverance, and the unwavering belief that art has the power to transform lives.",
+      "image": {
+        "alt": "Our Journey to Success",
+        "overlay": {
+          "subtitle": "Our Amazing Journey",
+          "years": "2025 - 2028"
+        }
+      },
+      "timeline": {
+        "title": "Our Milestones"
+      },
+      "milestones": {
+        "beginning": {
+          "title": "The Beginning",
+          "description": "Started with a dream to make art accessible to everyone",
+          "achievement": "First 100 Users"
+        },
+        "community": {
+          "title": "Growing Community",
+          "description": "Building bridges between art lovers worldwide",
+          "achievement": "10K+ Community"
+        },
+        "recognition": {
+          "title": "Recognition",
+          "description": "Honored for innovation in art education",
+          "achievement": "Top 3 Education Platform"
+        },
+        "milestone": {
+          "title": "Major Milestone",
+          "description": "Reaching millions of art enthusiasts globally",
+          "achievement": "2M+ Happy Learners"
+        }
+      },
+      "cta": {
+        "join": "Join Our Story",
+        "learn": "Learn More"
+      }
+    },
+    "clients": {
+      "badge": "Testimonials",
+      "title": {
+        "what": "WHAT OUR",
+        "learners": "LEARNERS SAY"
+      },
+      "description": "Join thousands of art enthusiasts who have transformed their understanding of art history through our comprehensive learning platform.",
+      "testimonials": {
+        "sarah": {
+          "name": "Sarah Martinez",
+          "role": "Art History Student",
+          "quote": "ArtJourney transformed my understanding of Renaissance art. The interactive timeline and detailed explanations made complex art movements so accessible. I've never felt more connected to art history!"
+        },
+        "michael": {
+          "name": "Dr. Michael Chen",
+          "role": "Museum Curator",
+          "quote": "As a professional curator, I'm impressed by the depth and accuracy of ArtJourney's content. It's become my go-to resource for research and I recommend it to all my colleagues and students."
+        },
+        "emma": {
+          "name": "Emma Thompson",
+          "role": "High School Teacher",
+          "quote": "My students are finally excited about art history! ArtJourney's engaging visual content and storytelling approach have completely transformed my classroom. Test scores improved by 40%!"
+        },
+        "roberto": {
+          "name": "Roberto Silva",
+          "role": "Art Enthusiast",
+          "quote": "I never thought I'd understand abstract art until I took ArtJourney's modern art course. The way they explain artistic techniques and historical context is absolutely brilliant!"
+        },
+        "lisa": {
+          "name": "Prof. Lisa Wang",
+          "role": "University Professor",
+          "quote": "ArtJourney bridges the gap between academic rigor and accessibility perfectly. My university students love the platform, and I use it to supplement my lectures regularly."
+        },
+        "james": {
+          "name": "James Rodriguez",
+          "role": "Retired Art Lover",
+          "quote": "At 65, I thought it was too late to learn about art. ArtJourney proved me wrong! The pacing is perfect for adult learners, and I've discovered artists I never knew existed."
+        }
+      },
+      "stats": {
+        "rating": {
+          "value": "4.9/5",
+          "label": "Average Rating"
+        },
+        "students": {
+          "value": "15K+",
+          "label": "Happy Students",
+          "subtitle": "Across 50+ countries"
+        },
+        "completion": {
+          "value": "98%",
+          "label": "Completion Rate",
+          "subtitle": "Students finish courses"
+        }
+      },
+      "cta": {
+        "button": "Start Your Art Journey Today"
+      }
+    }
   }
 }

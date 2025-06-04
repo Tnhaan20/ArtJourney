@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import Carousel from "@/components/elements/carousel/Carousel"; // Import Carousel component
 
 // Import crown and users' images
 import crownImage from "@/assets/crown.png";
@@ -17,81 +17,46 @@ import { TailwindStyle } from "@/utils/Enum";
 
 export default function HomeAchieve() {
   const { t } = useTranslation();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSliding, setIsSliding] = useState(false);
-  const [direction, setDirection] = useState("");
 
-  // Get testimonials from translation
+  // Get testimonials from translation và format cho Carousel
   const testimonials = t("home.achievements.testimonials.users", {
     returnObjects: true,
   }).map((user, index) => ({
-    ...user,
+    id: index,
     image: [commentUser1, commentUser2, commentUser3, commentUser4][index],
+    title: user.name,
+    description: user.text,
   }));
 
-  // ---- handlePrev: Slide current out to right, then load previous
-  const handlePrev = () => {
-    if (isSliding) return;
-    setDirection("prev");
-    setIsSliding(true);
+  // Custom render cho testimonial slides
+  const renderTestimonialSlide = (slide, index) => (
+    <div
+      key={`testimonial-${slide.id}-${index}`}
+      className="relative h-full w-full flex-shrink-0 flex items-center justify-center gap-8 px-8"
+    >
+      {/* Image block */}
+      <div className="w-110 h-74 overflow-hidden">
+        <img
+          loading="lazy"
+          src={slide.image}
+          alt={slide.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-    setTimeout(() => {
-      setDirection("out-right");
-
-      setTimeout(() => {
-        setCurrentIndex((prev) =>
-          prev === 0 ? testimonials.length - 1 : prev - 1
-        );
-        setDirection("reset");
-
-        setTimeout(() => {
-          setIsSliding(false);
-        }, 300);
-      }, 300);
-    }, 0);
-  };
-
-  // ---- handleNext: Slide current out to left, then load next
-  const handleNext = () => {
-    if (isSliding) return;
-    setDirection("next");
-    setIsSliding(true);
-
-    setTimeout(() => {
-      setDirection("out-left");
-
-      setTimeout(() => {
-        setCurrentIndex((prev) =>
-          prev === testimonials.length - 1 ? 0 : prev + 1
-        );
-        setDirection("in-right");
-
-        setTimeout(() => {
-          setIsSliding(false);
-        }, 300);
-      }, 300);
-    }, 0);
-  };
-
-  // Determine CSS class for sliding container
-  let slideClass = "translate-x-0 opacity-100";
-  if (direction === "next") {
-    slideClass = "-translate-x-full opacity-0";
-  } else if (direction === "prev") {
-    slideClass = "translate-x-full opacity-0";
-  } else if (direction === "out-left") {
-    slideClass = "-translate-x-full opacity-0";
-  } else if (direction === "out-right") {
-    slideClass = "translate-x-full opacity-0";
-  } else if (direction === "in-right") {
-    slideClass = "translate-x-0 opacity-100";
-  } else if (direction === "reset") {
-    slideClass = "translate-x-0 opacity-100";
-  }
+      {/* Text block */}
+      <div className="text-center max-w-md">
+        <h3 className="text-2xl font-bold mb-2 text-black">{slide.title}</h3>
+        <p className="text-base text-gray-700 leading-relaxed">
+          {slide.description}
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="w-full bg-[#f8f8f8] py-30 text-black min-h-screen pb-5">
-      {/* Top 3 Users Section */}
+      {/* Top 3 Users Section - Giữ nguyên */}
       <div className="text-center py-12">
         {/* User Images Container */}
         <div className="flex justify-center relative">
@@ -136,7 +101,7 @@ export default function HomeAchieve() {
         </div>
       </div>
 
-      {/* Join the challenge */}
+      {/* Join the challenge - Giữ nguyên */}
       <div className="text-center mt-[155px]">
         <h2 className="text-2xl font-extrabold ">
           {t("home.achievements.title")}
@@ -148,60 +113,26 @@ export default function HomeAchieve() {
         </button>
       </div>
 
-      {/* Meet Our Learners Section */}
+      {/* Meet Our Learners Section - Thay thế bằng Carousel */}
       <div className="text-center py-12">
         <h3 className="text-center text-3xl font-extrabold mb-8 ">
           {t("home.achievements.testimonials.title")}
         </h3>
 
-        <div className="flex items-center justify-center">
-          {/* Prev Button */}
-          <button
-            onClick={handlePrev}
-            className="p-4 mx-6 rounded-full hover:bg-gray-200 transition cursor-pointer active:scale-95"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft size={32} strokeWidth={2} />
-          </button>
-
-          {/* SLIDER WRAPPER with fixed width and overflow hidden */}
-          <div className="relative w-[900px] h-[300px] overflow-hidden">
-            {/* Sliding container referencing slideClass */}
-            <div
-              className={`absolute w-full h-full flex items-center justify-center gap-8
-              transition-all duration-300 ease-in-out ${slideClass}`}
-            >
-              {/* Image block */}
-              <div className="w-110 h-74 overflow-hidden">
-                <img
-                  loading="lazy"
-                  src={testimonials[currentIndex]?.image}
-                  alt={testimonials[currentIndex]?.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Text block */}
-              <div className="text-center max-w-md">
-                <h3 className="text-2xl font-bold mb-2 ">
-                  {testimonials[currentIndex]?.name}
-                </h3>
-                <p className="text-base text-gray-700 leading-relaxed">
-                  {testimonials[currentIndex]?.text}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Next Button */}
-          <button
-            onClick={handleNext}
-            className="p-4 mx-6 rounded-full hover:bg-gray-200 transition cursor-pointer active:scale-95"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight size={32} strokeWidth={2} />
-          </button>
-        </div>
+        {/* Sử dụng Carousel thay cho sliding code cũ */}
+        <Carousel
+          slides={testimonials}
+          autoPlay={true}
+          interval={4000}
+          width="max-w-6xl"
+          height="h-[300px]"
+          rounded="rounded-none"
+          showTitle={false}
+          showDots={false}
+          showArrows={true}
+          renderSlide={renderTestimonialSlide}
+          className="bg-transparent"
+        />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Icons } from '../../elements/Icons';
-import LazyImage from '../LazyImg/LazyImg';
+
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Carousel component with better reusability
 const Carousel = ({
@@ -159,14 +159,14 @@ const Carousel = ({
         className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-opacity z-10"
         aria-label="Previous slide"
       >
-        <Icons.chevronLeft size={24} />
+        <ChevronLeft size={24} />
       </button>
       <button
         onClick={() => navigate('next')}
         className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-opacity z-10"
         aria-label="Next slide"
       >
-        <Icons.chevronRight size={24} />
+        <ChevronRight size={24} />
       </button>
     </>
   );
