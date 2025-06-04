@@ -25,6 +25,8 @@ const ChallengePage = lazy(() =>
   import("@/pages/LearnPage/ChallengePage/ChallengePage")
 );
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
+const RankingPage = lazy(() => import("@/pages/RankingPage"));
+
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
 // Auth and Error components
 const Signin = lazy(() => import("@/components/layout/Signin/Signin"));
@@ -217,6 +219,18 @@ export default function AppRoutes() {
         }
       />
       <Route
+        path="/ranking"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute restrictAdmin={true}>
+              <MainLayout>
+                <RankingPage />
+              </MainLayout>
+            </ProtectedRoute>
+          </Suspense>
+        }
+      />
+      <Route
         path="/pay/:paymentType?"
         element={
           <Suspense fallback={<PageLoader />}>
@@ -315,7 +329,7 @@ export default function AppRoutes() {
         element={
           <Suspense fallback={<PageLoader />}>
             {/* <ProtectedRoute adminOnly={true}> */}
-              <ArtJourneyAdminDashboard />
+            <ArtJourneyAdminDashboard />
             {/* </ProtectedRoute> */}
           </Suspense>
         }

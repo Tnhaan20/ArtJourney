@@ -7,6 +7,7 @@ import {
   Settings,
   UserCircle,
   ChevronDown,
+  Flame,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import MobileMenu from "./MobileMenu";
@@ -25,6 +26,10 @@ export default function Header() {
   const { isAuthenticated, user, role, logout } = useAuthStore();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
+
+  // Mock streak data - replace with real data from your user store
+  const userStreak = user?.streak || 0; // Number of consecutive days
+  const isActiveStreak = userStreak > 0;
 
   // Close profile menu when clicking outside
   useEffect(() => {
@@ -72,7 +77,7 @@ export default function Header() {
               loading="lazy"
               className="h-8 w-auto mr-2"
             />
-            <span className="equila-bold font-extrabold text-primary-yellow">
+            <span className="equila-bold font-extrabold text-primary-blue">
               ArtJourney
             </span>
           </Link>
@@ -104,10 +109,11 @@ export default function Header() {
             {isAuthenticated ? (
               <div className="relative" ref={profileMenuRef}>
                 <div
-                  className={`flex items-center gap-2 ${TailwindStyle.GLASSMORPHISM} px-3 py-1.5 rounded-full cursor-pointer`}
+                  className={`flex items-center gap-3 ${TailwindStyle.GLASSMORPHISM} px-3 py-1.5 rounded-full cursor-pointer`}
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-2">
+                    {/* User Avatar */}
                     {user?.avatar ? (
                       <img
                         loading="lazy"
@@ -118,6 +124,26 @@ export default function Header() {
                     ) : (
                       <UserCircle size={24} className="text-primary-yellow" />
                     )}
+
+                    {/* Streak Fire Icon */}
+                    <div className="flex items-center gap-1">
+                      <Flame
+                        size={20}
+                        className={`${
+                          isActiveStreak
+                            ? "text-red-500 animate-pulse"
+                            : "text-gray-400"
+                        } transition-colors duration-300`}
+                      />
+                      <span
+                        className={`text-xs font-bold ${
+                          isActiveStreak ? "text-red-500" : "text-gray-400"
+                        }`}
+                      >
+                        {userStreak}
+                      </span>
+                    </div>
+
                     <ChevronDown
                       size={16}
                       className={`text-gray-500 transition-transform ${
@@ -133,6 +159,29 @@ export default function Header() {
                     className={`absolute mt-2 w-48 ${TailwindStyle.GLASSMORPHISM} transform -translate-x-1/2 left-1/2 rounded-xl shadow-lg overflow-hidden z-50`}
                   >
                     <div className="flex flex-col">
+                      {/* Streak Info in Dropdown */}
+                      <div className="px-4 py-3 border-b border-white/10">
+                        <div className="flex items-center gap-2">
+                          <Flame
+                            size={18}
+                            className={`${
+                              isActiveStreak ? "text-red-500" : "text-gray-400"
+                            }`}
+                          />
+                          <span className="text-sm font-medium text-gray-800">
+                            {isActiveStreak
+                              ? `${userStreak} ${t(
+                                  "header.streakDays",
+                                  "day streak!"
+                                )}`
+                              : t(
+                                  "header.noStreak",
+                                  "Start your learning streak!"
+                                )}
+                          </span>
+                        </div>
+                      </div>
+
                       <Link
                         to="/profile"
                         className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-800 hover:bg-white/10 transition-colors"

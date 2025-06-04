@@ -15,7 +15,7 @@
   "home": {
     "hero": {
       "title": "STUDY WITH",
-      "subtitle": "ART JOURNEY",
+      "subtitle": "ARTJOURNEY",
       "description": "Learn art history & Discover the stories behind masterpieces and enhance your understanding of art.",
       "signUp": "LET'S SIGN UP",
       "goToLearn": "Let's Learn"
@@ -723,6 +723,19 @@
       "cta": {
         "button": "Start Your Art Journey Today"
       }
+    }
+  },
+  "community": {
+    "search": {
+      "badge": "Community Hub",
+      "title": {
+        "welcome": "WELCOME TO",
+        "artJourney": "ART JOURNEY COMMUNITY"
+      },
+      "subtitle": "Connect with fellow art enthusiasts, share insights, and explore the fascinating world of art history together",
+      "placeholder": "Search discussions, topics, members, or art movements...",
+      "button": "Search",
+      "quickSearch": "Popular searches"
     }
   }
 }

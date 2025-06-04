@@ -51,6 +51,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Mongro';
+  src: url('../src/assets/fonts/Mongro/DVN-Mongro-6ehbct.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Normal Equila font class */
 .equila-normal {
   font-family: 'Equila', sans-serif;
@@ -63,29 +71,32 @@
   font-weight: 700;
 }
 
-/* Normal Equila font class */
+/* Normal Levaus font class */
 .levaus-normal {
   font-family: 'Levaus', sans-serif;
   font-weight: 400;
 }
 
-/* Bold Equila font class */
+/* Bold Levaus font class */
 .levaus-bold {
   font-family: 'Levaus', sans-serif;
   font-weight: 700;
 }
 
+/* Mongro font classes */
+.mongro-normal {
+  font-family: 'Mongro', sans-serif;
+  font-weight: normal;
+}
+
+.mongro-bold {
+  font-family: 'Mongro', sans-serif;
+  font-weight: bold;
+}
+
 /* Fix responsive issues */
 * {
   box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
 }
 
 /* Ensure container behaves properly */

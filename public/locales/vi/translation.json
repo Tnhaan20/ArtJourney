@@ -655,7 +655,7 @@
           "achievement": "Top 3 Nền Tảng Giáo Dục"
         },
         "milestone": {
-          "title": "Cột Mốc Quan Trọng",
+          "title": "Cột Mốc Quan trọng",
           "description": "Tiếp cận hàng triệu người đam mê nghệ thuật trên toàn cầu",
           "achievement": "Hơn 2 Triệu Học Viên Hài Lòng"
         }
@@ -723,6 +723,19 @@
       "cta": {
         "button": "Bắt Đầu Hành Trình Nghệ Thuật Ngay Hôm Nay"
       }
+    }
+  },
+  "community": {
+    "search": {
+      "badge": "Trung Tâm Cộng Đồng",
+      "title": {
+        "welcome": "CHÀO MỪNG ĐẾN",
+        "artJourney": "CỘNG ĐỒNG ART JOURNEY"
+      },
+      "subtitle": "Kết nối với những người đam mê nghệ thuật, chia sẻ kiến thức và cùng khám phá thế giới nghệ thuật đầy mê hoặc",
+      "placeholder": "Tìm kiếm thảo luận, chủ đề, thành viên hoặc phong trào nghệ thuật...",
+      "button": "Tìm Kiếm",
+      "quickSearch": "Tìm kiếm phổ biến"
     }
   }
 }
