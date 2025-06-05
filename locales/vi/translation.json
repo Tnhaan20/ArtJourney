@@ -5,7 +5,8 @@
     "aboutUs": "Về chúng tôi",
     "community": "Cộng đồng",
     "signUp": "Đăng ký",
-    "logIn": "Đăng nhập"
+    "logIn": "Đăng nhập",
+    "pricing": "Giá học"
   },
   "language": {
     "english": "Tiếng Anh",
@@ -42,7 +43,7 @@
       "title": "Công thức của 5% Bậc thầy Lịch sử Nghệ thuật hàng đầu",
       "step1": {
         "title": "Bước 1 - Đọc",
-        "description": "Bắt đầu hành trình của bạn bằng cách khám phá nội dung được tuyển chọn kỹ lưỡng đi sâu vào lịch sử nghệ thuật. Từ các nền văn minh cổ đại đến các kiệt tác hiện đại, hiểu biết sâu sắc về sự phát triển của biểu đạt nghệ thuật. Khám phá cách các phong trào văn hóa định hình phong cách nghệ thuật và cách các nghệ sĩ huyền thoại cách mạng hóa kỹ thuật và quan điểm theo thời gian."
+        "description": "Bắt đầu hành trình của bạn bằng cách khám phá nội dung được tuyển chọn kỹ lưỡng đi sâu vào lịch sử nghệ thuật. Từ các nền văn civilisation cổ đại đến các kiệt tác hiện đại, hiểu biết sâu sắc về sự phát triển của biểu đạt nghệ thuật. Khám phá cách các phong trào văn hóa định hình phong cách nghệ thuật và cách các nghệ sĩ huyền thoại cách mạng hóa kỹ thuật và quan điểm theo thời gian."
       },
       "step2": {
         "title": "Bước 2 - Thực hành",
@@ -52,6 +53,250 @@
     },
     "testimonials": {
       "title": "Người dùng nói gì về chúng tôi"
+    },
+    "achievements": {
+      "title": "Top 3 Người dùng có Thành tích Cao nhất",
+      "joinChallenge": "Tham gia Thử thách",
+      "testimonials": {
+        "title": "Gặp gỡ Học viên và Nghe câu chuyện của họ",
+        "users": [
+          {
+            "name": "Nguyễn Thị Vân Anh",
+            "text": "Là một nghệ sĩ đầy tham vọng, tôi thấy ArtJourney vô cùng truyền cảm hứng. Nó không chỉ dạy lịch sử nghệ thuật mà còn khuyến khích sự sáng tạo. Việc điều hướng liền mạch và những bài thuyết trình ấn tượng về mặt thị giác khiến việc sử dụng trở thành một niềm vui. Tôi hoàn toàn yêu thích nó!"
+          },
+          {
+            "name": "Đoàn Thái Minh Khang",
+            "text": "ArtJourney là một nền tảng tuyệt vời dành cho những người yêu nghệ thuật! Nó dễ sử dụng, tương tác và khiến việc học lịch sử nghệ thuật trở nên thú vị và cá nhân hóa."
+          },
+          {
+            "name": "Hoàng Minh Quốc",
+            "text": "ArtJourney mang đến trải nghiệm nghệ thuật tuyệt vời! Giao diện thân thiện với người dùng và nội dung phong phú giúp tôi dễ dàng khám phá và tạo ra những tác phẩm nghệ thuật độc đáo. Dịch vụ khách hàng chu đáo và phản hồi nhanh chóng. Chắc chắn đáng để thử!"
+          },
+          {
+            "name": "Tạ Thị Kiều Thi",
+            "text": "Tôi đã ngạc nhiên trước độ sâu kiến thức mà ArtJourney cung cấp. Từ những kiệt tác cổ điển đến các tác phẩm đương đại, mọi chi tiết đều được giải thích rõ ràng. Nền tảng mượt mà, hấp dẫn về mặt thị giác và thu hút. Đây là thứ không thể thiếu đối với bất kỳ ai đam mê nghệ thuật!"
+          }
+        ]
+      }
+    },
+    "pricing": {
+      "title": "Gói thành viên và Bảng giá",
+      "viewFullPlans": "Xem đầy đủ Gói giá",
+      "plans": {
+        "perCourse": {
+          "title": "Chương trình độc đáo",
+          "subtitle": "Học một khóa học và nhận chứng chỉ",
+          "price": "40,000 VND",
+          "period": "/tháng",
+          "description": "Truy cập trang khóa học riêng lẻ hoặc Chuyên môn để mua.",
+          "features": [
+            "Truy cập tất cả khóa học trong chương trình",
+            "Nhận chứng chỉ khi hoàn thành sau khi kết thúc thử nghiệm",
+            "Thời gian hoàn tiền 3 ngày"
+          ],
+          "button": "Tiếp tục"
+        },
+        "monthly": {
+          "title": "Plus Tháng",
+          "subtitle": "Hoàn thành nhiều khóa học và được chứng nhận trong thời gian ngắn",
+          "price": "99,999 VND",
+          "period": "/tháng",
+          "description": "Hủy bất cứ lúc nào",
+          "features": [
+            "Truy cập 10+ khóa học từ Art Journey",
+            "Nhận chứng chỉ khi hoàn thành sau khi kết thúc thử nghiệm",
+            "Thời gian hoàn tiền 3 ngày"
+          ],
+          "button": "Tiếp tục"
+        },
+        "annual": {
+          "title": "Plus Năm",
+          "subtitle": "Kết hợp tính linh hoạt và tiết kiệm với mục tiêu học tập dài hạn",
+          "price": "999,999 VND",
+          "period": "/năm",
+          "description": "Hủy bất cứ lúc nào",
+          "features": [
+            "Truy cập 10+ khóa học từ Art Journey",
+            "Tiết kiệm khi thanh toán trước cho năm",
+            "Thời gian hoàn tiền 7 ngày"
+          ],
+          "button": "Tiếp tục"
+        }
+      }
+    }
+  },
+  "support": {
+    "hero": {
+      "title": "Trung tâm hỗ trợ",
+      "description": "Tìm câu trả lời cho các câu hỏi thường gặp, tài liệu hỗ trợ và thông tin về mã lỗi hệ thống."
+    },
+    "search": {
+      "placeholder": "Tìm kiếm câu hỏi, mã lỗi hoặc nội dung hỗ trợ..."
+    },
+    "tabs": {
+      "faq": "FAQ",
+      "codes": "Mã lỗi & Thành công"
+    },
+    "categories": {
+      "all": "Tất cả",
+      "account": "Tài khoản",
+      "course": "Khóa học",
+      "payment": "Thanh toán",
+      "certificate": "Chứng chỉ",
+      "technical": "Kỹ thuật"
+    },
+    "faq": {
+      "questions": [
+        {
+          "category": "account",
+          "question": "Làm thế nào để tạo tài khoản mới?",
+          "answer": "Bạn có thể tạo tài khoản bằng cách click vào nút 'Đăng ký' ở góc trên bên phải. Điền thông tin cá nhân và email hợp lệ, sau đó kiểm tra email để xác thực tài khoản."
+        },
+        {
+          "category": "account",
+          "question": "Tôi quên mật khẩu, làm sao để lấy lại?",
+          "answer": "Nhấp vào 'Quên mật khẩu' ở trang đăng nhập, nhập email của bạn. Chúng tôi sẽ gửi link đặt lại mật khẩu đến email của bạn."
+        },
+        {
+          "category": "course",
+          "question": "Làm thế nào để ghi danh khóa học?",
+          "answer": "Duyệt danh sách khóa học, chọn khóa học bạn muốn và nhấp 'Ghi danh'. Bạn có thể xem trước một số bài học miễn phí trước khi quyết định."
+        },
+        {
+          "category": "course",
+          "question": "Tôi có thể truy cập khóa học trên điện thoại không?",
+          "answer": "Có! Nền tảng của chúng tôi hoạt động mượt mà trên tất cả thiết bị bao gồm smartphone và tablet."
+        },
+        {
+          "category": "payment",
+          "question": "Các phương thức thanh toán nào được hỗ trợ?",
+          "answer": "Chúng tôi hỗ trợ thanh toán qua thẻ tín dụng, thẻ ghi nợ, ví điện tử và chuyển khoản ngân hàng."
+        },
+        {
+          "category": "certificate",
+          "question": "Làm thế nào để nhận chứng chỉ?",
+          "answer": "Sau khi hoàn thành khóa học và vượt qua các bài kiểm tra, bạn sẽ nhận được chứng chỉ điện tử có thể tải xuống."
+        },
+        {
+          "category": "technical",
+          "question": "Website không tải được, tôi phải làm gì?",
+          "answer": "Thử làm mới trang, xóa cache trình duyệt, hoặc thử trình duyệt khác. Nếu vấn đề vẫn tiếp tục, hãy liên hệ với chúng tôi."
+        },
+        {
+          "category": "technical",
+          "question": "Video bài học không phát được?",
+          "answer": "Kiểm tra kết nối internet, đảm bảo trình duyệt hỗ trợ HTML5, và thử tải lại trang. Nếu vẫn lỗi, liên hệ hỗ trợ kỹ thuật."
+        }
+      ],
+      "noResults": {
+        "title": "Không tìm thấy kết quả",
+        "description": "Thử thay đổi từ khóa tìm kiếm hoặc danh mục."
+      }
+    },
+    "codes": {
+      "errorSection": {
+        "title": "🚨 Mã lỗi hệ thống"
+      },
+      "successSection": {
+        "title": "✅ Mã thành công"
+      },
+      "labels": {
+        "vietnamese": "🇻🇳 Tiếng Việt:",
+        "english": "🇺🇸 English:",
+        "description": "📝 Mô tả chi tiết:"
+      },
+      "errors": [
+        {
+          "code": "1001",
+          "description": "Lỗi xảy ra khi hệ thống không thể tìm thấy tài khoản người dùng với email được cung cấp. Kiểm tra lại email hoặc tạo tài khoản mới."
+        },
+        {
+          "code": "1002",
+          "description": "Email không tồn tại trong hệ thống. Đảm bảo bạn đã nhập đúng địa chỉ email."
+        },
+        {
+          "code": "1003",
+          "description": "Lỗi máy chủ khi cập nhật thông tin người dùng. Thử lại sau hoặc liên hệ hỗ trợ."
+        },
+        {
+          "code": "1004",
+          "description": "Lỗi xảy ra trong quá trình đăng nhập bằng Gmail. Thử đăng nhập lại hoặc sử dụng phương thức khác."
+        },
+        {
+          "code": "1005",
+          "description": "Dữ liệu đã được xử lý nhưng hệ thống không trả về phản hồi. Kiểm tra trạng thái đăng nhập."
+        },
+        {
+          "code": "1006",
+          "description": "Email đã tồn tại trong hệ thống. Sử dụng email khác hoặc đăng nhập với tài khoản hiện có."
+        },
+        {
+          "code": "1007",
+          "description": "Thông tin đăng nhập không chính xác. Kiểm tra lại email và mật khẩu."
+        },
+        {
+          "code": "1008",
+          "description": "Tài khoản đã bị khóa do vi phạm điều khoản sử dụng. Liên hệ admin để được hỗ trợ."
+        },
+        {
+          "code": "1009",
+          "description": "ID tài khoản không tồn tại trong hệ thống. Kiểm tra lại thông tin."
+        },
+        {
+          "code": "1010",
+          "description": "Lỗi hệ thống khi ghi nhận lịch sử đăng nhập. Không ảnh hưởng đến việc đăng nhập."
+        },
+        {
+          "code": "1011",
+          "description": "Lỗi truy vấn cơ sở dữ liệu. Liên hệ kỹ thuật viên."
+        },
+        {
+          "code": "1012",
+          "description": "Lỗi thống kê dữ liệu đăng nhập. Không ảnh hưởng chức năng chính."
+        },
+        {
+          "code": "1013",
+          "description": "Email đã được xác thực. Bạn có thể đăng nhập bình thường."
+        },
+        {
+          "code": "1014",
+          "description": "Link xác thực đã hết hạn. Yêu cầu gửi lại email xác thực."
+        },
+        {
+          "code": "1015",
+          "description": "Lỗi hệ thống trong quá trình xác thực. Thử lại hoặc liên hệ hỗ trợ."
+        }
+      ],
+      "success": [
+        {
+          "code": "2001",
+          "description": "Người dùng đã đăng nhập thành công vào hệ thống."
+        },
+        {
+          "code": "2002",
+          "description": "Thông tin tài khoản đã được lấy thành công từ hệ thống."
+        },
+        {
+          "code": "2003",
+          "description": "Lịch sử đăng nhập đã được ghi nhận thành công."
+        },
+        {
+          "code": "2004",
+          "description": "Email đã được xác thực thành công. Tài khoản đã kích hoạt."
+        }
+      ],
+      "noResults": {
+        "title": "Không tìm thấy mã nào",
+        "description": "Thử thay đổi từ khóa tìm kiếm."
+      }
+    },
+    "contactSection": {
+      "title": "Vẫn cần hỗ trợ?",
+      "description": "Nếu bạn không tìm thấy câu trả lời mong muốn, đội ngũ hỗ trợ của chúng tôi luôn sẵn sàng giúp đỡ bạn.",
+      "buttons": {
+        "contact": "📧 Liên hệ hỗ trợ",
+        "email": "✉️ Gửi Email"
+      }
     }
   },
   "emailVerify": {
@@ -77,6 +322,420 @@
     "help": {
       "problem": "Gặp vấn đề?",
       "supportCenter": "Trung tâm hỗ trợ"
+    }
+  },
+  "pricing": {
+    "title": "Gói thành viên và Bảng giá",
+    "subtitle": "Chọn gói phù hợp cho hành trình học tập của bạn",
+    "billing": {
+      "monthly": "Hàng tháng",
+      "yearly": "Hàng năm",
+      "discount": "-17%"
+    },
+    "plans": {
+      "free": {
+        "title": "Miễn phí",
+        "subtitle": "Nội dung cơ bản",
+        "price": "0",
+        "currency": "VND",
+        "period": "/tháng",
+        "description": "Hoàn toàn miễn phí, không cần thẻ tín dụng",
+        "features": [
+          "Truy cập nội dung cơ bản",
+          "Có quảng cáo",
+          "Tính năng giới hạn"
+        ],
+        "button": "Bắt đầu miễn phí"
+      },
+      "monthly": {
+        "title": "Gói tháng",
+        "subtitle": "Truy cập không giới hạn nội dung cao cấp",
+        "price": "99,999",
+        "currency": "VND",
+        "period": "/tháng",
+        "description": "Hủy bất cứ lúc nào",
+        "badge": "Phổ biến nhất",
+        "features": [
+          "Truy cập không giới hạn tất cả khóa học",
+          "Không quảng cáo",
+          "Chứng chỉ hoàn thành",
+          "Hỗ trợ ưu tiên"
+        ],
+        "button": "Đăng ký ngay",
+        "guarantee": "✓ Đảm bảo hoàn tiền trong 7 ngày"
+      },
+      "yearly": {
+        "title": "Gói năm",
+        "subtitle": "Truy cập cao cấp với giá ưu đãi hàng năm",
+        "price": "999,999",
+        "currency": "VND",
+        "period": "/năm",
+        "description": "Tiết kiệm hơn khi thanh toán hàng năm",
+        "badge": "Giá trị tốt nhất",
+        "features": [
+          "Tất cả tính năng gói tháng",
+          "Tiết kiệm 17% so với gói tháng",
+          "Nội dung độc quyền",
+          "Truy cập sớm tính năng mới"
+        ],
+        "button": "Đăng ký gói năm",
+        "guarantee": "✓ Đảm bảo hoàn tiền trong 14 ngày"
+      }
+    },
+    "payPerCourse": {
+      "title": "Thanh toán theo khóa học",
+      "subtitle": "Mua từng khóa học riêng biệt",
+      "basic": {
+        "title": "Khóa học cơ bản",
+        "subtitle": "Giá thấp cho từng khóa học",
+        "price": "20,000",
+        "currency": "VND",
+        "period": "/khóa học",
+        "description": "Truy cập trọn đời",
+        "features": [
+          "Truy cập trọn đời",
+          "Tài liệu khóa học",
+          "Chứng chỉ hoàn thành"
+        ],
+        "button": "Mua ngay"
+      },
+      "advanced": {
+        "title": "Khóa học nâng cao",
+        "subtitle": "Giá cao hơn cho từng khóa học",
+        "price": "40,000",
+        "currency": "VND",
+        "period": "/khóa học",
+        "description": "Truy cập trọn đời với nội dung cao cấp",
+        "features": [
+          "Tất cả tính năng khóa học cơ bản",
+          "Nội dung chuyên sâu",
+          "Hỗ trợ 1-1 với giảng viên",
+          "Dự án thực hành"
+        ],
+        "button": "Mua ngay"
+      }
+    }
+  },
+  "error404": {
+    "title": "RẤT TIẾC!",
+    "heading": "Không Tìm Thấy Trang",
+    "description": "Chúng tôi rất xin lỗi vì sự bất tiện này. Có vẻ như bạn đang cố gắng truy cập một trang đã bị xóa hoặc chưa bao giờ tồn tại.",
+    "button": "QUAY VỀ TRANG CHỦ"
+  },
+  "footer": {
+    "logo": "Art Journey",
+    "tagline": "Khám phá Lịch sử Nghệ thuật qua các Thời đại",
+    "motto": "Mỗi nét vẽ kể một câu chuyện, mỗi kiệt tác mang một tâm hồn. Hãy cùng chúng tôi khám phá di sản nghệ thuật của nhân loại.",
+    "about": {
+      "title": "Về ArtJourney",
+      "description": "ArtJourney là nền tảng học trực tuyến hàng đầu chuyên về giáo dục lịch sử nghệ thuật, cung cấp trải nghiệm học tập đắm chìm và toàn diện từ nghệ thuật cổ đại đến đương đại.",
+      "contact": {
+        "address": "610 Nguyễn Thượng Hiền, Quận 10, TP. Hồ Chí Minh",
+        "phone": "+84 98 174 5930",
+        "email": "contact.artjourney01@gmail.com"
+      }
+    },
+    "featuredTopics": {
+      "title": "Chủ đề Nổi bật",
+      "subtitle": "🎓 Các Thời kỳ Lịch sử Nghệ thuật",
+      "periods": [
+        {
+          "era": "Cổ đại",
+          "description": "Nghệ thuật Ai Cập & Hy Lạp"
+        },
+        {
+          "era": "Trung cổ",
+          "description": "Gothic & Byzantine"
+        },
+        {
+          "era": "Phục Hưng",
+          "description": "Leonardo & Michelangelo"
+        },
+        {
+          "era": "Hiện đại",
+          "description": "Ấn tượng & Lập thể"
+        }
+      ]
+    },
+    "navigation": {
+      "title": "Điều hướng",
+      "links": {
+        "about": "Về chúng tôi",
+        "pricing": "Bảng giá",
+        "courses": "Khóa học"
+      },
+      "quote": "Nghệ thuật không phải là thứ bạn nhìn thấy, mà là thứ bạn khiến người khác nhìn thấy."
+    },
+    "bottom": {
+      "copyright": "© 2025 ArtJourney. Tất cả quyền được bảo lưu.",
+      "links": {
+        "privacy": "Chính sách Bảo mật",
+        "terms": "Điều khoản Dịch vụ",
+        "support": "Hỗ trợ Học viên",
+        "contact": "Liên hệ"
+      }
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Chào Mừng Đến Với Thế Giới Của Chúng Tôi",
+      "title": {
+        "about": "VỀ CHÚNG TÔI",
+        "artJourney": "ART JOURNEY"
+      },
+      "description": {
+        "main": "Nơi",
+        "highlight": "sự sáng tạo gặp gỡ khám phá",
+        "ending": ", và mỗi nét cọ kể một câu chuyện kết nối chúng ta qua thời gian và văn hóa.",
+        "secondary": "Chúng tôi tin rằng nghệ thuật không chỉ là thứ bạn quan sát—mà là thứ bạn trải nghiệm. Hãy cùng chúng tôi trong hành trình thay đổi cách bạn nhìn, cảm nhận và kết nối với thế giới."
+      },
+      "stats": {
+        "artLovers": {
+          "count": "2M+",
+          "label": "Người Yêu Nghệ Thuật"
+        },
+        "artworks": {
+          "count": "10K+",
+          "label": "Tác Phẩm Nghệ Thuật"
+        },
+        "rating": {
+          "count": "4.9★",
+          "label": "Đánh Giá Người Dùng"
+        }
+      },
+      "buttons": {
+        "startJourney": "BẮT ĐẦU HÀNH TRÌNH",
+        "exploreGallery": "KHÁM PHÁ GALLERY"
+      },
+      "images": {
+        "contemporary": "Phòng Triển Lãm Nghệ Thuật Đương Đại",
+        "classical": "Kiệt Tác Nghệ Thuật Cổ Điển",
+        "ancient": "Nghệ Thuật & Điêu Khắc Cổ Đại"
+      },
+      "quote": {
+        "text": "Nghệ thuật không phải là những gì bạn nhìn thấy, mà là những gì bạn khiến người khác nhìn thấy. Tại ArtJourney, chúng tôi không chỉ cho bạn thấy nghệ thuật— chúng tôi giúp bạn khám phá những câu chuyện, cảm xúc và kết nối khiến mỗi tác phẩm trở nên vượt thời gian.",
+        "author": "— Đội Ngũ ArtJourney"
+      }
+    },
+    "benefits": {
+      "badge": "Tại Sao Chọn Chúng Tôi",
+      "title": {
+        "main": "LỰA CHỌN TỐT NHẤT CHO",
+        "highlight": "NGƯỜI HỌC NGHỆ THUẬT"
+      },
+      "description": "Trải nghiệm giáo dục nghệ thuật được thiết kế dành riêng cho bạn. Nền tảng của chúng tôi kết hợp công nghệ tiên tiến với kiến thức chuyên môn để mang lại trải nghiệm học tập vượt trội.",
+      "image": {
+        "alt": "Trải Nghiệm Học Nghệ Thuật",
+        "overlay": {
+          "title": "Khám Phá Nghệ Thuật Như Chưa Từng Có",
+          "subtitle": "Tham gia cùng hàng ngàn người đam mê nghệ thuật"
+        }
+      },
+      "floatingStats": {
+        "satisfaction": {
+          "value": "99%",
+          "label": "Hài Lòng"
+        },
+        "available": {
+          "value": "24/7",
+          "label": "Luôn Sẵn Sàng"
+        }
+      },
+      "items": {
+        "flexible": {
+          "title": "Học Tập Linh Hoạt & Tiện Lợi",
+          "description": "Học theo tốc độ riêng của bạn, mọi lúc, mọi nơi. Truy cập khóa học 24/7 từ bất kỳ thiết bị nào."
+        },
+        "quality": {
+          "title": "Nội Dung Chất Lượng Cao",
+          "description": "Được tuyển chọn bởi các chuyên gia và sử gia nghệ thuật. Nội dung cao cấp mang lại giá trị thực sự."
+        },
+        "support": {
+          "title": "Hỗ Trợ Học Tập Hiệu Quả",
+          "description": "Nhận hướng dẫn cá nhân hóa, bài kiểm tra tương tác và công cụ theo dõi tiến độ."
+        },
+        "community": {
+          "title": "Cộng Đồng Học Tập Sôi Động",
+          "description": "Kết nối với những người đam mê nghệ thuật, chia sẻ kiến thức và cùng nhau phát triển."
+        }
+      },
+      "cta": {
+        "button": "Trải Nghiệm Sự Khác Biệt"
+      },
+      "bottomStats": {
+        "learners": {
+          "value": "2M+",
+          "label": "Học Viên Tích Cực"
+        },
+        "courses": {
+          "value": "500+",
+          "label": "Khóa Học Nghệ Thuật"
+        },
+        "success": {
+          "value": "98%",
+          "label": "Tỷ Lệ Thành Công"
+        },
+        "support": {
+          "value": "24/7",
+          "label": "Hỗ Trợ Luôn Sẵn Sàng"
+        }
+      }
+    },
+    "team": {
+      "title": {
+        "who": "CHÚNG TÔI",
+        "weAre": "LÀ AI?"
+      },
+      "members": {
+        "thi": {
+          "name": "Tạ Thị Kiều Thi",
+          "role": "Leader"
+        },
+        "quoc": {
+          "name": "Nguyễn Minh Quốc",
+          "role": "UX/UI"
+        },
+        "nhan": {
+          "name": "Võ Thành Nhân",
+          "role": "Frontend"
+        },
+        "khang": {
+          "name": "Đoàn Thái Minh Khang",
+          "role": "Frontend"
+        },
+        "giap": {
+          "name": "Hoàng Duy Giáp",
+          "role": "Backend"
+        },
+        "hieu": {
+          "name": "Đoàn Phúc Hiếu",
+          "role": "Backend"
+        }
+      },
+      "cta": {
+        "badge": "Tham Gia Cùng Chúng Tôi",
+        "title": "Bạn muốn tham gia đội ngũ của chúng tôi?",
+        "description": "Chúng tôi luôn tìm kiếm những cá nhân tài năng có chung đam mê với nghệ thuật và sự đổi mới.",
+        "button": "Liên Hệ Ngay"
+      }
+    },
+    "stories": {
+      "badge": "Hành Trình Của Chúng Tôi",
+      "title": {
+        "from": "TỪ",
+        "dreams": "GIẤC MƠ",
+        "to": "ĐẾN",
+        "reality": "THỰC TẠI"
+      },
+      "description": "Mọi hành trình vĩ đại đều bắt đầu bằng một bước chân đầu tiên. Câu chuyện của chúng tôi là về đam mê, sự kiên trì và niềm tin không lay chuyển rằng nghệ thuật có sức mạnh thay đổi cuộc sống.",
+      "image": {
+        "alt": "Hành Trình Thành Công Của Chúng Tôi",
+        "overlay": {
+          "subtitle": "Hành Trình Tuyệt Vời",
+          "years": "2025 - 2028"
+        }
+      },
+      "timeline": {
+        "title": "Các Mốc Quan Trọng"
+      },
+      "milestones": {
+        "beginning": {
+          "title": "Khởi Đầu",
+          "description": "Bắt đầu với ước mơ làm cho nghệ thuật trở nên dễ tiếp cận với mọi người",
+          "achievement": "100 Người Dùng Đầu Tiên"
+        },
+        "community": {
+          "title": "Cộng Đồng Phát Triển",
+          "description": "Xây dựng cầu nối giữa những người yêu nghệ thuật trên toàn thế giới",
+          "achievement": "Hơn 10K Thành Viên"
+        },
+        "recognition": {
+          "title": "Được Công Nhận",
+          "description": "Được vinh danh vì những đổi mới trong giáo dục nghệ thuật",
+          "achievement": "Top 3 Nền Tảng Giáo Dục"
+        },
+        "milestone": {
+          "title": "Cột Mốc Quan trọng",
+          "description": "Tiếp cận hàng triệu người đam mê nghệ thuật trên toàn cầu",
+          "achievement": "Hơn 2 Triệu Học Viên Hài Lòng"
+        }
+      },
+      "cta": {
+        "join": "Tham Gia Câu Chuyện",
+        "learn": "Tìm Hiểu Thêm"
+      }
+    },
+    "clients": {
+      "badge": "Lời Chứng Thực",
+      "title": {
+        "what": "HỌC VIÊN NÓI",
+        "learners": "GÌ VỀ CHÚNG TÔI"
+      },
+      "description": "Tham gia cùng hàng ngàn người đam mê nghệ thuật đã thay đổi hiểu biết về lịch sử nghệ thuật thông qua nền tảng học tập toàn diện của chúng tôi.",
+      "testimonials": {
+        "sarah": {
+          "name": "Sarah Martinez",
+          "role": "Sinh Viên Lịch Sử Nghệ Thuật",
+          "quote": "ArtJourney đã thay đổi hiểu biết của tôi về nghệ thuật Phục Hưng. Dòng thời gian tương tác và những giải thích chi tiết đã làm cho các phong trào nghệ thuật phức tạp trở nên dễ tiếp cận. Tôi chưa bao giờ cảm thấy kết nối với lịch sử nghệ thuật như vậy!"
+        },
+        "michael": {
+          "name": "TS. Michael Chen",
+          "role": "Quản Tuyển Bảo Tàng",
+          "quote": "Là một quản tuyển chuyên nghiệp, tôi rất ấn tượng với độ sâu và tính chính xác của nội dung ArtJourney. Đây đã trở thành tài nguyên chính cho nghiên cứu của tôi và tôi giới thiệu cho tất cả đồng nghiệp và sinh viên."
+        },
+        "emma": {
+          "name": "Emma Thompson",
+          "role": "Giáo Viên Trung Học",
+          "quote": "Học sinh của tôi cuối cùng đã hứng thú với lịch sử nghệ thuật! Nội dung hình ảnh hấp dẫn và phương pháp kể chuyện của ArtJourney đã hoàn toàn thay đổi lớp học của tôi. Điểm kiểm tra cải thiện 40%!"
+        },
+        "roberto": {
+          "name": "Roberto Silva",
+          "role": "Người Đam Mê Nghệ Thuật",
+          "quote": "Tôi không bao giờ nghĩ mình có thể hiểu được nghệ thuật trừu tượng cho đến khi tham gia khóa học nghệ thuật hiện đại của ArtJourney. Cách họ giải thích kỹ thuật nghệ thuật và bối cảnh lịch sử thực sự tuyệt vời!"
+        },
+        "lisa": {
+          "name": "GS. Lisa Wang",
+          "role": "Giáo Sư Đại Học",
+          "quote": "ArtJourney kết nối hoàn hảo giữa tính nghiêm túc học thuật và khả năng tiếp cận. Sinh viên đại học của tôi yêu thích nền tảng này, và tôi sử dụng nó để bổ sung cho các bài giảng thường xuyên."
+        },
+        "james": {
+          "name": "James Rodriguez",
+          "role": "Người Yêu Nghệ Thuật Đã Nghỉ Hưu",
+          "quote": "Ở tuổi 65, tôi nghĩ đã quá muộn để học về nghệ thuật. ArtJourney đã chứng minh tôi sai! Tốc độ học hoàn hảo cho người học trưởng thành, và tôi đã khám phá những nghệ sĩ mà tôi chưa từng biết đến."
+        }
+      },
+      "stats": {
+        "rating": {
+          "value": "4.9/5",
+          "label": "Đánh Giá Trung Bình"
+        },
+        "students": {
+          "value": "15K+",
+          "label": "Học Viên Hài Lòng",
+          "subtitle": "Trên 50+ quốc gia"
+        },
+        "completion": {
+          "value": "98%",
+          "label": "Tỷ Lệ Hoàn Thành",
+          "subtitle": "Học viên hoàn thành khóa học"
+        }
+      },
+      "cta": {
+        "button": "Bắt Đầu Hành Trình Nghệ Thuật Ngay Hôm Nay"
+      }
+    }
+  },
+  "community": {
+    "search": {
+      "badge": "Trung Tâm Cộng Đồng",
+      "title": {
+        "welcome": "CHÀO MỪNG ĐẾN",
+        "artJourney": "CỘNG ĐỒNG ART JOURNEY"
+      },
+      "subtitle": "Kết nối với những người đam mê nghệ thuật, chia sẻ kiến thức và cùng khám phá thế giới nghệ thuật đầy mê hoặc",
+      "placeholder": "Tìm kiếm thảo luận, chủ đề, thành viên hoặc phong trào nghệ thuật...",
+      "button": "Tìm Kiếm",
+      "quickSearch": "Tìm kiếm phổ biến"
     }
   }
 }
