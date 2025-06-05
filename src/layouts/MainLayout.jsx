@@ -30,8 +30,10 @@ export default function MainLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      {/* Add padding-top equal to header height */}
-      <main className="flex-grow pt-16">{children}</main>
+      {/* Add padding-top equal to header height, except for home page */}
+      <main className={`flex-grow ${location.pathname === "/" ? "" : "pt-16"}`}>
+        {children}
+      </main>
       <Footer />
     </div>
   );

@@ -5,7 +5,8 @@
     "aboutUs": "About Us",
     "community": "Community",
     "signUp": "Sign Up",
-    "logIn": "Log In"
+    "logIn": "Log In",
+    "pricing": "Pricing"
   },
   "language": {
     "english": "English",
@@ -14,7 +15,7 @@
   "home": {
     "hero": {
       "title": "STUDY WITH",
-      "subtitle": "ART JOURNEY",
+      "subtitle": "ARTJOURNEY",
       "description": "Learn art history & Discover the stories behind masterpieces and enhance your understanding of art.",
       "signUp": "LET'S SIGN UP",
       "goToLearn": "Let's Learn"
@@ -52,6 +53,76 @@
     },
     "testimonials": {
       "title": "What Our Users Say"
+    },
+    "achievements": {
+      "title": "Top 3 Users with the Highest Achievements",
+      "joinChallenge": "Join the Challenge",
+      "testimonials": {
+        "title": "Meet Our Learners and Hear Their Stories",
+        "users": [
+          {
+            "name": "Nguyen Thi Van Anh",
+            "text": "As an aspiring artist, I find ArtJourney incredibly inspiring. It not only teaches art history but also encourages creativity. The seamless navigation and visually stunning presentations make it a joy to use. I absolutely love it!"
+          },
+          {
+            "name": "Doan Thai Minh Khang", 
+            "text": "ArtJourney is a great platform for art lovers! It's easy to use, interactive, and makes learning about art history fun and personal."
+          },
+          {
+            "name": "Hoang Minh Quoc",
+            "text": "ArtJourney offers an amazing art experience! The user-friendly interface and rich content make it easy for me to explore and create unique artworks. The customer service is attentive and responds quickly. Definitely worth trying!"
+          },
+          {
+            "name": "Ta Thi Kieu Thi",
+            "text": "I was amazed by the depth of knowledge ArtJourney provides. From classic masterpieces to contemporary works, every detail is well-explained. The platform is smooth, visually appealing, and engaging. It's a must-have for anyone passionate about art!"
+          }
+        ]
+      }
+    },
+    "pricing": {
+      "title": "Membership and Pricing",
+      "viewFullPlans": "View Full Pricing Plans",
+      "plans": {
+        "perCourse": {
+          "title": "Unique curriculum",
+          "subtitle": "Learn a single course and earn a certificate",
+          "price": "40,000 VND",
+          "period": "/month",
+          "description": "Visit an individual course or Specialization page to purchase.",
+          "features": [
+            "Access all courses in the curriculum",
+            "Earn certificate upon completion after trial ends",
+            "3 day refund period"
+          ],
+          "button": "Continue"
+        },
+        "monthly": {
+          "title": "Plus Monthly",
+          "subtitle": "Complete multiple courses and get certified in a short time",
+          "price": "99,999 VND",
+          "period": "/month",
+          "description": "Cancel anytime",
+          "features": [
+            "Access 10+ courses from Art Journey",
+            "Earn certificate upon completion after trial ends",
+            "3 day refund period"
+          ],
+          "button": "Continue"
+        },
+        "annual": {
+          "title": "Plus Annual",
+          "subtitle": "Combine flexibility and savings with long-term learning goals",
+          "price": "999,999 VND",
+          "period": "/year",
+          "description": "Cancel anytime",
+          "features": [
+            "Access 10+ courses from Art Journey",
+            "Save when you pay in advance for the year",
+            "7 day refund period"
+          ],
+          "button": "Continue"
+        }
+      }
     }
   },
   "emailVerify": {
@@ -77,6 +148,594 @@
     "help": {
       "problem": "Having issues?",
       "supportCenter": "Support Center"
+    }
+  },
+  "support": {
+    "hero": {
+      "title": "Support Center",
+      "description": "Find answers to frequently asked questions, support documentation and system error code information."
+    },
+    "search": {
+      "placeholder": "Search questions, error codes or support content..."
+    },
+    "tabs": {
+      "faq": "FAQ",
+      "codes": "Error & Success Codes"
+    },
+    "categories": {
+      "all": "All",
+      "account": "Account",
+      "course": "Course",
+      "payment": "Payment",
+      "certificate": "Certificate",
+      "technical": "Technical"
+    },
+    "faq": {
+      "questions": [
+        {
+          "category": "account",
+          "question": "How to create a new account?",
+          "answer": "You can create an account by clicking the 'Sign Up' button in the top right corner. Fill in your personal information and valid email, then check your email to verify your account."
+        },
+        {
+          "category": "account",
+          "question": "I forgot my password, how to recover it?",
+          "answer": "Click 'Forgot Password' on the login page, enter your email. We will send a password reset link to your email."
+        },
+        {
+          "category": "course",
+          "question": "How to enroll in a course?",
+          "answer": "Browse the course list, select the course you want and click 'Enroll'. You can preview some free lessons before deciding."
+        },
+        {
+          "category": "course",
+          "question": "Can I access courses on mobile?",
+          "answer": "Yes! Our platform works smoothly on all devices including smartphones and tablets."
+        },
+        {
+          "category": "payment",
+          "question": "What payment methods are supported?",
+          "answer": "We support payments via credit cards, debit cards, e-wallets and bank transfers."
+        },
+        {
+          "category": "certificate",
+          "question": "How to receive certificates?",
+          "answer": "After completing the course and passing the tests, you will receive a downloadable digital certificate."
+        },
+        {
+          "category": "technical",
+          "question": "Website won't load, what should I do?",
+          "answer": "Try refreshing the page, clearing browser cache, or try a different browser. If the problem persists, please contact us."
+        },
+        {
+          "category": "technical",
+          "question": "Lesson videos won't play?",
+          "answer": "Check your internet connection, make sure your browser supports HTML5, and try reloading the page. If still having issues, contact technical support."
+        }
+      ],
+      "noResults": {
+        "title": "No results found",
+        "description": "Try changing search keywords or categories."
+      }
+    },
+    "codes": {
+      "errorSection": {
+        "title": "🚨 System Error Codes"
+      },
+      "successSection": {
+        "title": "✅ Success Codes"
+      },
+      "labels": {
+        "vietnamese": "🇻🇳 Vietnamese:",
+        "english": "🇺🇸 English:",
+        "description": "📝 Detailed Description:"
+      },
+      "errors": [
+        {
+          "code": "1001",
+          "description": "Error occurs when the system cannot find a user account with the provided email. Check the email again or create a new account."
+        },
+        {
+          "code": "1002", 
+          "description": "Email does not exist in the system. Make sure you entered the correct email address."
+        },
+        {
+          "code": "1003",
+          "description": "Server error when updating user information. Try again later or contact support."
+        },
+        {
+          "code": "1004",
+          "description": "Error occurred during Gmail login process. Try logging in again or use another method."
+        },
+        {
+          "code": "1005",
+          "description": "Data has been processed but the system did not return a response. Check login status."
+        },
+        {
+          "code": "1006",
+          "description": "Email already exists in the system. Use a different email or log in with existing account."
+        },
+        {
+          "code": "1007",
+          "description": "Login information is incorrect. Check your email and password again."
+        },
+        {
+          "code": "1008",
+          "description": "Account has been locked due to violation of terms of use. Contact admin for support."
+        },
+        {
+          "code": "1009",
+          "description": "Account ID does not exist in the system. Check the information again."
+        },
+        {
+          "code": "1010",
+          "description": "System error when recording login history. Does not affect login functionality."
+        },
+        {
+          "code": "1011",
+          "description": "Database query error. Contact technical support."
+        },
+        {
+          "code": "1012",
+          "description": "Login data statistics error. Does not affect main functionality."
+        },
+        {
+          "code": "1013",
+          "description": "Email has been verified. You can log in normally."
+        },
+        {
+          "code": "1014",
+          "description": "Verification link has expired. Request to resend verification email."
+        },
+        {
+          "code": "1015",
+          "description": "System error during verification process. Try again or contact support."
+        }
+      ],
+      "success": [
+        {
+          "code": "2001",
+          "description": "User has successfully logged into the system."
+        },
+        {
+          "code": "2002",
+          "description": "Account information has been successfully retrieved from the system."
+        },
+        {
+          "code": "2003",
+          "description": "Login history has been successfully recorded."
+        },
+        {
+          "code": "2004",
+          "description": "Email has been successfully verified. Account has been activated."
+        }
+      ],
+      "noResults": {
+        "title": "No codes found",
+        "description": "Try changing search keywords."
+      }
+    },
+    "contactSection": {
+      "title": "Still need support?",
+      "description": "If you can't find the answer you're looking for, our support team is always ready to help you.",
+      "buttons": {
+        "contact": "📧 Contact Support",
+        "email": "✉️ Send Email"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Membership and Pricing",
+    "subtitle": "Choose the perfect plan for your learning journey",
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "discount": "-17%"
+    },
+    "plans": {
+      "free": {
+        "title": "Free",
+        "subtitle": "Basic content",
+        "price": "0",
+        "currency": "VND",
+        "period": "/month",
+        "description": "Completely free, no credit card required",
+        "features": [
+          "Access to basic content",
+          "Ad-supported experience",
+          "Limited features"
+        ],
+        "button": "Get Started Free"
+      },
+      "monthly": {
+        "title": "Monthly Subscription",
+        "subtitle": "Unlimited premium content access",
+        "price": "99,999",
+        "currency": "VND",
+        "period": "/month",
+        "description": "Cancel anytime",
+        "badge": "Most Popular",
+        "features": [
+          "Unlimited access to all courses",
+          "Ad-free experience",
+          "Completion certificates",
+          "Priority support"
+        ],
+        "button": "Subscribe Now",
+        "guarantee": "✓ 7-day money back guarantee"
+      },
+      "yearly": {
+        "title": "Yearly Subscription",
+        "subtitle": "Discounted annual premium access",
+        "price": "999,999",
+        "currency": "VND",
+        "period": "/year",
+        "description": "Save more when you pay annually",
+        "badge": "Best Value",
+        "features": [
+          "All monthly plan features",
+          "Save 17% compared to monthly",
+          "Exclusive content",
+          "Early access to new features"
+        ],
+        "button": "Subscribe Yearly",
+        "guarantee": "✓ 14-day money back guarantee"
+      }
+    },
+    "payPerCourse": {
+      "title": "Pay-per-course",
+      "subtitle": "Purchase individual courses separately",
+      "basic": {
+        "title": "Basic Course",
+        "subtitle": "Individual course lower price",
+        "price": "20,000",
+        "currency": "VND",
+        "period": "/course",
+        "description": "Lifetime access",
+        "features": [
+          "Lifetime access",
+          "Course materials",
+          "Completion certificate"
+        ],
+        "button": "Buy Now"
+      },
+      "advanced": {
+        "title": "Advanced Course",
+        "subtitle": "Individual course higher price",
+        "price": "40,000",
+        "currency": "VND",
+        "period": "/course",
+        "description": "Lifetime access with premium content",
+        "features": [
+          "All basic course features",
+          "In-depth content",
+          "1-on-1 instructor support",
+          "Hands-on projects"
+        ],
+        "button": "Buy Now"
+      }
+    }
+  },
+  "error404": {
+    "title": "OOPS!",
+    "heading": "Page Not Found",
+    "description": "We are very sorry for the inconvenience. It looks like you're trying to access a page that has been deleted or never even existed.",
+    "button": "GO BACK HOME"
+  },
+  "footer": {
+    "logo": "Art Journey",
+    "tagline": "Discover Art History Through the Ages",
+    "motto": "Every brushstroke tells a story, every masterpiece carries a soul. Join us in exploring humanity's artistic heritage.",
+    "about": {
+      "title": "About ArtJourney",
+      "description": "ArtJourney is a premier online learning platform dedicated to art history education, offering immersive and comprehensive learning experiences from ancient to contemporary art.",
+      "contact": {
+        "address": "610 Nguyen Thuong Hien, District 10 Ho Chi Minh city",
+        "phone": "+84 98 174 5930",
+        "email": "contact.artjourney01@gmail.com"
+      }
+    },
+    "featuredTopics": {
+      "title": "Featured Topics",
+      "subtitle": "🎓 Art History Periods",
+      "periods": [
+        {
+          "era": "Ancient",
+          "description": "Egyptian & Greek Art"
+        },
+        {
+          "era": "Medieval", 
+          "description": "Gothic & Byzantine"
+        },
+        {
+          "era": "Renaissance",
+          "description": "Leonardo & Michelangelo"
+        },
+        {
+          "era": "Modern",
+          "description": "Impressionism & Cubism"
+        }
+      ]
+    },
+    "navigation": {
+      "title": "Navigation",
+      "links": {
+        "about": "About Us",
+        "pricing": "Pricing",
+        "courses": "Courses"
+      },
+      "quote": "Art is not what you see, but what you make others see."
+    },
+    "bottom": {
+      "copyright": "© 2025 ArtJourney. All rights reserved.",
+      "links": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "support": "Student Support",
+        "contact": "Contact Us"
+      }
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Welcome to Our World",
+      "title": {
+        "about": "ABOUT",
+        "artJourney": "ART JOURNEY"
+      },
+      "description": {
+        "main": "Where",
+        "highlight": "creativity meets discovery",
+        "ending": ", and every brushstroke tells a story that connects us across time and culture.",
+        "secondary": "We believe art isn't just something you observe—it's something you experience. Join us on a journey that transforms the way you see, feel, and connect with the world."
+      },
+      "stats": {
+        "artLovers": {
+          "count": "2M+",
+          "label": "Art Lovers"
+        },
+        "artworks": {
+          "count": "10K+",
+          "label": "Artworks"
+        },
+        "rating": {
+          "count": "4.9★",
+          "label": "User Rating"
+        }
+      },
+      "buttons": {
+        "startJourney": "START YOUR JOURNEY",
+        "exploreGallery": "EXPLORE GALLERY"
+      },
+      "images": {
+        "contemporary": "Contemporary Art Gallery",
+        "classical": "Classical Art Masterpiece",
+        "ancient": "Ancient Art & Sculpture"
+      },
+      "quote": {
+        "text": "Art is not what you see, but what you make others see. At ArtJourney, we don't just show you art— we help you discover the stories, emotions, and connections that make each piece timeless.",
+        "author": "— The ArtJourney Team"
+      }
+    },
+    "benefits": {
+      "badge": "Why Choose Us",
+      "title": {
+        "main": "BEST CHOICE FOR",
+        "highlight": "ART LEARNERS"
+      },
+      "description": "Experience art education designed with you in mind. Our platform combines cutting-edge technology with expert knowledge to deliver an unparalleled learning experience.",
+      "image": {
+        "alt": "Art Learning Experience",
+        "overlay": {
+          "title": "Discover Art Like Never Before",
+          "subtitle": "Join thousands of art enthusiasts"
+        }
+      },
+      "floatingStats": {
+        "satisfaction": {
+          "value": "99%",
+          "label": "Satisfaction"
+        },
+        "available": {
+          "value": "24/7",
+          "label": "Available"
+        }
+      },
+      "items": {
+        "flexible": {
+          "title": "Flexible & Convenient Learning",
+          "description": "Learn at your own pace, anytime, anywhere. Access our courses 24/7 from any device."
+        },
+        "quality": {
+          "title": "High-Quality Content",
+          "description": "Curated by art experts and historians. Premium content that delivers real value."
+        },
+        "support": {
+          "title": "Effective Learning Support",
+          "description": "Get personalized guidance, interactive quizzes, and progress tracking tools."
+        },
+        "community": {
+          "title": "Engaging Learning Community",
+          "description": "Connect with fellow art enthusiasts, share insights, and grow together."
+        }
+      },
+      "cta": {
+        "button": "Experience the Difference"
+      },
+      "bottomStats": {
+        "learners": {
+          "value": "2M+",
+          "label": "Active Learners"
+        },
+        "courses": {
+          "value": "500+",
+          "label": "Art Courses"
+        },
+        "success": {
+          "value": "98%",
+          "label": "Success Rate"
+        },
+        "support": {
+          "value": "24/7",
+          "label": "Support Available"
+        }
+      }
+    },
+    "team": {
+      "title": {
+        "who": "WHO",
+        "weAre": "WE ARE?"
+      },
+      "members": {
+        "thi": {
+          "name": "Ta Thi Kieu Thi",
+          "role": "Team Lead"
+        },
+        "quoc": {
+          "name": "Nguyen Minh Quoc",
+          "role": "UX/UI Designer"
+        },
+        "nhan": {
+          "name": "Vo Thanh Nhan",
+          "role": "Frontend Developer"
+        },
+        "khang": {
+          "name": "Doan Thai Minh Khang",
+          "role": "Frontend Developer"
+        },
+        "giap": {
+          "name": "Hoang Duy Giap",
+          "role": "Backend Developer"
+        },
+        "hieu": {
+          "name": "Doan Phuc Hieu",
+          "role": "Backend Developer"
+        }
+      },
+      "cta": {
+        "badge": "Join Us",
+        "title": "Want to join our team?",
+        "description": "We're always looking for talented individuals who share our passion for art and innovation.",
+        "button": "Get In Touch"
+      }
+    },
+    "stories": {
+      "badge": "Our Journey",
+      "title": {
+        "from": "FROM",
+        "dreams": "DREAMS",
+        "to": "TO",
+        "reality": "REALITY"
+      },
+      "description": "Every great journey begins with a single step. Our story is one of passion, perseverance, and the unwavering belief that art has the power to transform lives.",
+      "image": {
+        "alt": "Our Journey to Success",
+        "overlay": {
+          "subtitle": "Our Amazing Journey",
+          "years": "2025 - 2028"
+        }
+      },
+      "timeline": {
+        "title": "Our Milestones"
+      },
+      "milestones": {
+        "beginning": {
+          "title": "The Beginning",
+          "description": "Started with a dream to make art accessible to everyone",
+          "achievement": "First 100 Users"
+        },
+        "community": {
+          "title": "Growing Community",
+          "description": "Building bridges between art lovers worldwide",
+          "achievement": "10K+ Community"
+        },
+        "recognition": {
+          "title": "Recognition",
+          "description": "Honored for innovation in art education",
+          "achievement": "Top 3 Education Platform"
+        },
+        "milestone": {
+          "title": "Major Milestone",
+          "description": "Reaching millions of art enthusiasts globally",
+          "achievement": "2M+ Happy Learners"
+        }
+      },
+      "cta": {
+        "join": "Join Our Story",
+        "learn": "Learn More"
+      }
+    },
+    "clients": {
+      "badge": "Testimonials",
+      "title": {
+        "what": "WHAT OUR",
+        "learners": "LEARNERS SAY"
+      },
+      "description": "Join thousands of art enthusiasts who have transformed their understanding of art history through our comprehensive learning platform.",
+      "testimonials": {
+        "sarah": {
+          "name": "Sarah Martinez",
+          "role": "Art History Student",
+          "quote": "ArtJourney transformed my understanding of Renaissance art. The interactive timeline and detailed explanations made complex art movements so accessible. I've never felt more connected to art history!"
+        },
+        "michael": {
+          "name": "Dr. Michael Chen",
+          "role": "Museum Curator",
+          "quote": "As a professional curator, I'm impressed by the depth and accuracy of ArtJourney's content. It's become my go-to resource for research and I recommend it to all my colleagues and students."
+        },
+        "emma": {
+          "name": "Emma Thompson",
+          "role": "High School Teacher",
+          "quote": "My students are finally excited about art history! ArtJourney's engaging visual content and storytelling approach have completely transformed my classroom. Test scores improved by 40%!"
+        },
+        "roberto": {
+          "name": "Roberto Silva",
+          "role": "Art Enthusiast",
+          "quote": "I never thought I'd understand abstract art until I took ArtJourney's modern art course. The way they explain artistic techniques and historical context is absolutely brilliant!"
+        },
+        "lisa": {
+          "name": "Prof. Lisa Wang",
+          "role": "University Professor",
+          "quote": "ArtJourney bridges the gap between academic rigor and accessibility perfectly. My university students love the platform, and I use it to supplement my lectures regularly."
+        },
+        "james": {
+          "name": "James Rodriguez",
+          "role": "Retired Art Lover",
+          "quote": "At 65, I thought it was too late to learn about art. ArtJourney proved me wrong! The pacing is perfect for adult learners, and I've discovered artists I never knew existed."
+        }
+      },
+      "stats": {
+        "rating": {
+          "value": "4.9/5",
+          "label": "Average Rating"
+        },
+        "students": {
+          "value": "15K+",
+          "label": "Happy Students",
+          "subtitle": "Across 50+ countries"
+        },
+        "completion": {
+          "value": "98%",
+          "label": "Completion Rate",
+          "subtitle": "Students finish courses"
+        }
+      },
+      "cta": {
+        "button": "Start Your Art Journey Today"
+      }
+    }
+  },
+  "community": {
+    "search": {
+      "badge": "Community Hub",
+      "title": {
+        "welcome": "WELCOME TO",
+        "artJourney": "ART JOURNEY COMMUNITY"
+      },
+      "subtitle": "Connect with fellow art enthusiasts, share insights, and explore the fascinating world of art history together",
+      "placeholder": "Search discussions, topics, members, or art movements...",
+      "button": "Search",
+      "quickSearch": "Popular searches"
     }
   }
 }

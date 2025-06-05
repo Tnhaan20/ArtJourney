@@ -5,6 +5,7 @@ import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { useToast } from "@/utils/Toast";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
+import { TailwindStyle } from "@/utils/Enum";
 
 export default function GoogleCallback() {
   
@@ -142,12 +143,12 @@ export default function GoogleCallback() {
       const timer = setTimeout(() => {
         console.log("Redirecting user based on role:", user.role);
 
-        if (user.role === 1) {
-          navigate("/dashboard");
-        } else if (user.role === 3) {
+        if (user.role === 0) {
+          navigate("/");
+        } else if (user.role === 1) {
           navigate("/task-designer");
         } else if (user.role === 2) {
-          navigate("/dashboard");
+          navigate("/admin");
         } else {
           navigate("/");
         }
@@ -199,12 +200,12 @@ export default function GoogleCallback() {
                   googleRefetchErrorData?.message ||
                   "An error occurred during sign in. Please try again."}
               </p>
-              <button
-                onClick={() => (window.location.href = "/signin")}
-                className="mt-4 px-4 py-2 bg-primary-yellow text-white rounded-md hover:bg-secondary-yellow transition-colors"
+              <Link
+                to="/signin"
+                className={`${TailwindStyle.HIGHLIGHT_FRAME}`}
               >
                 Return to Sign In
-              </button>
+              </Link>
             </div>
           )}
 

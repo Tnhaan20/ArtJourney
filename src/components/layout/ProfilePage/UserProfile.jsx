@@ -115,12 +115,12 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl py-8 px-4">
+    <div className="container mx-auto max-w-2xl py-10 px-4">
       <h1 className="text-3xl font-bold text-primary-yellow mb-6">
         My Profile
       </h1>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-7">
         {/* Profile Photo & Verification Status */}
         <Card className="w-full md:w-1/3">
           <CardHeader>
@@ -156,8 +156,8 @@ export default function UserProfile() {
                   Verified
                 </Badge>
               ) : (
-                <div>
-                  <Badge className="bg-primary-yellow mb-2">
+                <div className="flex flex-col items-center space-y-2">
+                  <Badge className="bg-primary-yellow">
                     <AlertCircle size={14} className="mr-1" />
                     Verification Required
                   </Badge>
@@ -165,7 +165,7 @@ export default function UserProfile() {
                     variant="link"
                     size="sm"
                     onClick={handleResendVerification}
-                    className="text-primary-blue hover:text-primary-yellow"
+                    className="text-primary-blue hover:text-primary-yellow p-0 h-auto"
                     disabled={isVerifyEmailLoading}
                   >
                     {isVerifyEmailLoading
