@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { TailwindStyle } from "@/utils/Enum";
 import { useCourse } from "@/hooks/Courses/use-course";
 
@@ -26,18 +26,21 @@ export default function CourseList() {
     setSearchTerm(e.target.value);
   };
 
-  const togglePeriod = (regionId, period) => {
+  const togglePeriod = (regionId, periodId) => {
     setActivePeriods((prev) => {
       const regionPeriods = prev[regionId] || [];
-      if (regionPeriods.includes(period)) {
+
+      // If clicking the same period that's already active, remove it
+      if (regionPeriods.includes(periodId)) {
         return {
           ...prev,
-          [regionId]: regionPeriods.filter((p) => p !== period),
+          [regionId]: [],
         };
       } else {
+        // Replace with the new period (only one at a time)
         return {
           ...prev,
-          [regionId]: [...regionPeriods, period],
+          [regionId]: [periodId],
         };
       }
     });
@@ -126,27 +129,15 @@ export default function CourseList() {
           const regionActivePeriods = activePeriods[region.regionId] || [];
           const periodFilteredCourses =
             regionActivePeriods.length > 0
-              ? filteredCourses.filter((course) => {
-                  // Find the historical period for this course
-                  const coursePeriod = region.historicalPeriodDTOs.find(
-                    (period) =>
-                      period.historicalPeriodId === course.historicalPeriodId
-                  );
-                  return (
-                    coursePeriod &&
-                    regionActivePeriods.includes(
-                      coursePeriod.historicalPeriodName
-                    )
-                  );
-                })
+              ? filteredCourses.filter((course) =>
+                  regionActivePeriods.includes(course.historicalPeriodId)
+                )
               : filteredCourses;
 
-          // Only show regions with matching courses when searching
-          if (
-            (searchTerm || regionActivePeriods.length > 0) &&
-            periodFilteredCourses.length === 0
-          )
+          // Only hide regions when searching (not when filtering by period)
+          if (searchTerm && periodFilteredCourses.length === 0) {
             return null;
+          }
 
           return (
             <div key={region.regionId} className="mb-12">
@@ -160,23 +151,36 @@ export default function CourseList() {
                   {region.historicalPeriodDTOs.map((period) => {
                     const isActive = (
                       activePeriods[region.regionId] || []
-                    ).includes(period.historicalPeriodName);
+                    ).includes(period.historicalPeriodId);
                     return (
                       <span
                         key={period.historicalPeriodId}
-                        className={`px-3 py-1 text-sm rounded-full cursor-pointer transition-all duration-300 ${
+                        className={`px-3 py-1 text-sm rounded-full cursor-pointer transition-all duration-300 flex items-center gap-1 ${
                           isActive
-                            ? TailwindStyle.HIGHLIGHT_FRAME
+                            ? "bg-primary-yellow text-white border-2 border-yellow-400"
                             : "bg-gray-100 hover:bg-gray-200"
                         }`}
                         onClick={() =>
                           togglePeriod(
                             region.regionId,
-                            period.historicalPeriodName
+                            period.historicalPeriodId
                           )
                         }
                       >
-                        {period.historicalPeriodName}
+                        <span>{period.historicalPeriodName}</span>
+                        {isActive && (
+                          <X
+                            size={14}
+                            className="ml-1 hover:bg-yellow-600 rounded-full p-0.5"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              togglePeriod(
+                                region.regionId,
+                                period.historicalPeriodId
+                              );
+                            }}
+                          />
+                        )}
                       </span>
                     );
                   })}
@@ -240,22 +244,26 @@ export default function CourseList() {
                 </div>
               ) : (
                 <div className="text-center py-8 text-gray-500">
-                  No courses available in this region yet.
+                  {regionActivePeriods.length > 0
+                    ? `No courses available for the selected period in this region.`
+                    : searchTerm
+                    ? `No courses found matching "${searchTerm}" in this region.`
+                    : "No courses available in this region yet."}
                 </div>
               )}
             </div>
           );
         })}
-      </div>
 
-      {/* Empty state when no regions found */}
-      {filteredRegions.length === 0 && (
-        <div className="text-center py-16">
-          <div className="text-gray-500 text-lg">
-            No courses found matching your criteria.
+        {/* Empty state when no regions found */}
+        {filteredRegions.length === 0 && (
+          <div className="text-center py-16">
+            <div className="text-gray-500 text-lg">
+              No courses found matching your criteria.
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
