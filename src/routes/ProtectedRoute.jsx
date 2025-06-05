@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/domains/store/use-auth-store";
-import { useRoleStore, USER_ROLES } from "@/domains/store/use-role-store";
+import { useRoleStore, USER_ROLES, ROLE_NAMES } from "@/domains/store/use-role-store";
 import { Navigate, useLocation } from "react-router-dom";
 
 export default function ProtectedRoute({
@@ -23,8 +23,9 @@ export default function ProtectedRoute({
   }
 
   // Check if user is admin (role = 2)
-  const isAdmin = isAuthenticated && role === USER_ROLES.ADMIN;
-
+  const isAdmin = isAuthenticated && role === USER_ROLES.ADMIN ;
+  console.log(`User role: ${role}, Is Admin: ${isAdmin}`);
+  
   // If this route restricts admin access and user is admin, redirect to admin dashboard
   if (restrictAdmin && isAdmin) {
     return <Navigate to="/admin" replace />;

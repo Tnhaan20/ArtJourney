@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/layout/Dashboard/Sidebar";
 import { Header } from "@/components/layout/Dashboard/Header";
-import { CourseModal } from "@/components/layout/Dashboard/Modals/CourseModal";
+import  CourseModal from "@/components/layout/Dashboard/Modals/CourseModal";
 import { ModuleModal } from "@/components/layout/Dashboard/Modals/ModuleModal";
 import { OverviewTab } from "@/components/layout/Dashboard/Tabs/Overview-tab";
 import { FinancialTab } from "@/components/layout/Dashboard/Tabs/Financial-tab";
@@ -11,8 +11,7 @@ import { QuizzesTab } from "@/components/layout/Dashboard/Tabs/Quizzes-tab";
 import { ChallengesTab } from "@/components/layout/Dashboard/Tabs/Challenge-tab";
 import { ContentTab } from "@/components/layout/Dashboard/Tabs/Content-tab";
 import { SettingsTab } from "@/components/layout/Dashboard/Tabs/Settings-tab";
-import { HistoricalPeriodModal } from "@/components/layout/Dashboard/Modals/HistoricalPeriodModal";
-import { RegionModal } from "@/components/layout/Dashboard/Modals/RegionModal";
+import  HistoricalPeriodModal  from "@/components/layout/Dashboard/Modals/HistoricalPeriodModal";
 
 const ArtJourneyAdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -23,7 +22,6 @@ const ArtJourneyAdminDashboard = () => {
   const [expandedCourses, setExpandedCourses] = useState(new Set());
   const [showHistoricalPeriodModal, setShowHistoricalPeriodModal] =
     useState(false);
-  const [showRegionModal, setShowRegionModal] = useState(false);
 
   // Mock data - thay thế bằng data thực từ API
   const [historicalPeriods, setHistoricalPeriods] = useState([
@@ -143,14 +141,7 @@ const ArtJourneyAdminDashboard = () => {
             setShowCourseModal(false);
             setSelectedCourse(null);
           }}
-          onSave={() => {
-            setShowCourseModal(false);
-            setSelectedCourse(null);
-          }}
-          historicalPeriods={historicalPeriods}
-          regions={regions}
           onCreateHistoricalPeriod={handleCreateHistoricalPeriod}
-          onCreateRegion={handleCreateRegion}
         />
       )}
 
@@ -162,13 +153,7 @@ const ArtJourneyAdminDashboard = () => {
         />
       )}
 
-      {showRegionModal && (
-        <RegionModal
-          region={null}
-          onClose={() => setShowRegionModal(false)}
-          onSave={handleSaveRegion}
-        />
-      )}
+      
 
       {showModuleModal && (
         <ModuleModal

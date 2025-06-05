@@ -82,7 +82,6 @@ export const useAuthStore = create(
         } catch (error) {
           console.error("Logout error", error);
         } finally {
-          // Reset state regardless of API success
           set({
             isAuthenticated: false,
             user: null,

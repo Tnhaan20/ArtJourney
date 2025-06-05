@@ -328,9 +328,9 @@ export default function AppRoutes() {
         path="/admin/*"
         element={
           <Suspense fallback={<PageLoader />}>
-            {/* <ProtectedRoute adminOnly={true}> */}
+            <ProtectedRoute adminOnly={true}>
             <ArtJourneyAdminDashboard />
-            {/* </ProtectedRoute> */}
+            </ProtectedRoute>
           </Suspense>
         }
       />

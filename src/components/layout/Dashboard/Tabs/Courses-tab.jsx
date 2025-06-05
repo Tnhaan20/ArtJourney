@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { StatCard } from "@/components/layout/Dashboard/Stat-card";
 import { courses } from "@/lib/dashboard-data"
+import { TailwindStyle } from "@/utils/Enum";
 
 export const CoursesTab = ({
   expandedCourses,
@@ -34,7 +35,7 @@ export const CoursesTab = ({
         </button>
         <button
           onClick={() => setShowCourseModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl ${TailwindStyle.HIGHLIGHT_FRAME}`}
         >
           <Plus className="w-4 h-4" />
           <span>Create Course</span>
