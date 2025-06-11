@@ -99,7 +99,7 @@
         "monthly": {
           "title": "Plus Monthly",
           "subtitle": "Complete multiple courses and get certified in a short time",
-          "price": "99,999 VND",
+          "price": "99,000 VND",
           "period": "/month",
           "description": "Cancel anytime",
           "features": [
@@ -112,7 +112,7 @@
         "annual": {
           "title": "Plus Annual",
           "subtitle": "Combine flexibility and savings with long-term learning goals",
-          "price": "999,999 VND",
+          "price": "990,000 VND",
           "period": "/year",
           "description": "Cancel anytime",
           "features": [
