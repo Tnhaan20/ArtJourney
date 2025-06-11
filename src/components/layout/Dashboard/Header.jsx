@@ -24,11 +24,10 @@ export const Header = ({ activeTab, sidebarOpen, setSidebarOpen }) => (
             className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow"
           />
         </div>
-        <button className="relative p-2 rounded-lg hover:bg-primary-yellow hover:bg-opacity-10">
+        <button className="relative p-2 rounded-lg hover:bg-opacity-10">
           <Bell className="w-5 h-5 text-primary-black" />
           <span className="absolute -top-1 -right-1 w-3 h-3 bg-primary-yellow rounded-full"></span>
         </button>
-        <div className="w-8 h-8 bg-gradient-to-r from-primary-yellow to-secondary-yellow rounded-full"></div>
       </div>
     </div>
   </div>

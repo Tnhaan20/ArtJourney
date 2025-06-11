@@ -43,6 +43,7 @@ const TermsPage = lazy(() => import("@/pages/TermsPage/TermsPage"));
 const CourseList = lazy(() =>
   import("@/components/layout/LearnPage/CourseList")
 );
+const SearchResultsPage = lazy(() => import("@/pages/LearnPage/SearchPage"));
 
 // Loading component for better UX
 const PageLoader = () => (
@@ -278,6 +279,14 @@ export default function AppRoutes() {
           }
         />
         <Route
+          path="search"
+          element={
+            <Suspense fallback={<ComponentLoader />}>
+              <SearchResultsPage />
+            </Suspense>
+          }
+        />
+        <Route
           path="course/:courseId"
           element={
             <Suspense fallback={<ComponentLoader />}>
@@ -329,7 +338,7 @@ export default function AppRoutes() {
         element={
           <Suspense fallback={<PageLoader />}>
             <ProtectedRoute adminOnly={true}>
-            <ArtJourneyAdminDashboard />
+              <ArtJourneyAdminDashboard />
             </ProtectedRoute>
           </Suspense>
         }

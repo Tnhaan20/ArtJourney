@@ -6,7 +6,7 @@ export default function PaymentTypeSelector({ selectedType, onSelect }) {
       id: 'monthly',
       title: 'Monthly Subscription',
       description: 'Access all courses with monthly billing',
-      price: '99,999 VND/month',
+      price: '99,000 VND/month',
       features: ['Full access to all courses', 'New content monthly', 'Cancel anytime']
     },
     {

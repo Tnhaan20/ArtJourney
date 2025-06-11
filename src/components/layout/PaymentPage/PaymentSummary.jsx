@@ -7,7 +7,7 @@ const paymentTypeData = {
   monthly: {
     name: 'Plus Monthly',
     description: 'Complete multiple courses and get certified in a short time',
-    price: 99999,
+    price: 99000,
     currency: 'VND',
     discount: 17.5
   },

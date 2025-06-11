@@ -2,189 +2,230 @@ import { TailwindStyle } from '@/utils/Enum';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
+import { Check, Star, Crown, Zap } from "lucide-react";
 
 export default function HomePrice() {
   const { t } = useTranslation();
 
   return (
-    <div className="py-16">
+    <div className="py-20 bg-gradient-to-br from-gray-50 to-white">
       {/* Page heading */}
-      <div className="text-center mb-14">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary-black mb-4 ">
+      <div className="text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-black to-gray-700 bg-clip-text text-transparent">
           {t("home.pricing.title")}
         </h1>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Choose the perfect plan to unlock your artistic journey
+        </p>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-primary-black border-opacity-20 rounded-lg overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Add padding and margin to accommodate the scaled card and badge */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-6 pt-8 pb-4">
           {/* ---------- CARD #1 - Per Course ---------- */}
-          <div className="bg-white p-8 flex flex-col border-r border-primary-black border-opacity-20">
-            {/* Top section */}
-            <div className="text-center mb-4">
-              <h2 className="text-xl font-bold text-primary-black">
-                {t("home.pricing.plans.perCourse.title")}
-              </h2>
-              <p className="text-gray-600 text-sm mt-2 h-12 flex items-center justify-center">
-                {t("home.pricing.plans.perCourse.subtitle")}
-              </p>
-            </div>
-
-            <div className="text-center py-6 border-t border-b border-gray-200 border-opacity-50">
-              <p className="text-2xl font-bold text-primary-black">
-                {t("home.pricing.plans.perCourse.price")}
-              </p>
-              <p className="text-sm text-gray-600">
-                {t("home.pricing.plans.perCourse.period")}
-              </p>
-            </div>
-
-            <div className="text-center py-4">
-              <p className="text-gray-600 text-sm">
-                {t("home.pricing.plans.perCourse.description")}
-              </p>
-            </div>
-
-            <div className="flex-grow">
-              {t("home.pricing.plans.perCourse.features", {
-                returnObjects: true,
-              }).map((feature, index) => (
-                <div
-                  key={index}
-                  className={`py-3 flex items-start ${
-                    index > 0 ? "border-t border-gray-200" : ""
-                  }`}
-                >
-                  <span className="text-primary-black mr-2">✓</span>
-                  <span className="text-sm text-primary-black">{feature}</span>
+          <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden">
+            <div className="p-8">
+              {/* Header */}
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Star className="w-8 h-8 text-blue-600" />
                 </div>
-              ))}
-            </div>
+                <h2 className="text-2xl font-bold text-primary-black">
+                  {t("home.pricing.plans.perCourse.title")}
+                </h2>
+                <p className="text-gray-600 text-sm mt-2">
+                  {t("home.pricing.plans.perCourse.subtitle")}
+                </p>
+              </div>
 
-            <div className="mt-6 text-center">
+              {/* Price */}
+              <div className="text-center mb-6 pb-6 border-b border-gray-100">
+                <div className="flex items-baseline justify-center">
+                  <span className="text-4xl font-bold text-primary-black">
+                    {t("home.pricing.plans.perCourse.price")}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 mt-1">
+                  {t("home.pricing.plans.perCourse.period")}
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="text-center mb-6">
+                <p className="text-gray-600 text-sm">
+                  {t("home.pricing.plans.perCourse.description")}
+                </p>
+              </div>
+
+              {/* Features */}
+              <div className="space-y-4 mb-8">
+                {t("home.pricing.plans.perCourse.features", {
+                  returnObjects: true,
+                }).map((feature, index) => (
+                  <div key={index} className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Button */}
               <Link
                 to="/pay/per-course"
-                className="w-full py-2 border border-primary-yellow text-primary-yellow rounded font-medium hover:bg-primary-yellow hover:text-white transition-colors duration-300 inline-flex items-center justify-center"
+                className="w-full py-3 px-4 border-2 border-primary-yellow text-primary-yellow rounded-xl font-semibold hover:bg-primary-yellow hover:text-white transition-all duration-300 inline-flex items-center justify-center"
               >
                 {t("home.pricing.plans.perCourse.button")}
               </Link>
             </div>
           </div>
 
-          {/* ---------- CARD #2 - Monthly ---------- */}
-          <div className="bg-white p-8 flex flex-col border-r border-primary-black">
-            <div className="text-center mb-4">
-              <h2 className="text-xl font-bold text-primary-black">
-                {t("home.pricing.plans.monthly.title")}
-              </h2>
-              <p className="text-gray-600 text-sm mt-2 h-12 flex items-center justify-center">
-                {t("home.pricing.plans.monthly.subtitle")}
-              </p>
+          {/* ---------- CARD #2 - Monthly (HIGHLIGHTED) ---------- */}
+          <div className="relative">
+            {/* Popular Badge - positioned outside the card to avoid clipping */}
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+              <div className="bg-white text-primary-yellow px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
+                <Crown className="w-4 h-4 mr-2" />
+                MOST POPULAR
+              </div>
             </div>
 
-            <div className="text-center py-6 border-t border-b border-gray-200">
-              <p className="text-2xl font-bold text-primary-black">
-                {t("home.pricing.plans.monthly.price")}
-              </p>
-              <p className="text-sm text-gray-600">
-                {t("home.pricing.plans.monthly.period")}
-              </p>
-            </div>
-
-            <div className="text-center py-4">
-              <p className="text-gray-600 text-sm">
-                {t("home.pricing.plans.monthly.description")}
-              </p>
-            </div>
-
-            <div className="flex-grow">
-              {t("home.pricing.plans.monthly.features", {
-                returnObjects: true,
-              }).map((feature, index) => (
-                <div
-                  key={index}
-                  className={`py-3 flex items-start ${
-                    index > 0 ? "border-t border-gray-200" : ""
-                  }`}
-                >
-                  <span className="text-primary-black mr-2">✓</span>
-                  <span className="text-sm text-primary-black">{feature}</span>
+            <div className="bg-primary-yellow rounded-2xl shadow-2xl transform scale-105 border-4 border-third-yellow overflow-hidden mt-4">
+              <div className="p-8 pt-12">
+                {/* Header */}
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-third-yellow bg-opacity-20 rounded-full flex items-center justify-center">
+                    <Zap className="w-8 h-8 text-primary-blue" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">
+                    {t("home.pricing.plans.monthly.title")}
+                  </h2>
+                  <p className="text-yellow-100 text-sm mt-2">
+                    {t("home.pricing.plans.monthly.subtitle")}
+                  </p>
                 </div>
-              ))}
-            </div>
 
-            <div className="mt-6 text-center">
-              <Link
-                to="/pay/monthly"
-                className="w-full py-2 border border-primary-yellow text-primary-yellow rounded font-medium hover:bg-primary-yellow hover:text-white transition-colors duration-300 inline-flex items-center justify-center"
-              >
-                {t("home.pricing.plans.monthly.button")}
-              </Link>
+                {/* Price */}
+                <div className="text-center mb-6 pb-6 border-b border-secondary-yellow border-opacity-30">
+                  <div className="flex items-baseline justify-center">
+                    <span className="text-4xl font-bold text-white">
+                      {t("home.pricing.plans.monthly.price")}
+                    </span>
+                  </div>
+                  <p className="text-sm text-yellow-100 mt-1">
+                    {t("home.pricing.plans.monthly.period")}
+                  </p>
+                  <div className={`mt-2 inline-block ${TailwindStyle.HIGHLIGHT_FRAME} text-xs px-3 py-1 rounded-full`}>
+                    Best Value!
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div className="text-center mb-6">
+                  <p className="text-yellow-100 text-sm">
+                    {t("home.pricing.plans.monthly.description")}
+                  </p>
+                </div>
+
+                {/* Features */}
+                <div className="space-y-4 mb-8">
+                  {t("home.pricing.plans.monthly.features", {
+                    returnObjects: true,
+                  }).map((feature, index) => (
+                    <div key={index} className="flex items-start">
+                      <Check className="w-5 h-5 text-white mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-white">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Button */}
+                <Link
+                  to="/pay/monthly"
+                  className="w-full py-3 px-4 bg-white text-primary-yellow rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center justify-center shadow-lg transform hover:scale-105"
+                >
+                  {t("home.pricing.plans.monthly.button")}
+                </Link>
+              </div>
             </div>
           </div>
 
           {/* ---------- CARD #3 - Annual ---------- */}
-          <div className="bg-white p-8 flex flex-col">
-            <div className="text-center mb-4">
-              <h2 className="text-xl font-bold text-primary-black">
-                {t("home.pricing.plans.annual.title")}
-              </h2>
-              <p className="text-gray-600 text-sm mt-2 h-12 flex items-center justify-center">
-                {t("home.pricing.plans.annual.subtitle")}
-              </p>
+          <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden">
+            {/* Savings Badge */}
+            <div className="absolute top-4 right-4">
+              <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">
+                Save 20%
+              </div>
             </div>
 
-            <div className="text-center py-6 border-t border-b border-gray-200">
-              <p className="text-2xl font-bold text-primary-black">
-                {t("home.pricing.plans.annual.price")}
-              </p>
-              <p className="text-sm text-gray-600">
-                {t("home.pricing.plans.annual.period")}
-              </p>
-            </div>
-
-            <div className="text-center py-4">
-              <p className="text-gray-600 text-sm">
-                {t("home.pricing.plans.annual.description")}
-              </p>
-            </div>
-
-            <div className="flex-grow">
-              {t("home.pricing.plans.annual.features", {
-                returnObjects: true,
-              }).map((feature, index) => (
-                <div
-                  key={index}
-                  className={`py-3 flex items-start ${
-                    index > 0 ? "border-t border-gray-200" : ""
-                  }`}
-                >
-                  <span className="text-primary-black mr-2">✓</span>
-                  <span className="text-sm text-primary-black">{feature}</span>
+            <div className="p-8">
+              {/* Header */}
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Crown className="w-8 h-8 text-primary-blue" />
                 </div>
-              ))}
-            </div>
+                <h2 className="text-2xl font-bold text-primary-black">
+                  {t("home.pricing.plans.annual.title")}
+                </h2>
+                <p className="text-gray-600 text-sm mt-2">
+                  {t("home.pricing.plans.annual.subtitle")}
+                </p>
+              </div>
 
-            <div className="mt-6 text-center">
+              {/* Price */}
+              <div className="text-center mb-6 pb-6 border-b border-gray-100">
+                <div className="flex items-baseline justify-center">
+                  <span className="text-4xl font-bold text-primary-black">
+                    {t("home.pricing.plans.annual.price")}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 mt-1">
+                  {t("home.pricing.plans.annual.period")}
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="text-center mb-6">
+                <p className="text-gray-600 text-sm">
+                  {t("home.pricing.plans.annual.description")}
+                </p>
+              </div>
+
+              {/* Features */}
+              <div className="space-y-4 mb-8">
+                {t("home.pricing.plans.annual.features", {
+                  returnObjects: true,
+                }).map((feature, index) => (
+                  <div key={index} className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Button */}
               <Link
                 to="/pay/annual"
-                className="w-full py-2 border border-primary-yellow text-primary-yellow rounded font-medium hover:bg-primary-yellow hover:text-white transition-colors duration-300 inline-flex items-center justify-center"
+                className="w-full py-3 px-4 border-2 border-secondary-blue text-primary-blue rounded-xl font-semibold hover:bg-primary-blue hover:text-white transition-all duration-300 inline-flex items-center justify-center"
               >
                 {t("home.pricing.plans.annual.button")}
               </Link>
             </div>
           </div>
         </div>
+
+       
       </div>
 
       {/* View Full Plans Button */}
-      <div className="w-full flex justify-center mt-8">
+      <div className="w-full flex justify-center mt-12">
         <Link
           to="/pricing"
-          className={`inline-flex items-center px-6 py-3 bg-primary-yellow text-primary-white font-medium rounded-lg ${TailwindStyle.HIGHLIGHT_FRAME} hover:bg-primary-yellow/90 transition-colors duration-300`}
+          className={`inline-flex items-center px-8 py-4 ${TailwindStyle.HIGHLIGHT_FRAME} font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
         >
           {t("home.pricing.viewFullPlans")}
           <svg
-            className="ml-2 w-4 h-4"
+            className="ml-2 w-5 h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
