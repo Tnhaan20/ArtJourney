@@ -26,5 +26,11 @@ export const QueryKey = {
     GET_ALL_COURSES: "course-get-all",
     UPDATE_COURSE: "course-update",
     DELETE_COURSE: "course-delete",
+    SEARCH_COURSES: "course-search",
+  },
+
+  MODULE: {
+    CREATE_MODULE: "create-module",
+    GET_MODULE: "get-module"
   },
 };

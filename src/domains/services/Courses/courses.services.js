@@ -25,6 +25,13 @@ const res = await axiosInstance.post("/courses", data, {
       const res = await axiosInstance.get(`/courses/${id}`);
       return res.data;
     },
+    searchCourses: async (input, page, size) => {
+      const res = await axiosInstance.get(`/courses/search`, {
+        params: { input, page, size },
+      });
+      return res.data;
+    },
+
   },
   put: {
     updateCourse: async (id, data) => {
