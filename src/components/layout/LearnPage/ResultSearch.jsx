@@ -253,7 +253,7 @@ export default function ResultSearch() {
                   <div className="h-48 overflow-hidden">
                     <img
                       src={
-                        course.thumbnailImageUrl ||
+                        course.thumbnailUrl ||
                         course.coverImageUrl ||
                         assets.courses.africa
                       }
