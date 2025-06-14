@@ -27,10 +27,26 @@ export const QueryKey = {
     UPDATE_COURSE: "course-update",
     DELETE_COURSE: "course-delete",
     SEARCH_COURSES: "course-search",
+    GET_COURSE_BY_ID: "course-get-by-id",
+    GET_COURSE_BY_ID_GUEST: "course-get-by-id-guest",
+    USER: {
+      GET_USER_COURSE_INFO: "course-get-user-course-info",
+      ENROLL_USER_COURSE: "course-enroll-user-course",
+    }
+
   },
 
   MODULE: {
     CREATE_MODULE: "create-module",
     GET_MODULE: "get-module"
   },
+  SUB_MODULE: {
+    CREATE_SUB_MODULE: "create-sub-module",
+    GET_SUB_MODULE: "get-sub-module",
+  },
+
+  LEARNING_CONTEXT: {
+    CREATE_LEARNING_CONTEXT: "learning-context-create",
+    GET_LEARNING_CONTEXT: "learning-context-get",
+  }
 };

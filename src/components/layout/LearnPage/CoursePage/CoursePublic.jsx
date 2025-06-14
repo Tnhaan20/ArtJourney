@@ -1,0 +1,415 @@
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Clock,
+  BookOpen,
+  Users,
+  Star,
+  Play,
+  Lock,
+  CheckCircle,
+  Award,
+  Target,
+} from "lucide-react";
+import { useCourse } from "@/hooks/Courses/use-course";
+import { useUserEnrollForm } from "@/hooks/Courses/use-course-form";
+import { useAuthStore } from "@/domains/store/use-auth-store";
+import { TailwindStyle } from "@/utils/Enum";
+import { assets } from "@/assets/assets";
+
+export default function CoursePublic({ courseId, isAuthenticated }) {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  
+  // Use the real API for course public data
+  const { useGetCoursePublic } = useCourse();
+  const { data: courseData, isLoading, error } = useGetCoursePublic(courseId);
+
+  // Use enrollment form hook
+  const { enrollUser, isLoading: isEnrolling, isSuccess, error: enrollError } = useUserEnrollForm();
+
+  // Handle start learning button click
+  const handleStartLearning = async () => {
+    if (!isAuthenticated || !user?.id) {
+      navigate("/signin");
+      return;
+    }
+
+    try {
+      console.log(`🎓 Starting enrollment for user ${user.id} in course ${courseId}`);
+      
+      await enrollUser(user.id, courseId);
+
+      console.log("✅ Enrollment successful, navigating to course...");
+      
+      setTimeout(() => {
+        navigate(`/learn/course/${courseId}`);
+      }, 1000);
+      
+    } catch (error) {
+      console.error("❌ Failed to enroll user:", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg">Loading course</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg text-red-600">Error loading course preview</div>
+      </div>
+    );
+  }
+
+  const course = courseData?.data;
+
+  // Helper function to get course level text
+  const getCourseLevelText = (level) => {
+    switch (level) {
+      case 0:
+        return "Beginner";
+      case 1:
+        return "Intermediate";
+      case 2:
+        return "Advanced";
+      default:
+        return "Unknown";
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <div className="flex items-center space-x-2 mb-4">
+              <span className="bg-primary-yellow text-white px-3 py-1 rounded-full text-sm font-medium">
+                {getCourseLevelText(course?.courseLevel)}
+              </span>
+              {course?.isPremium ? (
+                <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                  Premium
+                </span>
+              ) : (
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                  Free
+                </span>
+              )}
+              {course?.price > 0 && (
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                  ${course.price}
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              {course?.title}
+            </h1>
+
+            <p className="text-lg text-gray-600 mb-6">{course?.description}</p>
+
+            {/* Course Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+              <div className="flex items-center space-x-2">
+                <BookOpen className="w-5 h-5 text-primary-yellow" />
+                <span className="text-sm text-gray-600">
+                  {course?.totalModule || 0} Modules
+                </span>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Target className="w-5 h-5 text-primary-yellow" />
+                <span className="text-sm text-gray-600">
+                  {course?.courseCompletionPercentage || 0}% Complete
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {isAuthenticated ? (
+                <button
+                  onClick={handleStartLearning}
+                  disabled={isEnrolling}
+                  className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium ${TailwindStyle.HIGHLIGHT_FRAME} disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+                >
+                  <Play className="w-5 h-5" />
+                  <span>
+                    {isEnrolling ? "Enrolling..." : isSuccess ? "Enrolled! ✓" : "Start Learning"}
+                  </span>
+                </button>
+              ) : (
+                <Link
+                  to="/signin"
+                  className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium ${TailwindStyle.HIGHLIGHT_FRAME}`}
+                >
+                  <Play className="w-5 h-5" />
+                  <span>Sign In to Start</span>
+                </Link>
+              )}
+            </div>
+
+            {/* Enrollment Status */}
+            {enrollError && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">
+                  Failed to enroll. Please try again.
+                </p>
+              </div>
+            )}
+
+            {isSuccess && (
+              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-600">
+                  ✅ Successfully enrolled! Redirecting to course...
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <img
+              src={course?.coverImageUrl || assets.courses.asia.bhimbetkaRockArt}
+              alt={course?.title}
+              className="w-full h-80 object-cover rounded-lg shadow-lg"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Course Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg p-6 shadow-md">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="bg-blue-100 p-3 rounded-lg">
+              <Target className="w-6 h-6 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-semibold">Course Goals</h3>
+          </div>
+          <p className="text-gray-600">
+            {course?.learningOutcomes ||
+              "Master comprehensive knowledge and practical skills in this subject area"}
+          </p>
+        </div>
+
+        <div className="bg-white rounded-lg p-6 shadow-md">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="bg-green-100 p-3 rounded-lg">
+              <Award className="w-6 h-6 text-green-600" />
+            </div>
+            <h3 className="text-lg font-semibold">Certification</h3>
+          </div>
+          <p className="text-gray-600">
+            Earn a certificate upon successful completion of all{" "}
+            {course?.totalModule} modules
+          </p>
+        </div>
+
+        <div className="bg-white rounded-lg p-6 shadow-md">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="bg-purple-100 p-3 rounded-lg">
+              <BookOpen className="w-6 h-6 text-purple-600" />
+            </div>
+            <h3 className="text-lg font-semibold">Course Level</h3>
+          </div>
+          <p className="text-gray-600">
+            {getCourseLevelText(course?.courseLevel)} level course designed for
+            comprehensive learning
+          </p>
+        </div>
+      </div>
+
+      {/* What You'll Learn */}
+      {course?.learningOutcomes && (
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold mb-6">What You'll Learn</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {course.learningOutcomes.split("\n").map((outcome, index) => (
+              <div key={index} className="flex items-start space-x-3">
+                <div className="bg-green-100 rounded-full p-1 mt-1">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                </div>
+                <span className="text-gray-700">{outcome}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Complete Course Content */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold mb-6">Complete Course Content</h2>
+        <div className="space-y-4">
+          {course?.moduleCourseDetailScreenResponseDTOs?.map(
+            (module, moduleIndex) => (
+              <div
+                key={module.moduleId}
+                className="border border-gray-200 rounded-lg overflow-hidden"
+              >
+                <div className="bg-gray-50 p-4 border-b">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-primary-yellow text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                        {moduleIndex + 1}
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          {module.moduleTitle}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Module {moduleIndex + 1} of {course.totalModule}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">
+                        {module.subModuleCourseDetailScreenResponseDTOs
+                          ?.length || 0}{" "}
+                        lessons
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sub-modules */}
+                <div className="p-4">
+                  <div className="space-y-3">
+                    {module.subModuleCourseDetailScreenResponseDTOs?.map(
+                      (subModule, subIndex) => (
+                        <div
+                          key={`${module.moduleId}-${subIndex}`}
+                          className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <span className="text-sm text-gray-500 w-6">
+                              {moduleIndex + 1}.{subIndex + 1}
+                            </span>
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-900">
+                                {subModule.subModuleTitle}
+                              </h4>
+                              <p className="text-xs text-gray-600">
+                                {subModule
+                                  .learningContentDetailScreenResponseDTOs
+                                  ?.length || 0}{" "}
+                                learning contents
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {!isAuthenticated && (
+                              <Lock className="w-4 h-4 text-gray-400" />
+                            )}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+      </div>
+
+      {/* Course Progress (for authenticated users) */}
+      {isAuthenticated && (
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold mb-6">Your Progress</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-medium text-blue-800">Course Completion</h3>
+              <p className="text-2xl font-bold text-blue-600">
+                {course?.courseCompletionPercentage || 0}%
+              </p>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg">
+              <h3 className="font-medium text-green-800">Time Spent</h3>
+              <p className="text-2xl font-bold text-green-600">
+                {course?.timeSpentPercentage || 0}%
+              </p>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h3 className="font-medium text-purple-800">Remaining Time</h3>
+              <p className="text-2xl font-bold text-purple-600">
+                {course?.remainingTime || "00:00:00"}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Course Features */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-xl font-semibold mb-4">Course Features</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <span className="text-gray-700">
+              {course?.totalModule} comprehensive modules
+            </span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <span className="text-gray-700">
+              {getCourseLevelText(course?.courseLevel)} level content
+            </span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <span className="text-gray-700">
+              Interactive learning experience
+            </span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <span className="text-gray-700">
+              Progress tracking and analytics
+            </span>
+          </div>
+          {course?.isPremium && (
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <span className="text-gray-700">Premium course content</span>
+            </div>
+          )}
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <span className="text-gray-700">Certificate of completion</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      {!isAuthenticated && (
+        <div className="bg-gradient-to-r from-primary-yellow to-orange-400 rounded-lg p-8 text-white text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
+          <p className="text-lg mb-6 opacity-90">
+            Join thousands of students and explore {course?.title}!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/signin"
+              className="inline-block bg-white text-primary-yellow px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+            >
+              Get Started Now
+            </Link>
+            <Link
+              to="/courses"
+              className="inline-block border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-primary-yellow transition-colors"
+            >
+              Browse All Courses
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

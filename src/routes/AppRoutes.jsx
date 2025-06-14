@@ -262,7 +262,7 @@ export default function AppRoutes() {
         path="/learn"
         element={
           <Suspense fallback={<PageLoader />}>
-            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+            <ProtectedRoute  requireAuth={false}>
               <MainLayout>
                 <LearnPage />
               </MainLayout>

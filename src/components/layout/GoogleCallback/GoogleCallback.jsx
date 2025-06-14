@@ -22,8 +22,6 @@ export default function GoogleCallback() {
   useEffect(() => { 
     const isPendingGoogleAuth =
       sessionStorage.getItem("google_auth_pending") === "true";
-      const cookie = Cookies.get('TK')
-      console.log("Cookie 1 value:", cookie);
       
     // Process the callback as soon as the component mounts
     const handleGoogleCallback = async () => {
@@ -37,7 +35,6 @@ export default function GoogleCallback() {
           console.log(
             "Processing Google sign-in flow with direct user data fetch"
           );
-          console.log("Cookie 2 value:", cookie);
 
 
           // Remove the pending flag since we're handling it now
@@ -46,9 +43,7 @@ export default function GoogleCallback() {
            try {
              // Call the /me endpoint to get the user data
 
-             console.log("Cookie 3 value:", cookie);
              
-            console.log(2);
             
             const userResponse = await AuthServices.get.me();
             console.log("User response from /me API:", userResponse);

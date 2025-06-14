@@ -92,7 +92,7 @@ const EmailVerify = () => {
           transition={{ duration: 0.5 }}
         >
           <div className="flex justify-center mb-8">
-            <LazyImage
+            <img
               src={assets.main_logo.artjourney_logo}
               alt="ArtJourney Logo"
               className="h-12"

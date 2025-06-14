@@ -1,11 +1,12 @@
 import { courseService } from "@/domains/services/Courses/courses.services";
 import { QueryKey } from "@/domains/store/query-key";
 import { useToast } from "@/utils/Toast";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 
 export const useCourse = () => {
   const { toast } = useToast();
-  
+  const queryClient = new QueryClient();
+
   const createCourseMutation = useMutation({
     mutationKey: [QueryKey.COURSES.CREATE_COURSE],
     mutationFn: async (payload) => await courseService.post.createCourse(payload),
@@ -26,6 +27,32 @@ export const useCourse = () => {
     },
   });
 
+  const createUserEnroll = useMutation({
+      mutationKey: [QueryKey.COURSES.USER.ENROLL_USER_COURSE],
+      mutationFn: async (payload) =>
+        await courseService.post.userEnrollCourse(payload),
+
+      onSuccess: async (data) => {
+        toast({
+          title: "User enrolled successfully",
+          description: data.message,
+          variant: "success",
+        });
+      },
+      onError: async (error) => {
+        toast({
+          title: "User enrollment failed",
+          description: error.response?.data?.errors?.[0].message,
+          variant: "destructive",
+        });
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: [QueryKey.COURSES.GET_COURSE_BY_ID],
+        });
+      },
+    });
+
   const getCourseQuery = useQuery({
     queryKey: [QueryKey.COURSES.GET_COURSE],
     queryFn: async () => await courseService.get.getCourse(1, 10),
@@ -36,6 +63,21 @@ export const useCourse = () => {
     queryFn: async () => await courseService.get.getAllCourses(),
   });
 
+  const getCoursesById = (id) => {
+    return useQuery({
+      queryKey: [QueryKey.COURSES.GET_COURSE_BY_ID, id],
+      queryFn: async () => await courseService.get.getCourseById(id),
+    });
+    
+  };
+
+  const useGetCoursePublic = (id) => {
+    return useQuery({
+      queryKey: [QueryKey.COURSES.GET_COURSE_BY_ID_GUEST, id],
+      queryFn: async () => await courseService.get.getCourseByIdGuest(id),
+    });
+  };
+
   const useSearchCourses = (searchTerm, page = 1, size = 10) => {
     return useQuery({
       queryKey: [QueryKey.COURSES.SEARCH_COURSES, searchTerm, page, size],
@@ -43,11 +85,23 @@ export const useCourse = () => {
       enabled: !!searchTerm && searchTerm.length > 0, // Only run query if search term exists
     });
   };
+
+  const getUserLearningProgress = (userId, courseId) => {
+    return useQuery({
+      queryKey: [QueryKey.COURSES.USER.GET_USER_COURSE_INFO, userId, courseId],
+      queryFn: async () => await courseService.get.getUserLearningProgress(userId, courseId),
+      enabled: !!userId && !!courseId,
+    });
+  };
   
   return {
     createCourseMutation,
     getCourseQuery,
     getAllCoursesQuery,
+    createUserEnroll,
     useSearchCourses,
+    getCoursesById,
+    useGetCoursePublic,
+    getUserLearningProgress,
   };
 };

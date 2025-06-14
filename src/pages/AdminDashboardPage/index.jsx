@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/layout/Dashboard/Sidebar";
 import { Header } from "@/components/layout/Dashboard/Header";
 import  CourseModal from "@/components/layout/Dashboard/Modals/CourseModal";
 import { ModuleModal } from "@/components/layout/Dashboard/Modals/ModuleModal";
+import { LearningContextModal } from "@/components/layout/Dashboard/Modals/LearningContextModal";
 import { OverviewTab } from "@/components/layout/Dashboard/Tabs/Overview-tab";
 import { FinancialTab } from "@/components/layout/Dashboard/Tabs/Financial-tab";
 import { UsersTab } from "@/components/layout/Dashboard/Tabs/Users-tab";
@@ -11,7 +12,8 @@ import { QuizzesTab } from "@/components/layout/Dashboard/Tabs/Quizzes-tab";
 import { ChallengesTab } from "@/components/layout/Dashboard/Tabs/Challenge-tab";
 import { ContentTab } from "@/components/layout/Dashboard/Tabs/Content-tab";
 import { SettingsTab } from "@/components/layout/Dashboard/Tabs/Settings-tab";
-import  HistoricalPeriodModal  from "@/components/layout/Dashboard/Modals/HistoricalPeriodModal";
+import HistoricalPeriodModal from "@/components/layout/Dashboard/Modals/HistoricalPeriodModal";
+import { SubModuleModal } from "@/components/layout/Dashboard/Modals/SubModuleModal";
 
 const ArtJourneyAdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -19,36 +21,16 @@ const ArtJourneyAdminDashboard = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showCourseModal, setShowCourseModal] = useState(false);
   const [showModuleModal, setShowModuleModal] = useState(false);
+  const [showSubModuleModal, setShowSubModuleModal] = useState(false);
+  const [showLearningContextModal, setShowLearningContextModal] =
+    useState(false);
   const [expandedCourses, setExpandedCourses] = useState(new Set());
+  const [expandedModules, setExpandedModules] = useState(new Set());
   const [showHistoricalPeriodModal, setShowHistoricalPeriodModal] =
     useState(false);
-
-  // Mock data - thay thế bằng data thực từ API
-  const [historicalPeriods, setHistoricalPeriods] = useState([
-    {
-      historical_period_id: 1,
-      historical_period_name: "Renaissance",
-      start_year: "1400",
-      end_year: "1600",
-    },
-    {
-      historical_period_id: 2,
-      historical_period_name: "Baroque",
-      start_year: "1600",
-      end_year: "1750",
-    },
-  ]);
-
-  const [regions, setRegions] = useState([
-    {
-      region_id: 1,
-      region_name: "Western Europe",
-    },
-    {
-      region_id: 2,
-      region_name: "East Asia",
-    },
-  ]);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [selectedModuleId, setSelectedModuleId] = useState(null);
+  const [selectedSubModuleId, setSelectedSubModuleId] = useState(null);
 
   // Handler functions
   const handleCreateHistoricalPeriod = () => {
@@ -84,8 +66,15 @@ const ArtJourneyAdminDashboard = () => {
           <CoursesTab
             expandedCourses={expandedCourses}
             setExpandedCourses={setExpandedCourses}
+            expandedModules={expandedModules}
+            setExpandedModules={setExpandedModules}
             setShowCourseModal={setShowCourseModal}
             setShowModuleModal={setShowModuleModal}
+            setShowSubModuleModal={setShowSubModuleModal}
+            setShowLearningContextModal={setShowLearningContextModal}
+            setSelectedCourseId={setSelectedCourseId}
+            setSelectedModuleId={setSelectedModuleId}
+            setSelectedSubModuleId={setSelectedSubModuleId}
           />
         );
       case "quizzes":
@@ -102,8 +91,8 @@ const ArtJourneyAdminDashboard = () => {
   };
 
   return (
-    <div className="h-screen overflow-hidden">
-      {/* Fixed Sidebar */}
+    <div className="min-h-screen bg-gray-50">
+      {/* Sidebar */}
       <div className="flex inset-y-0 left-0 fixed h-screen">
         <Sidebar
           sidebarOpen={sidebarOpen}
@@ -145,22 +134,43 @@ const ArtJourneyAdminDashboard = () => {
         />
       )}
 
-      {showHistoricalPeriodModal && (
-        <HistoricalPeriodModal
-          historicalPeriod={null}
-          onClose={() => setShowHistoricalPeriodModal(false)}
-          onSave={handleSaveHistoricalPeriod}
+      {showModuleModal && (
+        <ModuleModal
+          courseId={selectedCourseId}
+          onClose={() => {
+            setShowModuleModal(false);
+            setSelectedCourseId(null);
+          }}
         />
       )}
 
-      
+      {showSubModuleModal && (
+        <SubModuleModal
+          moduleId={selectedModuleId}
+          onClose={() => {
+            setShowSubModuleModal(false);
+            setSelectedModuleId(null);
+          }}
+        />
+      )}
 
-      {showModuleModal && (
-        <ModuleModal
-          module={null}
-          courseId={selectedCourse?.id}
-          onClose={() => setShowModuleModal(false)}
-          onSave={() => setShowModuleModal(false)}
+      {showLearningContextModal && (
+        <LearningContextModal
+          isOpen={showLearningContextModal}
+          onClose={() => {
+            setShowLearningContextModal(false);
+            setSelectedSubModuleId(null);
+            setSelectedCourseId(null);
+          }}
+          subModuleId={selectedSubModuleId}
+          courseId={selectedCourseId}
+        />
+      )}
+
+      {showHistoricalPeriodModal && (
+        <HistoricalPeriodModal
+          onClose={() => setShowHistoricalPeriodModal(false)}
+          onSave={handleSaveHistoricalPeriod}
         />
       )}
     </div>

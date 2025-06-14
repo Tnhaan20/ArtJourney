@@ -57,3 +57,23 @@ export const useCourseSchema = z.object({
 
   CoverImage: fileSchema,
 });
+
+export const userEnrollCourse = z.object({
+  enrollmentStatus: z
+    .number(),
+
+  learningStatus: z
+    .number(),
+
+  userId: z
+    .number()
+    .int("User ID must be an integer")
+    .positive("User ID must be a positive number")
+    .max(9223372036854775807n, "User ID exceeds maximum value"), // int64 max
+
+  courseId: z
+    .number()
+    .int("Course ID must be an integer")
+    .positive("Course ID must be a positive number")
+    .max(9223372036854775807n, "Course ID exceeds maximum value"), // int64 max
+});
