@@ -7,287 +7,804 @@ import {
   CheckCircle,
   PenLine,
   Award,
+  Loader2,
+  Play,
+  FileText,
+  Star,
+  Eye,
+  Image,
+  Type,
+  MousePointer,
+  Move3D,
+  Check,
 } from "lucide-react";
 import CompletedBox from "@/components/elements/completedbox/Completed";
 import { TailwindStyle } from "@/utils/Enum";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useLearning } from "@/hooks/LearningContent/use-learning";
+import { useCourse } from "@/hooks/Courses/use-course";
 
-export default function ModuleDetail({ moduleId, courseId, onBack }) {
-  const [activeSection, setActiveSection] = useState("introduction");
+export default function SubModuleContent() {
+  const [activeSection, setActiveSection] = useState(0);
   const navigate = useNavigate();
+  const { courseId, moduleId, subModuleId } = useParams();
 
-  // Hardcoded module data for module 1 with additional quiz and challenge sections
-  const moduleData = {
-    id: 1,
-    title: "Early Christian Art",
-    description:
-      "Explore the beginnings of Christian art in the late Roman Empire and its development through the early Byzantine period.",
-    sections: [
-      {
-        id: "introduction",
-        title: "Introduction to Early Christian Art",
-        type: "reading", // reading, video, quiz, or challenge
-        completed: true,
-        hasCompletionButton: true,
-        content: `
-          <p class="mb-4">Early Christian art, also called Paleo-Christian art or primitive Christian art, architecture, painting, and sculpture from the beginnings of Christianity until about the early 6th century, particularly the art of Italy and the western Mediterranean.</p>
-          
-          <p class="mb-4">The earliest identifiably Christian art consists of a few 2nd-century wall and ceiling paintings in the Roman catacombs (underground burial chambers), which continued to be decorated in a sketchy style derived from Roman impressionism through the 4th century.</p>
-        `,
-      },
-      {
-        id: "characteristics",
-        title: "Key Characteristics",
-        type: "reading",
-        completed: false,
-        hasCompletionButton: true,
-        content: `
-          <ul class="list-disc pl-6 mb-4">
-            <li>Adaptation of Roman artistic forms</li>
-            <li>Use of symbolism rather than direct representation</li>
-            <li>Focus on salvation themes</li>
-            <li>Avoidance of idolatry concerns</li>
-          </ul>
-        `,
-      },
-      {
-        id: "important-works",
-        title: "Important Works",
-        type: "video",
-        completed: false,
-        hasCompletionButton: true,
-        content: `
-          <div class="mb-6">
-            <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-              <p class="text-gray-500">Video player would be embedded here</p>
-            </div>
-          </div>
-          <p class="mb-4">The Good Shepherd, the Orant, and the story of Jonah were among the most popular motifs. The earliest Christian iconography tended to be symbolic. A simple rendering of a fish was sufficient to allude to Christ.</p>
-          
-          <p class="mb-4">The Catacombs of Rome contain most of the surviving examples of early Christian art. The Dura-Europos church in Syria is the oldest surviving church building, while the Dura-Europos house church contains the oldest surviving Christian paintings.</p>
-        `,
-      },
-      {
-        id: "module-quiz",
-        title: "Knowledge Check Quiz",
-        type: "quiz",
-        completed: false,
-        hasCompletionButton: false,
-        content: `
-          <div class="bg-amber-50 p-4 rounded-lg border border-amber-100 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">Test Your Understanding</h3>
-            <p class="mb-4">This quiz contains 5 questions about Early Christian Art. Complete this quiz to check your understanding of the key concepts covered in this module.</p>
-            <p class="text-sm text-gray-600 mb-4">
-              <strong>Time:</strong> 10 minutes<br>
-              <strong>Passing Score:</strong> 80%
-            </p>
-            <div class="bg-white p-4 rounded border border-gray-200 mb-4">
-              <p class="font-medium">Sample Question:</p>
-              <p class="text-gray-700 mb-2">Which of the following was a common symbol in Early Christian Art?</p>
-              <ul class="list-disc pl-6">
-                <li>Fish (Ichthys)</li>
-                <li>Eagle</li>
-                <li>Lion</li>
-                <li>Dragon</li>
-              </ul>
-            </div>
-          </div>
-        `,
-      },
-      {
-        id: "module-challenge",
-        title: "Art Analysis Challenge",
-        type: "challenge",
-        completed: false,
-        hasCompletionButton: false,
-        content: `
-          <div class="bg-amber-50 p-4 rounded-lg border border-amber-100 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">Practice Challenge</h3>
-            <p class="mb-4">Test your ability to analyze Early Christian artwork by identifying symbols, themes, and techniques in various examples.</p>
-            <p class="text-sm text-gray-600 mb-4">
-              <strong>Difficulty:</strong> Intermediate<br>
-              <strong>Estimated Time:</strong> 20 minutes
-            </p>
-            <p class="mb-2">In this challenge, you'll:</p>
-            <ul class="list-disc pl-6 mb-4">
-              <li>Analyze 3 different pieces of Early Christian art</li>
-              <li>Identify key symbols and their meanings</li>
-              <li>Explain the historical context of each artwork</li>
-              <li>Compare techniques used across different examples</li>
-            </ul>
-          </div>
-        `,
-      },
-    ],
-    duration: 45, // minutes
-    difficulty: "Intermediate",
-    completed: false,
-  };
+  const { getLearningContent, getLearningItem } = useLearning();
+  const { getCoursesById } = useCourse();
+
+  console.log("URL Params:", { courseId, moduleId, subModuleId });
+
+  // Fetch learning content for this specific submodule
+  const {
+    data: learningContentData,
+    isLoading: isContentLoading,
+    error: contentError,
+  } = getLearningContent(subModuleId);
+
+  // Fetch course data to get module and submodule info
+  const {
+    data: courseData,
+    isLoading: isCourseLoading,
+    error: courseError,
+  } = getCoursesById(courseId);
+
+  // Get learning contents from the API response
+  const learningContents = learningContentData?.data || [];
+
+  // Get the current active learning content ID
+  const activeLearningContentId =
+    learningContents[activeSection]?.learningContentId;
+
+  // Fetch detailed content for the currently selected learning item
+  const {
+    data: learningItemData,
+    isLoading: isItemLoading,
+    error: itemError,
+  } = getLearningItem(activeLearningContentId);
 
   const handleMarkComplete = (sectionId) => {
-    // This would update the completion status in a real app
     alert(`Section "${sectionId}" marked as complete!`);
-    // In a real app, you would update the completion status here
   };
 
-  // Find the active section content
-  const activeContent =
-    moduleData.sections.find((section) => section.id === activeSection)
-      ?.content || "";
-
-  // Find the active section
-  const activeSection_data = moduleData.sections.find(
-    (section) => section.id === activeSection
-  );
-
-  // Function to start quiz or challenge with courseId
-  const handleStartActivity = (type) => {
+  const handleStartActivity = (type, learningContentId) => {
     if (type === "quiz") {
-      navigate(`/quiz/course/${courseId}/module/${moduleId}`);
+      navigate(
+        `/quiz/course/${courseId}/module/${moduleId}/submodule/${subModuleId}/content/${learningContentId}`
+      );
     } else if (type === "challenge") {
-      navigate(`/challenge/course/${courseId}/module/${moduleId}`);
+      navigate(
+        `/challenge/course/${courseId}/module/${moduleId}/submodule/${subModuleId}/content/${learningContentId}`
+      );
     }
   };
 
-  return (
-    <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-md overflow-hidden">
-      {/* Sidebar - Course Navigation */}
-      <div className="lg:w-1/4 border-r border-gray-200">
-        {/* Module Header */}
-        <div className="bg-amber-50 p-4 border-b border-amber-100">
-          <button
-            onClick={onBack}
-            className="flex items-center text-[var(--color-primary-yellow)] hover:text-[var(--color-secondary-yellow)] mb-2"
+  const onBack = () => {
+    navigate(`/learn/course/${courseId}`);
+  };
+
+  console.log("Learning Content Data:", learningContentData);
+  console.log("Course Data:", courseData);
+  console.log("Learning Item Data:", learningItemData);
+
+  // Loading state
+  // Loading state
+  if (isContentLoading || isCourseLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <div className="text-center">
+          <div className="flex justify-center mb-6">
+            <Loader2 className="w-20 h-20 text-primary-yellow animate-spin" />
+          </div>
+          <p className="text-lg font-semibold text-gray-700 mt-6">
+            Loading submodule content...
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Please wait while we prepare your learning materials
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (contentError || courseError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-red-50 to-orange-50">
+        <div className="text-center p-8 rounded-3xl shadow-2xl bg-white border border-red-100">
+          <div className="text-red-500 text-6xl mb-6">😞</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            Oops! Something went wrong
+          </h2>
+          <p className="text-gray-600 mb-6 max-w-md">
+            {contentError?.message ||
+              courseError?.message ||
+              "We're having trouble loading your learning content. Please try again."}
+          </p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-3 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
-            <ArrowLeft size={16} className="mr-1" />
-            <span>Back to Course</span>
-          </button>
-          <h1 className="text-lg font-bold text-[var(--color-primary-yellow)]">
-            {moduleData.title}
-          </h1>
+            Try Again
+          </Button>
         </div>
+      </div>
+    );
+  }
 
-        {/* Module Info */}
-        <div className="p-4 border-b border-gray-200 text-sm text-gray-600">
-          <div className="flex items-center mb-2">
-            <Clock
-              size={16}
-              className="mr-2 text-[var(--color-primary-yellow)]"
-            />
-            <span>{moduleData.duration} minutes</span>
+  const course = courseData?.data;
+
+  // Find current module and submodule info from course data
+  const currentModule = course?.moduleCourseDetailScreenResponseDTOs?.find(
+    (module) => module.moduleId === parseInt(moduleId)
+  );
+
+  const currentSubModule =
+    currentModule?.subModuleCourseDetailScreenResponseDTOs?.find(
+      (subModule) => subModule.subModuleId === parseInt(subModuleId)
+    );
+
+  // Check if we have learning content
+  if (!learningContents.length) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="text-center p-12 rounded-3xl shadow-2xl bg-white">
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <BookOpen size={48} className="text-blue-600" />
           </div>
-          <div className="flex items-center">
-            <BookOpen
-              size={16}
-              className="mr-2 text-[var(--color-primary-yellow)]"
-            />
-            <span>Difficulty: {moduleData.difficulty}</span>
-          </div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            No Learning Content Available
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-md">
+            This submodule "{currentSubModule?.subModuleTitle || "Unknown"}"
+            doesn't have any learning content yet. Check back soon!
+          </p>
+          <Button
+            onClick={onBack}
+            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+          >
+            <ArrowLeft size={18} className="mr-2" />
+            Back to Course
+          </Button>
         </div>
+      </div>
+    );
+  }
 
-        {/* Section Navigation */}
-        <div className="p-2">
-          <h3 className="px-2 py-1 text-sm font-medium text-gray-500 uppercase">
-            Module Content
-          </h3>
-          <nav className="mt-2">
-            {moduleData.sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => {
-                  setActiveSection(section.id);
-                }}
-                className={`w-full text-left px-4 py-3 flex items-center ${
-                  activeSection === section.id
-                    ? "bg-amber-50 text-[var(--color-primary-yellow)] border-l-2 border-[var(--color-primary-yellow)]"
-                    : "text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <div className="mr-2">
-                  <CompletedBox isCompleted={section.completed} size={16} />
-                </div>
-                <div className="mr-2 text-[var(--color-primary-yellow)]">
-                  {section.type === "reading" ? (
-                    <BookOpen size={16} />
-                  ) : section.type === "video" ? (
-                    <Video size={16} />
-                  ) : section.type === "quiz" ? (
-                    <PenLine size={16} />
-                  ) : (
-                    <Award size={16} />
-                  )}
-                </div>
-                <span>{section.title}</span>
-              </button>
-            ))}
+  const activeContent = learningContents[activeSection];
+  const activeItemDetail = learningItemData?.data?.[0]; // Get the first item from the array
+
+  // Helper function to get content type icon based on contentType number
+  // Reading 0, Challenge 1, Quiz 2
+  const getContentTypeIcon = (contentType, size = 16) => {
+    switch (contentType) {
+      case 0:
+        return <BookOpen size={size} />; // Reading
+      case 1:
+        return <Award size={size} />; // Challenge
+      case 2:
+        return <PenLine size={size} />; // Quiz
+      default:
+        return <BookOpen size={size} />;
+    }
+  };
+
+  // Helper function to get content type label for activities
+  // Reading 0, Challenge 1, Quiz 2
+  const getContentTypeLabel = (contentType) => {
+    switch (contentType) {
+      case 0:
+        return "Reading";
+      case 1:
+        return "Challenge";
+      case 2:
+        return "Quiz";
+      default:
+        return "Reading";
+    }
+  };
+
+  // Helper function to get content format icon based on itemTypes
+  // Image 0, Video 1, Text 2, Input 3, Draggable 4
+  const getContentFormatIcon = (itemTypes, size = 16) => {
+    switch (itemTypes) {
+      case 0:
+        return <Image size={size} />; // Image
+      case 1:
+        return <Video size={size} />; // Video
+      case 2:
+        return <Type size={size} />; // Text
+      case 3:
+        return <MousePointer size={size} />; // Input
+      case 4:
+        return <Move3D size={size} />; // Draggable
+      default:
+        return <Type size={size} />;
+    }
+  };
+
+  // Helper function to get content format label based on itemTypes
+  // Image 0, Video 1, Text 2, Input 3, Draggable 4
+  const getContentFormatLabel = (itemTypes) => {
+    switch (itemTypes) {
+      case 0:
+        return "Image";
+      case 1:
+        return "Video";
+      case 2:
+        return "Text";
+      case 3:
+        return "Input";
+      case 4:
+        return "Draggable";
+      default:
+        return "Text";
+    }
+  };
+
+  // Helper function to get content type color
+  const getContentTypeColor = (contentType) => {
+    switch (contentType) {
+      case 0:
+        return "from-green-500 to-green-600"; // Reading
+      case 1:
+        return "from-purple-500 to-purple-600"; // Challenge
+      case 2:
+        return "from-blue-500 to-blue-600"; // Quiz
+      default:
+        return "from-green-500 to-green-600";
+    }
+  };
+
+  // Helper function to determine if content is completed
+  const isCompleted = (learningContentId) => {
+    // Check from course data if available
+    const contentFromCourse =
+      currentSubModule?.learningContentDetailScreenResponseDTOs?.find(
+        (content) => content.learningContentId === learningContentId
+      );
+    return contentFromCourse?.userLearningProgressStatus === 2;
+  };
+
+  const completedCount = learningContents.filter((content) =>
+    isCompleted(content.learningContentId)
+  ).length;
+
+  const progressPercentage =
+    learningContents.length > 0
+      ? (completedCount / learningContents.length) * 100
+      : 0;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+      {/* Enhanced Breadcrumb */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-amber-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex py-4" aria-label="Breadcrumb">
+            <ol className="flex items-center space-x-3">
+              <li>
+                <button
+                  onClick={() => navigate("/learn")}
+                  className="text-primary-yellow hover:text-secondary-yellow font-semibold transition-all duration-200 hover:scale-105"
+                >
+                  Learn
+                </button>
+              </li>
+              <li className="flex items-center">
+                <div className="w-2 h-2 bg-gray-300 rounded-full mx-3"></div>
+                <button
+                  onClick={() => navigate(`/learn/course/${courseId}`)}
+                  className="text-primary-yellow hover:text-secondary-yellow font-semibold transition-all duration-200 hover:scale-105"
+                >
+                  {course?.title || "Course"}
+                </button>
+              </li>
+              <li className="flex items-center">
+                <div className="w-2 h-2 bg-gray-300 rounded-full mx-3"></div>
+                <span className="text-gray-700 font-semibold">
+                  {currentModule?.moduleTitle || "Module"}
+                </span>
+              </li>
+              <li className="flex items-center">
+                <div className="w-2 h-2 bg-gray-300 rounded-full mx-3"></div>
+                <span className="text-gray-600 font-medium">
+                  {currentSubModule?.subModuleTitle || "Submodule"}
+                </span>
+              </li>
+            </ol>
           </nav>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="lg:w-3/4">
-        {/* Content Header */}
-        <div className="bg-white p-6 border-b border-gray-200">
-          <div className="flex items-center">
-            {activeSection_data?.type === "reading" ? (
-              <BookOpen
-                size={20}
-                className="mr-3 text-[var(--color-primary-yellow)]"
-              />
-            ) : activeSection_data?.type === "video" ? (
-              <Video
-                size={20}
-                className="mr-3 text-[var(--color-primary-yellow)]"
-              />
-            ) : activeSection_data?.type === "quiz" ? (
-              <PenLine
-                size={20}
-                className="mr-3 text-[var(--color-primary-yellow)]"
-              />
-            ) : (
-              <Award
-                size={20}
-                className="mr-3 text-[var(--color-primary-yellow)]"
-              />
-            )}
-            <h2 className="text-xl font-bold text-gray-800">
-              {activeSection_data?.title}
-            </h2>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden border border-amber-100">
+          {/* Enhanced Sidebar - Navigation */}
+          <div className="lg:w-1/3 border-r border-amber-100">
+            {/* Enhanced Submodule Header */}
+            <div className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 p-8 border-b border-amber-200">
+              <button
+                onClick={onBack}
+                className="flex items-center text-primary-yellow hover:text-secondary-yellow mb-6 transition-all duration-200 hover:scale-105 group"
+              >
+                <div className="p-2 bg-white rounded-xl shadow-md group-hover:shadow-lg transition-all duration-200 mr-3">
+                  <ArrowLeft size={18} />
+                </div>
+                <span className="font-semibold">Back to Course</span>
+              </button>
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold text-gray-800 mb-2 leading-tight">
+                  {currentSubModule?.subModuleTitle || "Submodule"}
+                </h1>
+                <p className="text-sm text-gray-600 font-medium">
+                  {currentModule?.moduleTitle || "Module"}
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center text-sm text-gray-700">
+                  <div className="p-2 bg-primary-yellow/20 rounded-lg mr-3">
+                    <BookOpen size={16} className="text-primary-yellow" />
+                  </div>
+                  <span className="font-medium">
+                    {learningContents.length} Activities
+                  </span>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-500 mb-1">Progress</div>
+                  <div className="text-sm font-bold text-gray-700">
+                    {completedCount}/{learningContents.length}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Progress Overview */}
+            <div className="p-6 border-b border-amber-100 bg-gradient-to-r from-green-50 to-emerald-50">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-semibold text-gray-700">
+                  Overall Progress
+                </span>
+                <span className="text-sm font-bold text-green-600">
+                  {Math.round(progressPercentage)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-green-400 via-green-500 to-green-600 h-3 rounded-full transition-all duration-500 ease-out relative"
+                  style={{ width: `${progressPercentage}%` }}
+                >
+                  <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+              <div className="mt-2 text-xs text-gray-600">
+                {completedCount === learningContents.length
+                  ? "🎉 Congratulations! All activities completed!"
+                  : `${
+                      learningContents.length - completedCount
+                    } activities remaining`}
+              </div>
+            </div>
+
+            {/* Enhanced Content Navigation */}
+            <div className="p-4">
+              <h3 className="px-4 py-3 text-xs font-bold text-gray-600 uppercase tracking-wider">
+                Learning Activities
+              </h3>
+              <nav className="mt-2 space-y-2">
+                {learningContents
+                  .sort((a, b) => a.displayOrder - b.displayOrder)
+                  .map((content, index) => (
+                    <button
+                      key={content.learningContentId}
+                      onClick={() => setActiveSection(index)}
+                      className={`w-full text-left p-4 flex items-center rounded-2xl mx-2 transition-all duration-300 group ${
+                        activeSection === index
+                          ? "bg-gradient-to-r from-primary-yellow to-secondary-yellow text-white shadow-lg transform scale-[1.02]"
+                          : "text-gray-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-yellow-50 hover:shadow-md"
+                      }`}
+                    >
+                      <div className="mr-4">
+                        <CompletedBox
+                          isCompleted={isCompleted(content.learningContentId)}
+                          size={20}
+                        />
+                      </div>
+                      <div
+                        className={`mr-4 p-2 rounded-xl ${
+                          activeSection === index
+                            ? "bg-white/20"
+                            : "bg-primary-yellow/10 group-hover:bg-primary-yellow/20"
+                        } transition-all duration-200`}
+                      >
+                        <div
+                          className={
+                            activeSection === index
+                              ? "text-white"
+                              : "text-primary-yellow"
+                          }
+                        >
+                          {getContentTypeIcon(content.contentType, 18)}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm font-semibold truncate block mb-1">
+                          {content.title}
+                        </span>
+                        <div className="flex items-center">
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full ${
+                              activeSection === index
+                                ? "bg-white/20 text-white"
+                                : "bg-gray-100 text-gray-600 group-hover:bg-primary-yellow/20 group-hover:text-primary-yellow"
+                            } transition-all duration-200`}
+                          >
+                            {getContentTypeLabel(content.contentType)}
+                          </span>
+                        </div>
+                      </div>
+                      {activeSection === index && (
+                        <div className="ml-2">
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+              </nav>
+            </div>
           </div>
-        </div>
 
-        {/* Content Section */}
-        <div className="p-6">
-          <div dangerouslySetInnerHTML={{ __html: activeContent }} />
+          {/* Enhanced Main Content Area */}
+          <div className="lg:w-2/3">
+            {activeContent ? (
+              <>
+                {/* Enhanced Content Header */}
+                <div className="bg-gradient-to-r from-white to-gray-50 p-8 border-b border-gray-200">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center">
+                      <div
+                        className={`mr-6 p-4 bg-gradient-to-r ${getContentTypeColor(
+                          activeContent.contentType
+                        )} rounded-2xl shadow-lg`}
+                      >
+                        <div className="text-white">
+                          {getContentTypeIcon(activeContent.contentType, 24)}
+                        </div>
+                      </div>
+                      <div>
+                        <h2 className="text-3xl font-bold text-gray-800 mb-2 leading-tight">
+                          {activeContent.title}
+                        </h2>
+                        <div className="flex items-center text-sm text-gray-600 space-x-4">
+                          <span className="bg-gradient-to-r from-gray-100 to-gray-200 px-3 py-1 rounded-full font-medium">
+                            {getContentTypeLabel(activeContent.contentType)}
+                          </span>
+                          {/* Show content format if available from itemTypes */}
+                          {activeItemDetail?.itemTypes !== undefined && (
+                            <span className="bg-gradient-to-r from-blue-100 to-blue-200 px-3 py-1 rounded-full font-medium flex items-center">
+                              <div className="mr-1">
+                                {getContentFormatIcon(
+                                  activeItemDetail.itemTypes,
+                                  14
+                                )}
+                              </div>
+                              {getContentFormatLabel(
+                                activeItemDetail.itemTypes
+                              )}
+                            </span>
+                          )}
+                          <div className="flex items-center">
+                            <Clock size={16} className="mr-2 text-gray-500" />
+                            <span className="font-medium">
+                              {activeContent.timeLimit || "30:00"}
+                            </span>
+                          </div>
+                          {activeContent.likesCount > 0 && (
+                            <div className="flex items-center">
+                              <Star
+                                size={16}
+                                className="mr-2 text-yellow-500"
+                              />
+                              <span className="font-medium">
+                                {activeContent.likesCount} likes
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-gray-500 mb-1">Activity</div>
+                      <div className="text-lg font-bold text-gray-700">
+                        {activeSection + 1} of {learningContents.length}
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-          {/* Action button based on content type */}
-          <div className="mt-8">
-            {activeSection_data?.type === "quiz" && (
-              <Button
-                onClick={() => handleStartActivity("quiz")}
-                className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2 rounded-md`}
-              >
-                Start Quiz
-              </Button>
-            )}
+                {/* Enhanced Loading state for learning item details */}
+                {isItemLoading && (
+                  <div className="p-12 text-center">
+                    <div className="relative mb-6">
+                      <div className="w-16 h-16 border-4 border-primary-yellow/20 rounded-full mx-auto"></div>
+                      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-16 border-4 border-primary-yellow border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                      Loading content details...
+                    </h3>
+                    <p className="text-gray-500">
+                      Preparing your learning materials
+                    </p>
+                  </div>
+                )}
 
-            {activeSection_data?.type === "challenge" && (
-              <Button
-                onClick={() => handleStartActivity("challenge")}
-                className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2 rounded-md`}
-              >
-                Begin Challenge
-              </Button>
-            )}
+                {/* Enhanced Error state for learning item */}
+                {itemError && (
+                  <div className="p-12 text-center">
+                    <div className="text-red-500 text-5xl mb-6">😕</div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-3">
+                      Content Not Available
+                    </h3>
+                    <p className="text-red-600 mb-6 max-w-md mx-auto">
+                      Error loading content details: {itemError.message}
+                    </p>
+                  </div>
+                )}
 
-            {activeSection_data?.hasCompletionButton && (
-              <Button
-                onClick={() => handleMarkComplete(activeSection_data.id)}
-                className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2 rounded-md`}
-              >
-                Mark as Complete
-              </Button>
+                {/* Enhanced Content Section */}
+                {!isItemLoading && !itemError && (
+                  <div className="p-8">
+                    {/* Only show content if itemContent exists and is not null */}
+                    {activeItemDetail?.itemContent && (
+                      <>
+                        {/* Enhanced Video Content */}
+                        {activeItemDetail?.itemTypes === 1 && (
+                          <div className="mb-10">
+                            <div className="aspect-video bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl overflow-hidden shadow-2xl border-4 border-gray-200">
+                              <video
+                                controls
+                                className="w-full h-full object-cover"
+                                src={activeItemDetail.itemContent}
+                              >
+                                Your browser does not support the video tag.
+                              </video>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Enhanced Image Content */}
+                        {activeItemDetail?.itemTypes === 0 && (
+                          <div className="mb-10">
+                            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl overflow-hidden shadow-2xl border-4 border-gray-200">
+                              <img
+                                className="w-full h-auto object-cover"
+                                src={activeItemDetail.itemContent}
+                                alt={activeContent.title}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Text/Reading Content */}
+                        {(activeItemDetail?.itemTypes === 2 ||
+                          activeItemDetail?.itemTypes === undefined) && (
+                          <div className="mb-10">
+                            <div className="prose prose-lg max-w-none text-gray-800">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: activeItemDetail.itemContent,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Input Content */}
+                        {activeItemDetail?.itemTypes === 3 && (
+                          <div className="mb-10">
+                            <div className="prose prose-lg max-w-none text-gray-800">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: activeItemDetail.itemContent,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Draggable Content */}
+                        {activeItemDetail?.itemTypes === 4 && (
+                          <div className="mb-10">
+                            <div className="prose prose-lg max-w-none text-gray-800">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: activeItemDetail.itemContent,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Mark as Complete Button - Outside content sections */}
+                        <div className="flex justify-end mb-10">
+                          {!isCompleted(activeContent.learningContentId) ? (
+                            <Button
+                              onClick={() =>
+                                handleMarkComplete(
+                                  activeContent.learningContentId
+                                )
+                              }
+                              className={`${TailwindStyle.HIGHLIGHT_FRAME} px-8 py-3 flex items-center`}
+                            >
+                              <Check size={20} className="mr-3" />
+                              Mark as Complete
+                            </Button>
+                          ) : (
+                            <div className="bg-gradient-to-r from-green-100 to-green-200 text-green-700 px-8 py-3 rounded-xl flex items-center shadow-lg">
+                              <CheckCircle size={20} className="mr-3" />
+                              Completed ✓
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
+
+                    {/* Enhanced Hint section - only if hint exists */}
+                    {activeItemDetail?.hint && (
+                      <div className="mb-10">
+                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-100 shadow-lg">
+                          <div className="flex items-center mb-6">
+                            <div className="p-3 bg-purple-500 rounded-xl mr-4">
+                              <Eye size={24} className="text-white" />
+                            </div>
+                            <h4 className="text-xl font-bold text-purple-900">
+                              Hint
+                            </h4>
+                          </div>
+                          <div className="text-purple-800 prose max-w-none">
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: activeItemDetail.hint,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Enhanced Additional Data section - only if additionalData exists */}
+                    {activeItemDetail?.additionalData && (
+                      <div className="mb-10">
+                        <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-3xl p-8 border border-indigo-100 shadow-lg">
+                          <div className="flex items-center mb-6">
+                            <div className="p-3 bg-indigo-500 rounded-xl mr-4">
+                              <FileText size={24} className="text-white" />
+                            </div>
+                            <h4 className="text-xl font-bold text-indigo-900">
+                              Additional Information
+                            </h4>
+                          </div>
+                          <div className="text-indigo-800 prose max-w-none">
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: activeItemDetail.additionalData,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Only show placeholder if itemContent is null or doesn't exist */}
+                    {!activeItemDetail?.itemContent &&
+                      !isItemLoading &&
+                      !itemError && (
+                        <div className="text-center p-16 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 rounded-3xl mb-10 border border-gray-200 shadow-lg">
+                          <div
+                            className={`w-24 h-24 bg-gradient-to-r ${getContentTypeColor(
+                              activeContent.contentType
+                            )} rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg`}
+                          >
+                            <div className="text-white">
+                              {getContentTypeIcon(
+                                activeContent.contentType,
+                                48
+                              )}
+                            </div>
+                          </div>
+                          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                            {activeContent.title}
+                          </h3>
+                          <p className="text-gray-600 mb-8 max-w-lg mx-auto text-lg">
+                            This{" "}
+                            {getContentTypeLabel(
+                              activeContent.contentType
+                            ).toLowerCase()}{" "}
+                            content is being prepared and will be available
+                            soon. Stay tuned!
+                          </p>
+                          <div className="inline-flex items-center px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-600">
+                            <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
+                            Coming Soon
+                          </div>
+                        </div>
+                      )}
+
+                    {/* Bottom action buttons section */}
+                    <div className="flex items-center justify-between pt-8 border-t border-gray-200">
+                      <div className="flex space-x-4">
+                        {activeContent.contentType === 2 && (
+                          <Button
+                            onClick={() =>
+                              handleStartActivity(
+                                "quiz",
+                                activeContent.learningContentId
+                              )
+                            }
+                            className={TailwindStyle.HIGHLIGHT_FRAME}
+                          >
+                            <PenLine size={20} className="mr-3" />
+                            Start Quiz
+                          </Button>
+                        )}
+
+                        {activeContent.contentType === 1 && (
+                          <Button
+                            onClick={() =>
+                              handleStartActivity(
+                                "challenge",
+                                activeContent.learningContentId
+                              )
+                            }
+                            className={TailwindStyle.HIGHLIGHT_FRAME}
+                          >
+                            <Award size={20} className="mr-3" />
+                            Begin Challenge
+                          </Button>
+                        )}
+                      </div>
+
+                      {/* Enhanced Navigation buttons */}
+                      <div className="flex space-x-3">
+                        <Button
+                          onClick={() =>
+                            setActiveSection(Math.max(0, activeSection - 1))
+                          }
+                          disabled={activeSection === 0}
+                          variant="outline"
+                          className="px-6 py-3 rounded-xl border-2 border-gray-300 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                        >
+                          ← Previous
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            setActiveSection(
+                              Math.min(
+                                learningContents.length - 1,
+                                activeSection + 1
+                              )
+                            )
+                          }
+                          disabled={
+                            activeSection === learningContents.length - 1
+                          }
+                          variant="outline"
+                          className="px-6 py-3 rounded-xl border-2 border-gray-300 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                        >
+                          Next →
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="p-12 text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BookOpen size={32} className="text-gray-400" />
+                </div>
+                <p className="text-gray-500 text-lg">
+                  No learning content selected
+                </p>
+              </div>
             )}
           </div>
         </div>

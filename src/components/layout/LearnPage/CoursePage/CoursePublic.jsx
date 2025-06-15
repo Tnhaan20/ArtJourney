@@ -10,6 +10,7 @@ import {
   CheckCircle,
   Award,
   Target,
+  AlertCircle,
 } from "lucide-react";
 import { useCourse } from "@/hooks/Courses/use-course";
 import { useUserEnrollForm } from "@/hooks/Courses/use-course-form";
@@ -20,13 +21,18 @@ import { assets } from "@/assets/assets";
 export default function CoursePublic({ courseId, isAuthenticated }) {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  
+
   // Use the real API for course public data
   const { useGetCoursePublic } = useCourse();
   const { data: courseData, isLoading, error } = useGetCoursePublic(courseId);
 
   // Use enrollment form hook
-  const { enrollUser, isLoading: isEnrolling, isSuccess, error: enrollError } = useUserEnrollForm();
+  const {
+    enrollUser,
+    isLoading: isEnrolling,
+    isSuccess,
+    error: enrollError,
+  } = useUserEnrollForm();
 
   // Handle start learning button click
   const handleStartLearning = async () => {
@@ -36,16 +42,17 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
     }
 
     try {
-      console.log(`🎓 Starting enrollment for user ${user.id} in course ${courseId}`);
-      
+      console.log(
+        `🎓 Starting enrollment for user ${user.id} in course ${courseId}`
+      );
+
       await enrollUser(user.id, courseId);
 
       console.log("✅ Enrollment successful, navigating to course...");
-      
+
       setTimeout(() => {
         navigate(`/learn/course/${courseId}`);
       }, 1000);
-      
     } catch (error) {
       console.error("❌ Failed to enroll user:", error);
     }
@@ -82,6 +89,11 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         return "Unknown";
     }
   };
+
+  // Check if course has content
+  const hasContent =
+    course?.moduleCourseDetailScreenResponseDTOs &&
+    course.moduleCourseDetailScreenResponseDTOs.length > 0;
 
   return (
     <div className="space-y-8">
@@ -123,7 +135,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
                   {course?.totalModule || 0} Modules
                 </span>
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <Target className="w-5 h-5 text-primary-yellow" />
                 <span className="text-sm text-gray-600">
@@ -132,26 +144,48 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
               </div>
             </div>
 
+            {/* Content Availability Notice */}
+            {!hasContent && (
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="w-5 h-5 text-orange-600" />
+                  <span className="text-sm font-medium text-orange-800">
+                    Course content is being prepared and will be available soon.
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               {isAuthenticated ? (
                 <button
                   onClick={handleStartLearning}
-                  disabled={isEnrolling}
+                  disabled={isEnrolling || !hasContent}
                   className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium ${TailwindStyle.HIGHLIGHT_FRAME} disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
                 >
                   <Play className="w-5 h-5" />
                   <span>
-                    {isEnrolling ? "Enrolling..." : isSuccess ? "Enrolled! ✓" : "Start Learning"}
+                    {!hasContent
+                      ? "Content Coming Soon"
+                      : isEnrolling
+                      ? "Enrolling..."
+                      : isSuccess
+                      ? "Enrolled! ✓"
+                      : "Start Learning"}
                   </span>
                 </button>
               ) : (
                 <Link
                   to="/signin"
-                  className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium ${TailwindStyle.HIGHLIGHT_FRAME}`}
+                  className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium ${
+                    TailwindStyle.HIGHLIGHT_FRAME
+                  } ${!hasContent ? "opacity-50 pointer-events-none" : ""}`}
                 >
                   <Play className="w-5 h-5" />
-                  <span>Sign In to Start</span>
+                  <span>
+                    {!hasContent ? "Content Coming Soon" : "Sign In to Start"}
+                  </span>
                 </Link>
               )}
             </div>
@@ -176,7 +210,9 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
 
           <div className="relative">
             <img
-              src={course?.coverImageUrl || assets.courses.asia.bhimbetkaRockArt}
+              src={
+                course?.coverImageUrl || assets.courses.asia.bhimbetkaRockArt
+              }
               alt={course?.title}
               className="w-full h-80 object-cover rounded-lg shadow-lg"
             />
@@ -246,105 +282,98 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
       {/* Complete Course Content */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold mb-6">Complete Course Content</h2>
-        <div className="space-y-4">
-          {course?.moduleCourseDetailScreenResponseDTOs?.map(
-            (module, moduleIndex) => (
-              <div
-                key={module.moduleId}
-                className="border border-gray-200 rounded-lg overflow-hidden"
-              >
-                <div className="bg-gray-50 p-4 border-b">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="bg-primary-yellow text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
-                        {moduleIndex + 1}
+
+        {hasContent ? (
+          <div className="space-y-4">
+            {course.moduleCourseDetailScreenResponseDTOs.map(
+              (module, moduleIndex) => (
+                <div
+                  key={module.moduleId}
+                  className="border border-gray-200 rounded-lg overflow-hidden"
+                >
+                  <div className="bg-gray-50 p-4 border-b">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-primary-yellow text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                          {moduleIndex + 1}
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-900">
+                            {module.moduleTitle}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Module {moduleIndex + 1} of {course.totalModule}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          {module.moduleTitle}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Module {moduleIndex + 1} of {course.totalModule}
-                        </p>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-500">
+                          {module.subModuleCourseDetailScreenResponseDTOs
+                            ?.length || 0}{" "}
+                          lessons
+                        </span>
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500">
-                        {module.subModuleCourseDetailScreenResponseDTOs
-                          ?.length || 0}{" "}
-                        lessons
-                      </span>
                     </div>
                   </div>
-                </div>
 
-                {/* Sub-modules */}
-                <div className="p-4">
-                  <div className="space-y-3">
-                    {module.subModuleCourseDetailScreenResponseDTOs?.map(
-                      (subModule, subIndex) => (
-                        <div
-                          key={`${module.moduleId}-${subIndex}`}
-                          className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <span className="text-sm text-gray-500 w-6">
-                              {moduleIndex + 1}.{subIndex + 1}
-                            </span>
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-900">
-                                {subModule.subModuleTitle}
-                              </h4>
-                              <p className="text-xs text-gray-600">
-                                {subModule
-                                  .learningContentDetailScreenResponseDTOs
-                                  ?.length || 0}{" "}
-                                learning contents
-                              </p>
+                  {/* Sub-modules */}
+                  <div className="p-4">
+                    <div className="space-y-3">
+                      {module.subModuleCourseDetailScreenResponseDTOs?.map(
+                        (subModule, subIndex) => (
+                          <div
+                            key={`${module.moduleId}-${subIndex}`}
+                            className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <span className="text-sm text-gray-500 w-6">
+                                {moduleIndex + 1}.{subIndex + 1}
+                              </span>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900">
+                                  {subModule.subModuleTitle}
+                                </h4>
+                                <p className="text-xs text-gray-600">
+                                  {subModule
+                                    .learningContentDetailScreenResponseDTOs
+                                    ?.length || 0}{" "}
+                                  learning contents
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              {!isAuthenticated && (
+                                <Lock className="w-4 h-4 text-gray-400" />
+                              )}
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            {!isAuthenticated && (
-                              <Lock className="w-4 h-4 text-gray-400" />
-                            )}
-                          </div>
-                        </div>
-                      )
-                    )}
+                        )
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          )}
-        </div>
-      </div>
-
-      {/* Course Progress (for authenticated users) */}
-      {isAuthenticated && (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-6">Your Progress</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="font-medium text-blue-800">Course Completion</h3>
-              <p className="text-2xl font-bold text-blue-600">
-                {course?.courseCompletionPercentage || 0}%
-              </p>
+              )
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertCircle size={40} className="text-gray-400" />
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h3 className="font-medium text-green-800">Time Spent</h3>
-              <p className="text-2xl font-bold text-green-600">
-                {course?.timeSpentPercentage || 0}%
-              </p>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <h3 className="font-medium text-purple-800">Remaining Time</h3>
-              <p className="text-2xl font-bold text-purple-600">
-                {course?.remainingTime || "00:00:00"}
-              </p>
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">
+              Course Content Not Available
+            </h3>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              The course modules and lessons are currently being prepared.
+              Please check back soon for the complete learning experience.
+            </p>
+            <div className="inline-flex items-center px-4 py-2 bg-orange-100 rounded-full text-sm text-orange-700">
+              <div className="w-2 h-2 bg-orange-400 rounded-full mr-2 animate-pulse"></div>
+              Content Coming Soon
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Course Features */}
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -392,21 +421,34 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         <div className="bg-gradient-to-r from-primary-yellow to-orange-400 rounded-lg p-8 text-white text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
           <p className="text-lg mb-6 opacity-90">
-            Join thousands of students and explore {course?.title}!
+            {hasContent
+              ? `Join thousands of students and explore ${course?.title}!`
+              : `Be the first to know when ${course?.title} content becomes available!`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/signin"
-              className="inline-block bg-white text-primary-yellow px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-            >
-              Get Started Now
-            </Link>
-            <Link
-              to="/courses"
-              className="inline-block border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-primary-yellow transition-colors"
-            >
-              Browse All Courses
-            </Link>
+            {hasContent ? (
+              <>
+                <Link
+                  to="/signin"
+                  className="inline-block bg-white text-primary-yellow px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                >
+                  Get Started Now
+                </Link>
+                <Link
+                  to="/courses"
+                  className="inline-block border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-primary-yellow transition-colors"
+                >
+                  Browse All Courses
+                </Link>
+              </>
+            ) : (
+              <Link
+                to="/courses"
+                className="inline-block bg-white text-primary-yellow px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+              >
+                Browse Available Courses
+              </Link>
+            )}
           </div>
         </div>
       )}

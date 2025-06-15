@@ -34,11 +34,22 @@ export const useLearning = () => {
     },
   });
 
-  const getLearningContext = (subModuleId) => {
+  const getLearningContent = (subModuleId) => {
     return useQuery({
       queryKey: [QueryKey.LEARNING_CONTEXT.GET_LEARNING_CONTEXT, subModuleId],
-      queryFn: async () => await learningContextServices.get.getlearningContext(subModuleId),
+      queryFn: async () => await learningContextServices.get.getLearningContent(subModuleId),
       enabled: !!subModuleId,
+      refetchOnWindowFocus: false,
+      retry: false,
+    });
+  };
+
+  const getLearningItem = (learningItemId) => {
+    return useQuery({
+      queryKey: [QueryKey.LEARNING_CONTEXT.GET_LEARNING_ITEM, learningItemId],
+      queryFn: async () =>
+        await learningContextServices.get.getLearningItem(learningItemId),
+      enabled: !!learningItemId,
       refetchOnWindowFocus: false,
       retry: false,
     });
@@ -46,6 +57,7 @@ export const useLearning = () => {
 
   return {
     createLearningMutation,
-    getLearningContext,
+    getLearningContent,
+    getLearningItem,
   };
 };

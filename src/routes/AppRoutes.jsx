@@ -262,7 +262,7 @@ export default function AppRoutes() {
         path="/learn"
         element={
           <Suspense fallback={<PageLoader />}>
-            <ProtectedRoute  requireAuth={false}>
+            <ProtectedRoute requireAuth={false}>
               <MainLayout>
                 <LearnPage />
               </MainLayout>
@@ -278,6 +278,7 @@ export default function AppRoutes() {
             </Suspense>
           }
         />
+
         <Route
           path="search"
           element={
@@ -296,6 +297,14 @@ export default function AppRoutes() {
         />
         <Route
           path="course/:courseId/module/:moduleId"
+          element={
+            <Suspense fallback={<ComponentLoader />}>
+              <CourseDetailPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="course/:courseId/module/:moduleId/submodule/:subModuleId"
           element={
             <Suspense fallback={<ComponentLoader />}>
               <CourseDetailPage />

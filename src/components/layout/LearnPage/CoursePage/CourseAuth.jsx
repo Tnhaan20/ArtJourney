@@ -5,7 +5,7 @@ import courseHeaderBg from "@/assets/course/course-header.png";
 import CompletedBox from "@/components/elements/completedbox/Completed";
 import { useCourse } from "@/hooks/Courses/use-course";
 import { useAuthStore } from "@/domains/store/use-auth-store";
-import { Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { TailwindStyle } from "@/utils/Enum";
 import Timer from "@/lib/timer";
 
@@ -173,8 +173,6 @@ export default function CourseAuth({ learningProgress, courseId }) {
                   {course?.description ||
                     "Kickstart your career in art. Build job-ready skills in art techniques, art history, and creative expression and learn to create beautiful artworks in just 6 months"}
                 </p>
-
-                
               </div>
 
               {/* Right Column - Learning Outcomes */}
@@ -338,25 +336,30 @@ export default function CourseAuth({ learningProgress, courseId }) {
                     {module.subModuleCourseDetailScreenResponseDTOs?.map(
                       (subModule, subIndex) => (
                         <div
-                          key={subIndex}
+                          key={`${module.moduleId}-${subModule.subModuleId}-${subIndex}`}
                           className="border-l-4 border-third-yellow pl-6"
                         >
                           <h5 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
                             <span className="bg-secondary-yellow text-primary-blue rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
                               {subIndex + 1}
                             </span>
-                            {subModule.subModuleTitle}
+                            <Link
+                              to={`/learn/course/${courseId}/module/${module.moduleId}/submodule/${subModule.subModuleId}`}
+                              className="hover:text-primary-yellow hover:underline transition-colors cursor-pointer flex items-center group"
+                            >
+                              <span>{subModule.subModuleTitle}</span>
+                              <ChevronRight className="w-5 h-5 ml-2 text-gray-400 group-hover:text-primary-yellow transition-colors" />
+                            </Link>
                           </h5>
 
                           <div className="space-y-3">
                             {subModule.learningContentDetailScreenResponseDTOs?.map(
                               (content, contentIndex) => (
-                                <Link
-                                  key={contentIndex}
-                                  to={`/learn/course/${courseId}/module/${module.moduleId}/content/${contentIndex}`}
-                                  className="block group"
+                                <div
+                                  key={`${module.moduleId}-${subModule.subModuleId}-${content.learningContentId}`}
+                                  className="block"
                                 >
-                                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200">
+                                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center">
                                         <CompletedBox
@@ -367,7 +370,7 @@ export default function CourseAuth({ learningProgress, courseId }) {
                                           size={20}
                                         />
                                         <div>
-                                          <span className="font-medium text-gray-900 group-hover:text-blue-700">
+                                          <span className="font-medium text-gray-900">
                                             {content.learningContentTitle}
                                           </span>
                                           <div className="flex items-center mt-1">
@@ -389,24 +392,9 @@ export default function CourseAuth({ learningProgress, courseId }) {
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="group-hover:translate-x-1 transition-transform">
-                                        <svg
-                                          className="h-5 w-5 text-gray-400 group-hover:text-primary-yellow"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                          />
-                                        </svg>
-                                      </div>
                                     </div>
                                   </div>
-                                </Link>
+                                </div>
                               )
                             )}
                           </div>

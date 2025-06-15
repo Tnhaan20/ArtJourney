@@ -12,10 +12,17 @@ export const learningContextServices = {
     },
   },
   get: {
-    getlearningContext: async (subModuleId) => {
+    getLearningContent: async (subModuleId) => {
       const res = await axiosInstance.get(`/learning-contents/sub-module/${subModuleId}`);
       return res.data;
     },
+
+    getLearningItem: async (learningItemId) => {
+      const res = await axiosInstance.get(
+        `/learning-contents/${learningItemId}/challenge-items`
+      );
+      return res.data;
+    }
   },
   put: {},
   delete: {},
