@@ -315,20 +315,9 @@ export default function CourseList() {
                         <div className="h-48 overflow-hidden">
                           <img
                             loading="lazy"
-                            src={
-                              course.thumbnailImageUrl ||
-                              course.coverImageUrl ||
-                              `https://via.placeholder.com/300x200?text=${encodeURIComponent(
-                                course.title
-                              )}`
-                            }
+                            src={course.thumbnailImageUrl}
                             alt={course.title}
                             className="w-full h-full object-cover transition-transform duration-300"
-                            onError={(e) => {
-                              e.target.src = `https://via.placeholder.com/300x200?text=${encodeURIComponent(
-                                course.title
-                              )}`;
-                            }}
                           />
                         </div>
                         <div className="py-6 px-4 bg-[#f8e7ce] relative">
