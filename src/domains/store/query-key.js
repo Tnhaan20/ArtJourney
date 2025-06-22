@@ -48,5 +48,6 @@ export const QueryKey = {
   LEARNING_CONTEXT: {
     CREATE_LEARNING_CONTEXT: "learning-context-create",
     GET_LEARNING_CONTEXT: "learning-context-get",
+    MARK_AS_COMPLETE: "learning-context-mark-as-complete",
   }
 };

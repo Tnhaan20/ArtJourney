@@ -22,7 +22,13 @@ export const learningContextServices = {
         `/learning-contents/${learningItemId}/challenge-items`
       );
       return res.data;
-    }
+    },
+    markAsCompleted: async (learningItemId) => {
+      const res = await axiosInstance.post(
+        `/users/mark-as-complete/learning-content/${learningItemId}`
+      );
+      return res.data;
+    },
   },
   put: {},
   delete: {},

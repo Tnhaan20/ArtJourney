@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLearning } from "@/hooks/LearningContent/use-learning";
 import { useCourse } from "@/hooks/Courses/use-course";
+import { useMarkAsComplete } from "@/hooks/LearningContent/use-learning-form";
 
 export default function SubModuleContent() {
   const [activeSection, setActiveSection] = useState(0);
@@ -32,6 +33,7 @@ export default function SubModuleContent() {
 
   const { getLearningContent, getLearningItem } = useLearning();
   const { getCoursesById } = useCourse();
+  const { markAsComplete, isLoading: isMarkingComplete } = useMarkAsComplete();
 
   console.log("URL Params:", { courseId, moduleId, subModuleId });
 
@@ -63,8 +65,17 @@ export default function SubModuleContent() {
     error: itemError,
   } = getLearningItem(activeLearningContentId);
 
-  const handleMarkComplete = (sectionId) => {
-    alert(`Section "${sectionId}" marked as complete!`);
+  const handleMarkComplete = async (learningContentId) => {
+    const result = await markAsComplete(learningContentId);
+
+    if (result.success) {
+      // Show success message or update UI
+      console.log("Successfully marked as complete!");
+      // You might want to refetch the course data to update completion status
+    } else {
+      // Show error message
+      console.error("Failed to mark as complete:", result.error);
+    }
   };
 
   const handleStartActivity = (type, learningContentId) => {
@@ -632,10 +643,20 @@ export default function SubModuleContent() {
                                   activeContent.learningContentId
                                 )
                               }
+                              disabled={isMarkingComplete}
                               className={`${TailwindStyle.HIGHLIGHT_FRAME} px-8 py-3 flex items-center`}
                             >
-                              <Check size={20} className="mr-3" />
-                              Mark as Complete
+                              {isMarkingComplete ? (
+                                <Loader2
+                                  size={20}
+                                  className="mr-3 animate-spin"
+                                />
+                              ) : (
+                                <Check size={20} className="mr-3" />
+                              )}
+                              {isMarkingComplete
+                                ? "Marking..."
+                                : "Mark as Complete"}
                             </Button>
                           ) : (
                             <div className="bg-gradient-to-r from-green-100 to-green-200 text-green-700 px-8 py-3 rounded-xl flex items-center shadow-lg">

@@ -32,3 +32,25 @@ export const useLearningForm = ({ subModuleId, courseId }) => {
     isLoading: createLearningMutation.isPending,
   };
 };
+
+
+export const useMarkAsComplete = () => {
+  const { createMarkAsComplete } = useLearning();
+
+  const markAsComplete = async (learningContentId) => {
+    try {
+      await createMarkAsComplete.mutateAsync(learningContentId);
+      return { success: true };
+    } catch (error) {
+      console.error("Error marking as complete:", error);
+      return { success: false, error };
+    }
+  };
+
+  return {
+    markAsComplete,
+    isLoading: createMarkAsComplete.isPending,
+    isError: createMarkAsComplete.isError,
+    error: createMarkAsComplete.error,
+  };
+};

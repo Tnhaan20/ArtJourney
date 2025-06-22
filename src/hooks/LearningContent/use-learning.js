@@ -34,6 +34,32 @@ export const useLearning = () => {
     },
   });
 
+  const createMarkAsComplete = useMutation({
+    mutationKey: [QueryKey.LEARNING_CONTEXT.MARK_AS_COMPLETE],
+    mutationFn: async (learningItemId) =>
+      await learningContextServices.get.markAsCompleted(learningItemId),
+
+    onSuccess: async (data) => {
+      toast({
+        title: "Learning context marked as complete successfully",
+        description: data.message,
+        variant: "success",
+      });
+    },
+    onError: async (error) => {
+      toast({
+        title: "Learning context marking as complete failed",
+        description: error.response?.data?.errors?.[0].message,
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LEARNING_CONTEXT.GET_LEARNING_CONTEXT],
+      });
+    },
+  });
+
   const getLearningContent = (subModuleId) => {
     return useQuery({
       queryKey: [QueryKey.LEARNING_CONTEXT.GET_LEARNING_CONTEXT, subModuleId],
@@ -58,6 +84,7 @@ export const useLearning = () => {
   return {
     createLearningMutation,
     getLearningContent,
+    createMarkAsComplete,
     getLearningItem,
   };
 };
