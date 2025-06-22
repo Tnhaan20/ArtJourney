@@ -32,6 +32,7 @@ export const QueryKey = {
     USER: {
       GET_USER_COURSE_INFO: "course-get-user-course-info",
       ENROLL_USER_COURSE: "course-enroll-user-course",
+      ENROLLED_COURSES: "enrolled-courses",
     }
 
   },
@@ -49,5 +50,9 @@ export const QueryKey = {
     CREATE_LEARNING_CONTEXT: "learning-context-create",
     GET_LEARNING_CONTEXT: "learning-context-get",
     MARK_AS_COMPLETE: "learning-context-mark-as-complete",
-  }
+  },
+
+  PAYMENT: {
+    CREATE_PAYMENT_LINK: "payment-create-link",
+  },
 };

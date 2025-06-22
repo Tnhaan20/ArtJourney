@@ -36,6 +36,8 @@ const ServerError = lazy(() => import("@/components/layout/Error/500Error"));
 const GoogleCallback = lazy(() =>
   import("@/components/layout/GoogleCallback/GoogleCallback")
 );
+const PaymentCallbackPage = lazy(() =>
+  import("@/pages/PaymentPage/Callback"))
 const SupportPage = lazy(() =>
   import("@/pages/SupportPage/SupportPage"));
 const TermsPage = lazy(() => import("@/pages/TermsPage/TermsPage"));
@@ -136,6 +138,17 @@ export default function AppRoutes() {
               <MainLayout>
                 <PricingPage />
               </MainLayout>
+            </ProtectedRoute>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/payment-callback"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <ProtectedRoute restrictAdmin={true} requireAuth={false}>
+                <PaymentCallbackPage />
             </ProtectedRoute>
           </Suspense>
         }

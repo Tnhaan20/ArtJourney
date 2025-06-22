@@ -15,6 +15,7 @@ import {
 import { useCourse } from "@/hooks/Courses/use-course";
 import { useUserEnrollForm } from "@/hooks/Courses/use-course-form";
 import { useAuthStore } from "@/domains/store/use-auth-store";
+import { usePaymentForm } from "@/hooks/Payment/use-payment-form";
 import { TailwindStyle } from "@/utils/Enum";
 import { assets } from "@/assets/assets";
 
@@ -34,27 +35,104 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
     error: enrollError,
   } = useUserEnrollForm();
 
-  // Handle start learning button click
-  const handleStartLearning = async () => {
+  // Use payment form hook
+  const { onSubmit: createPayment, isLoading: isCreatingPayment } =
+    usePaymentForm();
+
+  // Handle start learning/purchase button click
+  const handleCourseAction = async () => {
     if (!isAuthenticated || !user?.id) {
       navigate("/signin");
       return;
     }
 
-    try {
-      console.log(
-        `🎓 Starting enrollment for user ${user.id} in course ${courseId}`
-      );
+    // If course is free (price = 0), enroll directly
+    if (course?.price === 0) {
+      try {
+        console.log(
+          `🎓 Starting enrollment for user ${user.id} in course ${courseId}`
+        );
 
-      await enrollUser(user.id, courseId);
+        await enrollUser(user.id, courseId);
 
-      console.log("✅ Enrollment successful, navigating to course...");
+        console.log("✅ Enrollment successful, navigating to course...");
 
-      setTimeout(() => {
-        navigate(`/learn/course/${courseId}`);
-      }, 1000);
-    } catch (error) {
-      console.error("❌ Failed to enroll user:", error);
+        setTimeout(() => {
+          navigate(`/learn/course/${courseId}`);
+        }, 1000);
+      } catch (error) {
+      }
+    } else {
+      // If course has price, create payment
+      try {
+        const paymentData = {
+          buyerName: user?.name || user?.firstName || "Student",
+          buyerEmail: user?.email || "",
+          buyerPhone: user?.phone || "0354545454",
+          description: `thanh toan khoa hoc`,
+          items: [
+            {
+              courseId: parseInt(courseId),
+              name: course?.title || "Course",
+              quantity: 1,
+              price: course?.price || 0,
+            },
+          ],
+        };
+
+        await createPayment(paymentData);
+      } catch (error) {
+      }
+    }
+  };
+
+  // Format price in VND
+  const formatPriceVND = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
+  // Get course action button text and style
+  const getCourseActionButton = () => {
+    if (!hasContent) {
+      return {
+        text: "Content Coming Soon",
+        disabled: true,
+        showPrice: false,
+      };
+    }
+
+    if (!isAuthenticated) {
+      return {
+        text:
+          course?.price === 0
+            ? "Sign In to Start"
+            : `Purchase for ${formatPriceVND(course.price)}`,
+        disabled: false,
+        showPrice: course?.price > 0,
+      };
+    }
+
+    if (course?.price === 0) {
+      return {
+        text: isEnrolling
+          ? "Enrolling..."
+          : isSuccess
+          ? "Enrolled! ✓"
+          : "Start Learning",
+        disabled: isEnrolling,
+        showPrice: false,
+      };
+    } else {
+      return {
+        text: isCreatingPayment
+          ? "Creating Payment..."
+          : `Purchase for ${formatPriceVND(course.price)}`,
+        disabled: isCreatingPayment,
+        showPrice: true,
+      };
     }
   };
 
@@ -95,6 +173,8 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
     course?.moduleCourseDetailScreenResponseDTOs &&
     course.moduleCourseDetailScreenResponseDTOs.length > 0;
 
+  const courseAction = getCourseActionButton();
+
   return (
     <div className="space-y-8">
       {/* Hero Section */}
@@ -110,13 +190,17 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
                   Premium
                 </span>
               ) : (
+                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                  Standard
+                </span>
+              )}
+              {course?.price === 0 ? (
                 <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
                   Free
                 </span>
-              )}
-              {course?.price > 0 && (
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                  ${course.price}
+              ) : (
+                <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
+                  {formatPriceVND(course.price)}
                 </span>
               )}
             </div>
@@ -158,34 +242,27 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              {isAuthenticated ? (
-                <button
-                  onClick={handleStartLearning}
-                  disabled={isEnrolling || !hasContent}
-                  className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium ${TailwindStyle.HIGHLIGHT_FRAME} disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
-                >
-                  <Play className="w-5 h-5" />
-                  <span>
-                    {!hasContent
-                      ? "Content Coming Soon"
-                      : isEnrolling
-                      ? "Enrolling..."
-                      : isSuccess
-                      ? "Enrolled! ✓"
-                      : "Start Learning"}
-                  </span>
-                </button>
-              ) : (
+              <button
+                onClick={handleCourseAction}
+                disabled={courseAction.disabled}
+                className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                  course?.price > 0 && hasContent
+                    ? `${TailwindStyle.HIGHLIGHT_FRAME} text-white shadow-lg`
+                    : TailwindStyle.HIGHLIGHT_FRAME
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                <Play className="w-5 h-5" />
+                <span>{courseAction.text}</span>
+              </button>
+
+              {/* Additional Browse Button for non-authenticated users */}
+              {!isAuthenticated && (
                 <Link
-                  to="/signin"
-                  className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium ${
-                    TailwindStyle.HIGHLIGHT_FRAME
-                  } ${!hasContent ? "opacity-50 pointer-events-none" : ""}`}
+                  to="/learn"
+                  className="flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium border-2 border-gray-300 text-gray-700 hover:border-primary-yellow hover:text-primary-yellow transition-all"
                 >
-                  <Play className="w-5 h-5" />
-                  <span>
-                    {!hasContent ? "Content Coming Soon" : "Sign In to Start"}
-                  </span>
+                  <BookOpen className="w-5 h-5" />
+                  <span>Browse All Courses</span>
                 </Link>
               )}
             </div>
@@ -216,6 +293,17 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
               alt={course?.title}
               className="w-full h-80 object-cover rounded-lg shadow-lg"
             />
+            {/* Price Overlay for Paid Courses */}
+            {course?.price > 0 && (
+              <div className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-3">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {formatPriceVND(course.price)}
+                  </div>
+                  <div className="text-xs text-gray-500">Course Price</div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -430,12 +518,14 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
               <>
                 <Link
                   to="/signin"
-                  className="inline-block bg-white text-primary-yellow px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                  className={`inline-block ${TailwindStyle.HIGHLIGHT_FRAME} px-8 py-3 rounded-lg font-medium  transition-colors`}
                 >
-                  Get Started Now
+                  {course?.price === 0
+                    ? "Get Started"
+                    : `Purchase for ${formatPriceVND(course.price)}`}
                 </Link>
                 <Link
-                  to="/courses"
+                  to="/learn"
                   className="inline-block border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-primary-yellow transition-colors"
                 >
                   Browse All Courses
@@ -443,7 +533,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
               </>
             ) : (
               <Link
-                to="/courses"
+                to="/learn"
                 className="inline-block bg-white text-primary-yellow px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
               >
                 Browse Available Courses

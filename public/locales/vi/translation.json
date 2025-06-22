@@ -350,7 +350,7 @@
       "monthly": {
         "title": "Gói tháng",
         "subtitle": "Truy cập không giới hạn nội dung cao cấp",
-        "price": "99,999",
+        "price": "90.000",
         "currency": "VND",
         "period": "/tháng",
         "description": "Hủy bất cứ lúc nào",
@@ -367,7 +367,7 @@
       "yearly": {
         "title": "Gói năm",
         "subtitle": "Truy cập cao cấp với giá ưu đãi hàng năm",
-        "price": "999,999",
+        "price": "990.000",
         "currency": "VND",
         "period": "/năm",
         "description": "Tiết kiệm hơn khi thanh toán hàng năm",

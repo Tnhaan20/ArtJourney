@@ -43,6 +43,11 @@ export const courseService = {
       return res.data;
     },
 
+    getEnrolledCourses: async (userId) => {
+      const res = await axiosInstance.get(`/courses/enrolled/user/${userId}`);
+      return res.data;
+    },
+
     getUserLearningProgress: async (userId, courseId) => {
       const res = await axiosInstance.get(
         `/user-course-infos/userId${userId}/courseId/${courseId}`

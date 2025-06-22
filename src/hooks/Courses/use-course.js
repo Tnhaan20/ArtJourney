@@ -86,6 +86,13 @@ export const useCourse = () => {
     });
   };
 
+  const useGetEnrolledCousreOfUser = (userId) => {
+    return useQuery({
+      queryKey: [QueryKey.COURSES.USER.ENROLLED_COURSES, userId],
+      queryFn: async () => await courseService.get.getEnrolledCourses(userId),
+    });
+  };
+
   const getUserLearningProgress = (userId, courseId) => {
     return useQuery({
       queryKey: [QueryKey.COURSES.USER.GET_USER_COURSE_INFO, userId, courseId],
@@ -103,5 +110,6 @@ export const useCourse = () => {
     getCoursesById,
     useGetCoursePublic,
     getUserLearningProgress,
+    useGetEnrolledCousreOfUser,
   };
 };

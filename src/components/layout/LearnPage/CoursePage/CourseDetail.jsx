@@ -4,6 +4,7 @@ import CourseAuth from "./CourseAuth";
 import CourseDetailGuest from "./CoursePublic";
 import { useAuthStore } from "@/domains/store/use-auth-store";
 import { useCourse } from "@/hooks/Courses/use-course";
+import { Loader2 } from "lucide-react";
 
 export default function CourseDetail() {
   const { courseId } = useParams();
@@ -24,6 +25,7 @@ export default function CourseDetail() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
+        <Loader2 className="animate-spin h-8 w-8 text-primary-yellow pr-3" />
         <div className="text-lg">Loading course information...</div>
       </div>
     );
