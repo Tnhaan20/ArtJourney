@@ -350,7 +350,7 @@
       "monthly": {
         "title": "Monthly Subscription",
         "subtitle": "Unlimited premium content access",
-        "price": "99,999",
+        "price": "90.000",
         "currency": "VND",
         "period": "/month",
         "description": "Cancel anytime",
@@ -367,7 +367,7 @@
       "yearly": {
         "title": "Yearly Subscription",
         "subtitle": "Discounted annual premium access",
-        "price": "999,999",
+        "price": "990.000",
         "currency": "VND",
         "period": "/year",
         "description": "Save more when you pay annually",
