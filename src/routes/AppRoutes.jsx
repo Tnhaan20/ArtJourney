@@ -144,7 +144,7 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/payment-callback"
+        path="/payment-callback/amount/:amount"
         element={
           <Suspense fallback={<PageLoader />}>
             <ProtectedRoute restrictAdmin={true} requireAuth={false}>
