@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  Link,
+  useParams,
+} from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   CheckCircle,
@@ -19,6 +24,7 @@ import { assets } from "@/assets/assets";
 export default function PaymentCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { amount: urlAmount } = useParams(); // Extract amount from URL path
   const [status, setStatus] = useState("loading");
   const [paymentData, setPaymentData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(true);
@@ -29,48 +35,61 @@ export default function PaymentCallback() {
       try {
         setIsProcessing(true);
 
-        // Get payment parameters from URL
+        // Get payment parameters from URL based on your example
+        const code = searchParams.get("code");
+        const paymentId = searchParams.get("id");
+        const cancel = searchParams.get("cancel");
         const paymentStatus = searchParams.get("status");
-        const transactionId = searchParams.get("transactionId");
-        const orderId = searchParams.get("orderId");
-        const amount = searchParams.get("amount");
-        const paymentMethod = searchParams.get("paymentMethod");
-        const resultCode = searchParams.get("resultCode");
-        const message = searchParams.get("message");
+        const orderCode = searchParams.get("orderCode");
+
+        // Extract amount from URL path (e.g., /payment-callback/amount/2000/)
+        const amount = urlAmount || "0";
 
         console.log("Payment callback parameters:", {
+          code,
+          paymentId,
+          cancel,
           paymentStatus,
-          transactionId,
-          orderId,
+          orderCode,
           amount,
-          paymentMethod,
-          resultCode,
-          message,
         });
 
         // Simulate API call to verify payment status
-        // In a real app, you would call your backend to verify the payment
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // Determine payment status based on parameters
         let finalStatus = "success";
 
-        // if (paymentStatus === "success" || resultCode === "0") {
-        //   finalStatus = "success";
-        // } else if (paymentStatus === "cancelled" || resultCode === "1006") {
-        //   finalStatus = "cancelled";
-        // } else {
-        //   finalStatus = "failed";
-        // }
+        // Check status based on the actual parameters
+        if (cancel === "true" || paymentStatus === "CANCELLED") {
+          finalStatus = "cancelled";
+        } else if (paymentStatus === "PAID") {
+          finalStatus = "success";
+        } else if (paymentStatus === "PENDING") {
+          finalStatus = "pending";
+        } else if (paymentStatus === "PROCESSING") {
+          finalStatus = "processing";
+        } else if (code === "00") {
+          // Code 00 means success
+          finalStatus = "success";
+        } else if (code === "01") {
+          // Code 01 means invalid params
+          finalStatus = "failed";
+        } else {
+          // Other cases
+          finalStatus = "failed";
+        }
 
         setStatus(finalStatus);
         setPaymentData({
-          transactionId: transactionId || "N/A",
-          orderId: orderId || "N/A",
+          transactionId: paymentId || "N/A",
+          orderId: orderCode || "N/A",
           amount: amount || "0",
-          paymentMethod: paymentMethod || "Unknown",
-          message: message || "No message provided",
+          paymentMethod: "PayOS",
+          message: getStatusMessage(finalStatus, paymentStatus, code),
           timestamp: new Date().toISOString(),
+          code: code,
+          rawStatus: paymentStatus,
         });
       } catch (error) {
         console.error("Error processing payment callback:", error);
@@ -85,7 +104,28 @@ export default function PaymentCallback() {
     };
 
     processPaymentCallback();
-  }, [searchParams]);
+  }, [searchParams, urlAmount]);
+
+  // Get status message based on result
+  const getStatusMessage = (status, paymentStatus, code) => {
+    switch (status) {
+      case "success":
+        return "Payment completed successfully";
+      case "cancelled":
+        return "Payment was cancelled by user";
+      case "pending":
+        return "Payment is pending confirmation";
+      case "processing":
+        return "Payment is being processed";
+      case "failed":
+        if (code === "01") {
+          return "Invalid payment parameters";
+        }
+        return "Payment processing failed";
+      default:
+        return `Payment status: ${paymentStatus || "Unknown"}`;
+    }
+  };
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -514,6 +554,206 @@ export default function PaymentCallback() {
                     <span className="flex items-center justify-center">
                       <Home className="mr-2 h-4 w-4" />
                       Back to Home
+                    </span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Pending state
+  if (status === "pending") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-primary-white to-secondary-yellow px-4">
+        <div className="w-full max-w-md">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex justify-center mb-8">
+              <img
+                src={assets.main_logo.artjourney_logo}
+                alt="ArtJourney Logo"
+                className="h-12"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Card className="border-none shadow-lg overflow-hidden">
+              <div className="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600"></div>
+              <CardHeader className="bg-white pt-6 pb-4">
+                <h1 className="text-2xl font-bold text-center text-gray-800">
+                  Payment Pending
+                </h1>
+              </CardHeader>
+              <CardContent className="bg-white px-6 pt-4 pb-6">
+                <motion.div
+                  className="text-center py-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="relative mx-auto w-24 h-24 mb-6">
+                    <div className="absolute inset-0 rounded-full bg-blue-100 animate-pulse"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Loader2 className="h-12 w-12 text-blue-600 animate-spin" />
+                    </div>
+                  </div>
+                  <h2 className="text-xl font-bold text-blue-600 mb-2">
+                    Payment Pending Confirmation
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    Your payment is being verified. Please wait for
+                    confirmation.
+                  </p>
+
+                  {/* Payment Details */}
+                  <div className="bg-blue-50 rounded-lg p-4 mb-6 text-left border border-blue-200">
+                    <h3 className="font-semibold text-blue-800 mb-3">
+                      Payment Details
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      {paymentData?.transactionId &&
+                        paymentData.transactionId !== "N/A" && (
+                          <div className="flex justify-between">
+                            <span className="text-blue-600">
+                              Transaction ID:
+                            </span>
+                            <span className="font-medium text-blue-800">
+                              {paymentData.transactionId}
+                            </span>
+                          </div>
+                        )}
+                      {paymentData?.orderId &&
+                        paymentData.orderId !== "N/A" && (
+                          <div className="flex justify-between">
+                            <span className="text-blue-600">Order ID:</span>
+                            <span className="font-medium text-blue-800">
+                              {paymentData.orderId}
+                            </span>
+                          </div>
+                        )}
+                      <div className="flex justify-between">
+                        <span className="text-blue-600">Amount:</span>
+                        <span className="font-medium text-blue-800">
+                          {formatCurrency(paymentData?.amount)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-blue-600">Status:</span>
+                        <span className="font-medium text-blue-800">
+                          {paymentData?.rawStatus || "PENDING"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <div className="flex flex-col gap-3">
+                  <Button
+                    onClick={() => window.location.reload()}
+                    className={`w-full ${TailwindStyle.HIGHLIGHT_FRAME}`}
+                  >
+                    <span className="flex items-center justify-center">
+                      <RefreshCcw className="mr-2 h-4 w-4" />
+                      Refresh Status
+                    </span>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/")}
+                    className="w-full border-amber-500 text-amber-600 hover:bg-amber-50"
+                  >
+                    <span className="flex items-center justify-center">
+                      <Home className="mr-2 h-4 w-4" />
+                      Back to Home
+                    </span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Processing state
+  if (status === "processing") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-primary-white to-secondary-yellow px-4">
+        <div className="w-full max-w-md">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex justify-center mb-8">
+              <img
+                src={assets.main_logo.artjourney_logo}
+                alt="ArtJourney Logo"
+                className="h-12"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Card className="border-none shadow-lg overflow-hidden">
+              <div className="h-2 bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600"></div>
+              <CardHeader className="bg-white pt-6 pb-4">
+                <h1 className="text-2xl font-bold text-center text-gray-800">
+                  Processing Payment
+                </h1>
+              </CardHeader>
+              <CardContent className="bg-white px-6 pt-4 pb-6">
+                <motion.div
+                  className="text-center py-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="relative mx-auto w-24 h-24 mb-6">
+                    <div className="absolute inset-0 rounded-full bg-purple-100 animate-pulse"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Loader2 className="h-12 w-12 text-purple-600 animate-spin" />
+                    </div>
+                  </div>
+                  <h2 className="text-xl font-bold text-purple-600 mb-2">
+                    Payment is Being Processed
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    Please wait while we process your payment. This may take a
+                    few moments.
+                  </p>
+
+                  <p className="text-gray-500 text-sm mb-6">
+                    Do not close this window or refresh the page.
+                  </p>
+                </motion.div>
+
+                <div className="flex flex-col gap-3">
+                  <Button
+                    onClick={() => window.location.reload()}
+                    className={`w-full ${TailwindStyle.HIGHLIGHT_FRAME}`}
+                  >
+                    <span className="flex items-center justify-center">
+                      <RefreshCcw className="mr-2 h-4 w-4" />
+                      Check Status
                     </span>
                   </Button>
                 </div>
