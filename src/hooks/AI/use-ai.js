@@ -13,13 +13,7 @@ export const useAI = () => {
     mutationFn: async (messageData) =>
       await aiService.post.sendMessage(messageData),
 
-    onSuccess: (data) => {
-      toast({
-        title: "Message sent successfully",
-        description: data.message,
-        variant: "success",
-      });
-    },
+    
     onError: (error) => {
       toast({
         title: "Failed to send message",
@@ -40,13 +34,7 @@ export const useAI = () => {
     mutationFn: async (sessionData) =>
       await aiService.post.createSession(sessionData),
 
-    onSuccess: (data) => {
-      toast({
-        title: "Chat session created successfully",
-        description: data.message,
-        variant: "success",
-      });
-    },
+    
     onError: (error) => {
       toast({
         title: "Failed to create session",
