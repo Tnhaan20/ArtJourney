@@ -33,13 +33,12 @@ export const QueryKey = {
       GET_USER_COURSE_INFO: "course-get-user-course-info",
       ENROLL_USER_COURSE: "course-enroll-user-course",
       ENROLLED_COURSES: "enrolled-courses",
-    }
-
+    },
   },
 
   MODULE: {
     CREATE_MODULE: "create-module",
-    GET_MODULE: "get-module"
+    GET_MODULE: "get-module",
   },
   SUB_MODULE: {
     CREATE_SUB_MODULE: "create-sub-module",
@@ -50,6 +49,17 @@ export const QueryKey = {
     CREATE_LEARNING_CONTEXT: "learning-context-create",
     GET_LEARNING_CONTEXT: "learning-context-get",
     MARK_AS_COMPLETE: "learning-context-mark-as-complete",
+    CREATE_QUESTION: "learning-context-create-question",
+    GET_QUESTION: "learning-context-get-question",
+  },
+
+  AI: {
+    SEND_MESSAGE: "ai-send-message",
+    CREATE_SESSION: "ai-create-session",
+    DELETE_SESSION: "ai-delete-session",
+    GET_LEARNING_ANALYTICS: "ai-get-learning-analytics",
+    GET_SESSIONS: "ai-get-sessions",
+    GET_SESSION_BY_ID: "ai-get-session-by-id",
   },
 
   PAYMENT: {

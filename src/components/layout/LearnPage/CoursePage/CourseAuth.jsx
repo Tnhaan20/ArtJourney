@@ -64,6 +64,84 @@ export default function CourseAuth({ learningProgress, courseId }) {
     "Appreciate diverse artistic styles and movements",
   ];
 
+  // Helper function to get learning outcomes array - Updated for multi-line handling
+  const getLearningOutcomes = () => {
+    const courseLearningOutcomes = course?.learningOutcomes;
+
+    // Check if learningOutcomes exists and is an array
+    if (
+      Array.isArray(courseLearningOutcomes) &&
+      courseLearningOutcomes.length > 0
+    ) {
+      return courseLearningOutcomes;
+    }
+
+    // If it's a string, handle multiple formats
+    if (
+      typeof courseLearningOutcomes === "string" &&
+      courseLearningOutcomes.trim()
+    ) {
+      // First, normalize line breaks (handle \r\n, \r, \n)
+      const normalizedText = courseLearningOutcomes
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n");
+
+      // Try to split by different delimiters
+      let splitOutcomes = [];
+
+      // Method 1: Split by line breaks
+      if (normalizedText.includes("\n")) {
+        splitOutcomes = normalizedText
+          .split("\n")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0)
+          // Remove common list prefixes
+          .map((item) =>
+            item
+              .replace(/^[-•*]\s*/, "")
+              .replace(/^\d+\.\s*/, "")
+              .trim()
+          )
+          .filter((item) => item.length > 0);
+      }
+
+      // Method 2: If no line breaks, try semicolons
+      if (splitOutcomes.length === 0 && normalizedText.includes(";")) {
+        splitOutcomes = normalizedText
+          .split(";")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+      }
+
+      // Method 3: If no semicolons, try bullets/dashes
+      if (splitOutcomes.length === 0) {
+        splitOutcomes = normalizedText
+          .split(/[•-]/)
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+      }
+
+      // Method 4: If still no splits, try numbered lists
+      if (splitOutcomes.length === 0) {
+        splitOutcomes = normalizedText
+          .split(/\d+\./)
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+      }
+
+      // If we found valid splits, return them
+      if (splitOutcomes.length > 0) {
+        return splitOutcomes;
+      }
+
+      // If no valid splits found, return as single item
+      return [normalizedText];
+    }
+
+    // Fall back to default outcomes
+    return defaultLearningOutcomes;
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
@@ -106,6 +184,9 @@ export default function CourseAuth({ learningProgress, courseId }) {
 
   const userName = user?.name || "Student";
   const userAvatar = user?.avatar || teamMember1;
+
+  // Get learning outcomes using the helper function
+  const learningOutcomes = getLearningOutcomes();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -182,18 +263,16 @@ export default function CourseAuth({ learningProgress, courseId }) {
                   <h4 className="font-bold text-lg mb-6">What You'll Learn</h4>
 
                   <ul className="space-y-4">
-                    {(course?.learningOutcomes || defaultLearningOutcomes).map(
-                      (outcome, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">
-                            ✓
-                          </div>
-                          <span className="text-gray-700 text-sm leading-relaxed">
-                            {outcome}
-                          </span>
-                        </li>
-                      )
-                    )}
+                    {learningOutcomes.map((outcome, index) => (
+                      <li key={index} className="flex items-start">
+                        <div className="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">
+                          ✓
+                        </div>
+                        <span className="text-gray-700 text-sm leading-relaxed">
+                          {outcome}
+                        </span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -423,5 +502,5 @@ export default function CourseAuth({ learningProgress, courseId }) {
       </div>
     </div>
   );
-};
+}
 

@@ -39,6 +39,114 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
   const { onSubmit: createPayment, isLoading: isCreatingPayment } =
     usePaymentForm();
 
+  // Helper function to get learning outcomes array - Updated for object handling
+  const getLearningOutcomes = () => {
+    const courseLearningOutcomes = course?.learningOutcomes;
+
+    // Check if learningOutcomes exists and is an array
+    if (
+      Array.isArray(courseLearningOutcomes) &&
+      courseLearningOutcomes.length > 0
+    ) {
+      return courseLearningOutcomes;
+    }
+
+    // Check if it's an object (like {"oc1":"tst", "oc2":"test2"})
+    if (
+      typeof courseLearningOutcomes === "object" &&
+      courseLearningOutcomes !== null &&
+      !Array.isArray(courseLearningOutcomes)
+    ) {
+      const objectValues = Object.values(courseLearningOutcomes).filter(
+        (value) => typeof value === "string" && value.trim().length > 0
+      );
+
+      if (objectValues.length > 0) {
+        return objectValues;
+      }
+    }
+
+    // If it's a string, handle multiple formats
+    if (
+      typeof courseLearningOutcomes === "string" &&
+      courseLearningOutcomes.trim()
+    ) {
+      // First, normalize line breaks (handle \r\n, \r, \n)
+      const normalizedText = courseLearningOutcomes
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n");
+
+      // Try to split by different delimiters
+      let splitOutcomes = [];
+
+      // Method 1: Split by line breaks
+      if (normalizedText.includes("\n")) {
+        splitOutcomes = normalizedText
+          .split("\n")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0)
+          // Remove common list prefixes
+          .map((item) =>
+            item
+              .replace(/^[-•*]\s*/, "")
+              .replace(/^\d+\.\s*/, "")
+              .trim()
+          )
+          .filter((item) => item.length > 0);
+      }
+
+      // Method 2: If no line breaks, try semicolons
+      if (splitOutcomes.length === 0 && normalizedText.includes(";")) {
+        splitOutcomes = normalizedText
+          .split(";")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+      }
+
+      // Method 3: If no semicolons, try commas
+      if (splitOutcomes.length === 0 && normalizedText.includes(",")) {
+        splitOutcomes = normalizedText
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+      }
+
+      // Method 4: If no commas, try bullets/dashes
+      if (splitOutcomes.length === 0) {
+        splitOutcomes = normalizedText
+          .split(/[•-]/)
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+      }
+
+      // Method 5: If still no splits, try numbered lists
+      if (splitOutcomes.length === 0) {
+        splitOutcomes = normalizedText
+          .split(/\d+\./)
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+      }
+
+      // If we found valid splits, return them
+      if (splitOutcomes.length > 0) {
+        return splitOutcomes;
+      }
+
+      // If no valid splits found, return as single item
+      return [normalizedText];
+    }
+
+    // Fall back to default outcomes
+    return [
+      "Master fundamental concepts and techniques",
+      "Develop critical thinking skills",
+      "Understand key principles and applications",
+      "Create practical projects",
+      "Build comprehensive knowledge",
+      "Apply learning to real-world scenarios",
+    ];
+  };
+
   // Handle start learning/purchase button click
   const handleCourseAction = async () => {
     if (!isAuthenticated || !user?.id) {
@@ -60,8 +168,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         setTimeout(() => {
           navigate(`/learn/course/${courseId}`);
         }, 1000);
-      } catch (error) {
-      }
+      } catch (error) {}
     } else {
       // If course has price, create payment
       try {
@@ -81,8 +188,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         };
 
         await createPayment(paymentData);
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   };
 
@@ -153,6 +259,9 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
   }
 
   const course = courseData?.data;
+
+  // Get learning outcomes using the helper function
+  const learningOutcomes = getLearningOutcomes();
 
   // Helper function to get course level text
   const getCourseLevelText = (level) => {
@@ -350,12 +459,12 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         </div>
       </div>
 
-      {/* What You'll Learn */}
-      {course?.learningOutcomes && (
+      {/* What You'll Learn - Updated to use helper function */}
+      {learningOutcomes && learningOutcomes.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-6">What You'll Learn</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {course.learningOutcomes.split("\n").map((outcome, index) => (
+            {learningOutcomes.map((outcome, index) => (
               <div key={index} className="flex items-start space-x-3">
                 <div className="bg-green-100 rounded-full p-1 mt-1">
                   <CheckCircle className="w-4 h-4 text-green-600" />

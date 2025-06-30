@@ -30,9 +30,15 @@ import samerica_precolumbian_machu_picchu from '@/assets/course/samerica/sameric
 import samerica_precolumbian_moche_art from '@/assets/course/samerica/samerica_precolumbian_moche_art.png';
 import samerica_precolumbian_sican_mask from '@/assets/course/samerica/samerica_precolumbian_sican_mask.png';
 
+import aiChatIcon from "@assets/MainLogo/MainLogo_ChatBubble.png";
+
 export const assets = {
   main_logo: {
     artjourney_logo
+  },
+
+  chat: {
+    aiChatIcon
   },
   
   courses: {
