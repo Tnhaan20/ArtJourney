@@ -16,7 +16,8 @@ import { Progress } from "@/components/ui/progress";
 import { TailwindStyle } from "@/utils/Enum";
 import { toast } from "@/utils/Toast";
 import { useQuiz } from "@/hooks/Quiz/use-quiz";
-import useQuizStore from "@/domains/store/use-quiz-store"; // Import the quiz store
+import { useSubmitQuizForm } from "@/hooks/Quiz/use-quiz-form"; // Import the submit quiz hook
+import useQuizStore from "@/domains/store/use-quiz-store";
 
 // Helper function to convert time format (HH:MM:SS) to seconds - moved outside component
 const parseTimeToSeconds = (timeString) => {
@@ -72,7 +73,7 @@ export default function Quiz() {
   // Use Zustand store
   const {
     quizAttemptId,
-    attemptData, // Get the full attempt data
+    attemptData,
     timeLimit,
     selectedAnswers,
     currentQuestionIndex,
@@ -86,8 +87,15 @@ export default function Quiz() {
     getAttemptSummary,
   } = useQuizStore();
 
+  // Use the submit quiz form hook
+  const {
+    submitQuiz,
+    formatAnswersForSubmission,
+    isLoading: isSubmitting,
+  } = useSubmitQuizForm();
+
   // Convert time limit to seconds
-  const initialTimeInSeconds = timeLimit ? parseTimeToSeconds(timeLimit) : 600; // Default 10 minutes
+  const initialTimeInSeconds = timeLimit ? parseTimeToSeconds(timeLimit) : 600;
 
   const [timeLeft, setTimeLeft] = useState(initialTimeInSeconds);
 
@@ -99,7 +107,7 @@ export default function Quiz() {
     error,
   } = getQuizByLearningContent(learningContentId, 1, 10);
 
-  // Log quiz attempt information with the correct structure
+  // Log quiz attempt information
   useEffect(() => {
     if (quizAttemptId && attemptData) {
       console.log("Quiz Attempt Details:", {
@@ -147,7 +155,7 @@ export default function Quiz() {
       questions: questions.sort((a, b) => a.orderIndex - b.orderIndex),
       totalQuestions: quizResponse.data.totalCount,
       attemptId: quizAttemptId,
-      attemptData: attemptData, // Include full attempt data
+      attemptData: attemptData,
       totalPossibleScore: attemptData?.totalPossibleScore || questions.length,
     };
   }, [
@@ -177,18 +185,20 @@ export default function Quiz() {
   }, [isLoading, isQuizComplete, quizData]);
 
   const handleAnswerSelect = (answerId) => {
-    // Update Zustand store
+    // Update Zustand store with the selected answer
     updateSelectedAnswer(currentQuestionIndex, answerId);
 
-    // Optional: Auto-save answer to backend
-    if (quizAttemptId) {
-      console.log("Saving answer for attempt:", quizAttemptId, {
-        questionId: quizData.questions[currentQuestionIndex].id,
-        selectedAnswer: answerId,
-        attemptStartedAt: attemptData?.startedAt,
-      });
-      // You can implement auto-save logic here if needed
-    }
+    // Log the answer selection for debugging
+    console.log("Answer selected:", {
+      attemptId: quizAttemptId,
+      questionId: quizData.questions[currentQuestionIndex].id,
+      questionIndex: currentQuestionIndex,
+      selectedOptionId: answerId,
+      questionText: quizData.questions[currentQuestionIndex].question,
+    });
+
+    // Optional: Auto-save answer to backend here if needed
+    // You can implement real-time saving by calling the submit API for individual answers
   };
 
   const handlePreviousQuestion = () => {
@@ -203,7 +213,7 @@ export default function Quiz() {
     }
   };
 
-  const handleQuizComplete = () => {
+  const handleQuizComplete = async () => {
     setIsQuizComplete(true);
 
     // Calculate final score
@@ -219,47 +229,74 @@ export default function Quiz() {
       totalScore: correctAnswers,
       isCompleted: true,
       completedAt: new Date().toISOString(),
-      timeTaken: quizData.timeLimit - timeLeft, // Time taken in seconds
+      timeTaken: quizData.timeLimit - timeLeft,
     });
 
-    console.log("Quiz completed:", {
-      attemptId: quizAttemptId,
-      answers: selectedAnswers,
+    // Format answers for API submission
+    const userAnswers = formatAnswersForSubmission(
+      selectedAnswers,
+      quizAttemptId,
+      quizData.questions
+    );
+
+    console.log("Quiz completion data:", {
+      learningContentId: parseInt(learningContentId),
+      quizAttemptId: quizAttemptId,
+      userAnswers: userAnswers,
       finalScore: correctAnswers,
       totalPossible: quizData.questions.length,
       timeTaken: quizData.timeLimit - timeLeft,
-      attemptSummary: getAttemptSummary(),
     });
 
     // Submit quiz results to backend
-    if (quizAttemptId) {
-      submitQuizResults(quizAttemptId, selectedAnswers, correctAnswers);
-    }
-  };
+    if (quizAttemptId && userAnswers.length > 0) {
+      try {
+        const result = await submitQuiz(
+          parseInt(learningContentId),
+          quizAttemptId,
+          userAnswers
+        );
 
-  // Function to submit quiz results using the correct attempt ID
-  const submitQuizResults = async (attemptId, answers, score) => {
-    try {
-      const submissionData = {
-        attemptId: attemptId, // Use the attempt ID from API (137 in your example)
-        answers: answers,
-        totalScore: score,
-        timeTaken: quizData.timeLimit - timeLeft,
-        completedAt: new Date().toISOString(),
-        learningContentId: attemptData?.learningContentId,
-        userId: attemptData?.userId,
-      };
+        if (result.success) {
+          console.log("✅ Quiz submitted successfully:", result.data);
 
-      console.log("Submitting quiz results:", submissionData);
+          toast({
+            title: "Quiz Completed!",
+            description: `Your quiz has been submitted successfully.`,
+            variant: "success",
+          });
 
-      // Call your API to submit quiz results here
-      // Example:
-      // await submitQuizAttempt(attemptId, submissionData);
-    } catch (error) {
-      console.error("Error submitting quiz results:", error);
+          // Auto-redirect after successful submission (optional)
+          setTimeout(() => {
+            handleBackToModule();
+          }, 3000); // Redirect after 3 seconds
+        } else {
+          console.error("❌ Quiz submission failed:", result.error);
+
+          toast({
+            title: "Submission Failed",
+            description:
+              result.error?.message ||
+              "Failed to submit quiz. Please try again.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("❌ Error during quiz submission:", error);
+
+        toast({
+          title: "Submission Error",
+          description:
+            "An unexpected error occurred while submitting the quiz.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      console.warn("No answers to submit or missing attempt ID");
+
       toast({
-        title: "Error",
-        description: "Failed to submit quiz results. Please try again.",
+        title: "No Answers",
+        description: "No answers found to submit.",
         variant: "destructive",
       });
     }
@@ -543,10 +580,17 @@ export default function Quiz() {
                   ) : (
                     <Button
                       onClick={handleQuizComplete}
-                      disabled={!isQuizCompleteCheck()}
+                      disabled={!isQuizCompleteCheck() || isSubmitting}
                       className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2`}
                     >
-                      Complete Quiz
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 size={16} className="mr-2 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        "Complete Quiz"
+                      )}
                     </Button>
                   )}
                 </div>
@@ -554,7 +598,7 @@ export default function Quiz() {
             </div>
           </div>
         ) : (
-          // Quiz Results - Same as before
+          // Quiz Results
           <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="bg-amber-50 p-6 border-b border-amber-100">
               <h1 className="text-xl font-bold text-gray-800">Quiz Complete</h1>
@@ -642,6 +686,7 @@ export default function Quiz() {
                 <Button
                   onClick={handleBackToModule}
                   className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2`}
+                  disabled={isSubmitting}
                 >
                   Return to Module
                 </Button>
@@ -660,6 +705,7 @@ export default function Quiz() {
                     }}
                     variant="outline"
                     className="border-primary-yellow text-primary-yellow hover:bg-amber-50"
+                    disabled={isSubmitting}
                   >
                     Try Again
                   </Button>

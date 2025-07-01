@@ -148,11 +148,7 @@ export default function SubModuleContent() {
           fullData: quizAttemptData,
         });
 
-        toast({
-          title: "Quiz attempt created",
-          description: `Your quiz attempt #${attemptData?.id} has been started successfully!`,
-          variant: "success",
-        });
+     
 
         // Navigate to the quiz page
         navigate(

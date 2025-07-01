@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { questionSchema, quizTitleSchema } from "@/domains/schema/Quiz/quiz.schema";
+import { questionSchema, quizTitleSchema, submitQuizSchema } from "@/domains/schema/Quiz/quiz.schema";
 import { useQuiz } from "./use-quiz";
 
 export const useCreateQuizTitleForm = () => {
@@ -109,3 +109,101 @@ export const useStartQuiz = () => {
     startQuiz,
   };
 };
+
+  // New useSubmitQuizForm hook
+  export const useSubmitQuizForm = () => {
+    const { submitQuizMutation } = useQuiz();
+
+    const form = useForm({
+      resolver: zodResolver(submitQuizSchema),
+      defaultValues: {
+        learningContentId: 0,
+        quizAttemptId: 0,
+        userAnswers: [],
+      },
+    });
+
+    const onSubmit = async (data) => {
+      console.log("🔥 Quiz submission form data:", data);
+      console.log("📊 Raw submission data:", JSON.stringify(data, null, 2));
+
+      try {
+        // Validate with schema
+        const validatedData = submitQuizSchema.parse(data);
+        console.log("✅ Validated submission data:", validatedData);
+
+        // Submit to API
+        await submitQuizMutation.mutateAsync(validatedData);
+        form.reset();
+      } catch (validationError) {
+        console.error("❌ Quiz submission validation failed:", validationError);
+        throw validationError;
+      }
+    };
+
+    // Helper function to submit quiz without form (for direct usage)
+    const submitQuiz = async (
+      learningContentId,
+      quizAttemptId,
+      userAnswers
+    ) => {
+      try {
+        const submissionData = {
+          learningContentId,
+          quizAttemptId,
+          userAnswers,
+        };
+
+        console.log("🚀 Direct quiz submission:", submissionData);
+
+        // Validate with schema
+        const validatedData = submitQuizSchema.parse(submissionData);
+
+        // Submit to API
+        const result = await submitQuizMutation.mutateAsync(validatedData);
+
+        return {
+          success: true,
+          data: result,
+        };
+      } catch (error) {
+        console.error("❌ Failed to submit quiz:", error);
+        return {
+          success: false,
+          error: error,
+        };
+      }
+    };
+
+    // Helper function to format answers from Zustand store
+    const formatAnswersForSubmission = (
+      selectedAnswers,
+      quizAttemptId,
+      questions
+    ) => {
+      const userAnswers = [];
+
+      Object.entries(selectedAnswers).forEach(
+        ([questionIndex, selectedOptionId]) => {
+          const question = questions[parseInt(questionIndex)];
+          if (question && selectedOptionId) {
+            userAnswers.push({
+              quizAttemptId: parseInt(quizAttemptId),
+              questionId: question.id,
+              selectedOptionId: selectedOptionId,
+            });
+          }
+        }
+      );
+
+      return userAnswers;
+    };
+
+    return {
+      form,
+      onSubmit,
+      submitQuiz,
+      formatAnswersForSubmission,
+      isLoading: submitQuizMutation.isPending,
+    };
+  };
