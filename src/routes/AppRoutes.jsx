@@ -148,7 +148,7 @@ export default function AppRoutes() {
         element={
           <Suspense fallback={<PageLoader />}>
             <ProtectedRoute restrictAdmin={true} requireAuth={false}>
-                <PaymentCallbackPage />
+              <PaymentCallbackPage />
             </ProtectedRoute>
           </Suspense>
         }
@@ -331,7 +331,7 @@ export default function AppRoutes() {
         Only authenticated non-admin users can access these
       */}
       <Route
-        path="quiz/course/:courseId/module/:moduleId"
+        path="/quiz/course/:courseId/module/:moduleId/submodule/:subModuleId/content/:learningContentId"
         element={
           <Suspense fallback={<PageLoader />}>
             <ProtectedRoute restrictAdmin={true}>

@@ -18,10 +18,9 @@ export const quizService = {
       return res.data;
     },
 
-    startQuiz: async (learningContentId, userId, data) => {
+    startQuiz: async (learningContentId, userId) => {
       const res = await axiosInstance.post(
-        `/quiz/learning-content/${learningContentId}/user/${userId}`,
-        data
+        `/quiz/learning-content/${learningContentId}/user/${userId}`
       );
       return res.data;
     },

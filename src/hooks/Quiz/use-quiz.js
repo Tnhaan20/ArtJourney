@@ -59,12 +59,10 @@ export const useQuiz = () => {
     },
   });
 
-  const startQuizMutation = (learningContentId, userId) => {
-    
-    return useMutation({
-      mutationKey: [QueryKey.QUIZZES.START_QUIZ, learningContentId, userId],
-      mutationFn: async (payload) =>
-        await quizService.post.startQuiz(learningContentId, userId, payload),
+  const startQuizMutation = useMutation({
+      mutationKey: [QueryKey.QUIZ.START_QUIZ],
+      mutationFn: async ({ learningContentId, userId }) =>
+        await quizService.post.startQuiz(learningContentId, userId),
 
       onError: (error) => {
         toast({
@@ -74,7 +72,7 @@ export const useQuiz = () => {
         });
       },
     });
-  }
+  
 
   const submitQuizMutation = useMutation({
     mutationKey: [QueryKey.QUIZ.SUBMIT_QUIZ],
@@ -103,19 +101,16 @@ export const useQuiz = () => {
 
 
 
-  const getQuizByLearningContent = (learningContentId) => {
+  const getQuizByLearningContent = (learningContentId, page, pageSize) => {
 
    return useQuery({
      queryKey: [QueryKey.QUIZ.GET_QUIZ_BY_CONTENT_ID
       , learningContentId
       ],
-      queryFn: async () => await quizService.get.getQuizByLearningContent(learningContentId),
+      queryFn: async () => await quizService.get.getQuizByLearningContent(learningContentId, page, pageSize),
     });
   }
-  const getAllRegionQuery = useQuery({
-    queryKey: [QueryKey.REGIONS.GET_ALL_REGIONS],
-    queryFn: async () => await regionService.get.getAllRegions(),
-  });
+  
 
   return {
     createQuizTitleMutation,

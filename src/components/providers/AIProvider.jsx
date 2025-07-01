@@ -6,7 +6,7 @@ export const AIProvider = ({ children }) => {
   const location = useLocation();
 
   // Pages where chat should be hidden
-  const excludedPaths = ["/signin", "/signup", "/admin", "/dashboard", "/email-verify"];
+  const excludedPaths = ["/signin", "/signup", "/admin", "/dashboard", "/quiz", "/email-verify"];
   const shouldHideChat = excludedPaths.some(path => location.pathname.startsWith(path));
 
   return (

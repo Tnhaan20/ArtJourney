@@ -80,13 +80,29 @@ export const useQuizForm = () => {
     isLoading: createQuizMutation.isPending,
   };
 };
-
 export const useStartQuiz = () => {
   const { startQuizMutation } = useQuiz();
 
   const startQuiz = async (learningContentId, userId) => {
-    const mutation = startQuizMutation(learningContentId, userId);
-    return await mutation.mutateAsync();
+    try {
+      // Since the API uses URL parameters, pass them as separate arguments
+      // The mutation should handle the URL construction: /api/quiz/learning-content/{learningContentId}/user/{userId}
+      const result = await startQuizMutation.mutateAsync({
+        learningContentId,
+        userId,
+      });
+
+      return {
+        success: true,
+        data: result,
+      };
+    } catch (error) {
+      console.error("❌ Failed to start quiz:", error);
+      return {
+        success: false,
+        error: error,
+      };
+    }
   };
 
   return {

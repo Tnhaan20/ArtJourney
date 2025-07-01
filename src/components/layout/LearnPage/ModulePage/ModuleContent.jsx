@@ -17,6 +17,7 @@ import {
   MousePointer,
   Move3D,
   Check,
+  AlertCircle,
 } from "lucide-react";
 import CompletedBox from "@/components/elements/completedbox/Completed";
 import { TailwindStyle } from "@/utils/Enum";
@@ -25,17 +26,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useLearning } from "@/hooks/LearningContent/use-learning";
 import { useCourse } from "@/hooks/Courses/use-course";
 import { useMarkAsComplete } from "@/hooks/LearningContent/use-learning-form";
+import { useStartQuiz } from "@/hooks/Quiz/use-quiz-form";
+import { useAuthStore } from "@/domains/store/use-auth-store";
+import useQuizStore from "@/domains/store/use-quiz-store"; // Import the quiz store
+import { toast } from "@/utils/Toast";
 
 export default function SubModuleContent() {
   const [activeSection, setActiveSection] = useState(0);
+  const [isStartingQuiz, setIsStartingQuiz] = useState(false);
   const navigate = useNavigate();
   const { courseId, moduleId, subModuleId } = useParams();
 
   const { getLearningContent, getLearningItem } = useLearning();
   const { getCoursesById } = useCourse();
   const { markAsComplete, isLoading: isMarkingComplete } = useMarkAsComplete();
+  const { startQuiz } = useStartQuiz();
+  const { user } = useAuthStore();
 
-  console.log("URL Params:", { courseId, moduleId, subModuleId });
+  // Use the Zustand quiz store
+  const { setQuizAttempt, setTimeLimit, setLearningContentId, resetQuizState } =
+    useQuizStore();
 
   // Fetch learning content for this specific submodule
   const {
@@ -78,11 +88,103 @@ export default function SubModuleContent() {
     }
   };
 
+  const handleStartQuizAttempt = async (learningContentId) => {
+    if (!user?.id) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to start the quiz.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsStartingQuiz(true);
+
+    try {
+      const result = await startQuiz(learningContentId, user.id);
+
+      if (result.success) {
+        // Get the time limit from activeContent
+        const timeLimit = activeContent.timeLimit || "00:10:00"; // Default 10 minutes
+
+        // Extract the attempt data from the API response structure
+        const attemptData = result.data?.data; // The actual attempt data is nested under 'data'
+
+        // Create quiz attempt data following the API response structure
+        const quizAttemptData = {
+          // Primary attempt ID (this is what we need for the quiz)
+          id: attemptData?.id, // This is the attemptId (137 in your example)
+          quizAttemptId: attemptData?.id, // Same as id, for consistency
+
+          // API response fields
+          startedAt: attemptData?.startedAt,
+          completedAt: attemptData?.completedAt,
+          totalScore: attemptData?.totalScore,
+          totalPossibleScore: attemptData?.totalPossibleScore,
+          isCompleted: attemptData?.isCompleted,
+          timeTaken: attemptData?.timeTaken,
+          learningContentId:
+            attemptData?.learningContentId || learningContentId,
+          userId: attemptData?.userId || user.id,
+          userAnswers: attemptData?.userAnswers || [],
+
+          // Additional fields for our quiz functionality
+          timeLimit: timeLimit,
+
+          // Include the full API response for reference
+          apiResponse: result.data,
+        };
+
+        // Save to Zustand store
+        setQuizAttempt(quizAttemptData);
+        setTimeLimit(timeLimit);
+        setLearningContentId(learningContentId);
+
+        // Log the attempt data for debugging
+        console.log("Quiz Attempt Created:", {
+          attemptId: attemptData?.id,
+          learningContentId: learningContentId,
+          timeLimit: timeLimit,
+          fullData: quizAttemptData,
+        });
+
+        toast({
+          title: "Quiz attempt created",
+          description: `Your quiz attempt #${attemptData?.id} has been started successfully!`,
+          variant: "success",
+        });
+
+        // Navigate to the quiz page
+        navigate(
+          `/quiz/course/${courseId}/module/${moduleId}/submodule/${subModuleId}/content/${learningContentId}`
+        );
+      } else {
+        toast({
+          title: "Failed to start quiz",
+          description:
+            result.error?.message ||
+            result.message ||
+            "Unable to create quiz attempt. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error starting quiz:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsStartingQuiz(false);
+    }
+  };
+
   const handleStartActivity = (type, learningContentId) => {
     if (type === "quiz") {
-      navigate(
-        `/quiz/course/${courseId}/module/${moduleId}/submodule/${subModuleId}/content/${learningContentId}`
-      );
+      // Reset any previous quiz state before starting new quiz
+      resetQuizState();
+      handleStartQuizAttempt(learningContentId);
     } else if (type === "challenge") {
       navigate(
         `/challenge/course/${courseId}/module/${moduleId}/submodule/${subModuleId}/content/${learningContentId}`
@@ -93,10 +195,6 @@ export default function SubModuleContent() {
   const onBack = () => {
     navigate(`/learn/course/${courseId}`);
   };
-
-  console.log("Learning Content Data:", learningContentData);
-  console.log("Course Data:", courseData);
-  console.log("Learning Item Data:", learningItemData);
 
   // Loading state
   // Loading state
@@ -287,7 +385,7 @@ export default function SubModuleContent() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
       {/* Enhanced Breadcrumb */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-amber-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -327,8 +425,8 @@ export default function SubModuleContent() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden border border-amber-100">
+      <div className="flex-1 container mx-auto px-4 py-8">
+        <div className="flex gap-8">
           {/* Enhanced Sidebar - Navigation */}
           <div className="lg:w-1/3 border-r border-amber-100">
             {/* Enhanced Submodule Header */}
@@ -463,8 +561,8 @@ export default function SubModuleContent() {
             </div>
           </div>
 
-          {/* Enhanced Main Content Area */}
-          <div className="lg:w-2/3">
+          {/* Main Content Area */}
+          <div className="flex-1 bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
             {activeContent ? (
               <>
                 {/* Enhanced Content Header */}
@@ -634,186 +732,313 @@ export default function SubModuleContent() {
                           </div>
                         )}
 
-                        {/* Mark as Complete Button - Outside content sections */}
-                        <div className="flex justify-end mb-10">
-                          {!isCompleted(activeContent.learningContentId) ? (
-                            <Button
-                              onClick={() =>
-                                handleMarkComplete(
-                                  activeContent.learningContentId
-                                )
-                              }
-                              disabled={isMarkingComplete}
-                              className={`${TailwindStyle.HIGHLIGHT_FRAME} px-8 py-3 flex items-center`}
-                            >
-                              {isMarkingComplete ? (
-                                <Loader2
-                                  size={20}
-                                  className="mr-3 animate-spin"
-                                />
+                        {/* Mark as Complete Button - Only show for reading content with actual content */}
+                        {activeContent.contentType === 0 &&
+                          activeItemDetail?.itemContent && (
+                            <div className="flex justify-end mb-10">
+                              {!isCompleted(activeContent.learningContentId) ? (
+                                <Button
+                                  onClick={() =>
+                                    handleMarkComplete(
+                                      activeContent.learningContentId
+                                    )
+                                  }
+                                  disabled={isMarkingComplete}
+                                  className={`${TailwindStyle.HIGHLIGHT_FRAME} px-8 py-3 flex items-center`}
+                                >
+                                  {isMarkingComplete ? (
+                                    <Loader2
+                                      size={20}
+                                      className="mr-3 animate-spin"
+                                    />
+                                  ) : (
+                                    <Check size={20} className="mr-3" />
+                                  )}
+                                  {isMarkingComplete
+                                    ? "Marking..."
+                                    : "Mark as Complete"}
+                                </Button>
                               ) : (
-                                <Check size={20} className="mr-3" />
+                                <div className="bg-gradient-to-r from-green-100 to-green-200 text-green-700 px-8 py-3 rounded-xl flex items-center shadow-lg">
+                                  <CheckCircle size={20} className="mr-3" />
+                                  Completed ✓
+                                </div>
                               )}
-                              {isMarkingComplete
-                                ? "Marking..."
-                                : "Mark as Complete"}
-                            </Button>
-                          ) : (
-                            <div className="bg-gradient-to-r from-green-100 to-green-200 text-green-700 px-8 py-3 rounded-xl flex items-center shadow-lg">
-                              <CheckCircle size={20} className="mr-3" />
-                              Completed ✓
                             </div>
                           )}
-                        </div>
+
+                        {/* Enhanced Hint section - only if hint exists */}
+                        {activeItemDetail?.hint && (
+                          <div className="mb-10">
+                            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-100 shadow-lg">
+                              <div className="flex items-center mb-6">
+                                <div className="p-3 bg-purple-500 rounded-xl mr-4">
+                                  <Eye size={24} className="text-white" />
+                                </div>
+                                <h4 className="text-xl font-bold text-purple-900">
+                                  Hint
+                                </h4>
+                              </div>
+                              <div className="text-purple-800 prose max-w-none">
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: activeItemDetail.hint,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Enhanced Additional Data section - only if additionalData exists */}
+                        {activeItemDetail?.additionalData && (
+                          <div className="mb-10">
+                            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-3xl p-8 border border-indigo-100 shadow-lg">
+                              <div className="flex items-center mb-6">
+                                <div className="p-3 bg-indigo-500 rounded-xl mr-4">
+                                  <FileText size={24} className="text-white" />
+                                </div>
+                                <h4 className="text-xl font-bold text-indigo-900">
+                                  Additional Information
+                                </h4>
+                              </div>
+                              <div className="text-indigo-800 prose max-w-none">
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: activeItemDetail.additionalData,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </>
                     )}
 
-                    {/* Enhanced Hint section - only if hint exists */}
-                    {activeItemDetail?.hint && (
+                    {/* Special handling for Quiz and Challenge content types - Show buttons even if content is null */}
+                    {activeContent.contentType === 2 ? (
+                      // Enhanced Quiz Content Section
                       <div className="mb-10">
-                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-100 shadow-lg">
-                          <div className="flex items-center mb-6">
-                            <div className="p-3 bg-purple-500 rounded-xl mr-4">
-                              <Eye size={24} className="text-white" />
+                        <div className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 rounded-3xl p-8 border border-amber-200 shadow-xl">
+                          <div className="flex items-center mb-8">
+                            <div className="p-4 bg-gradient-to-r from-primary-yellow to-secondary-yellow rounded-2xl mr-6 shadow-lg">
+                              <PenLine size={32} className="text-white" />
                             </div>
-                            <h4 className="text-xl font-bold text-purple-900">
-                              Hint
-                            </h4>
-                          </div>
-                          <div className="text-purple-800 prose max-w-none">
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: activeItemDetail.hint,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Enhanced Additional Data section - only if additionalData exists */}
-                    {activeItemDetail?.additionalData && (
-                      <div className="mb-10">
-                        <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-3xl p-8 border border-indigo-100 shadow-lg">
-                          <div className="flex items-center mb-6">
-                            <div className="p-3 bg-indigo-500 rounded-xl mr-4">
-                              <FileText size={24} className="text-white" />
+                            <div>
+                              <h3 className="text-3xl font-bold text-gray-800 mb-3">
+                                Interactive Quiz Assessment
+                              </h3>
+                              <p className="text-gray-700 text-lg font-medium">
+                                Test your knowledge and understanding with this
+                                comprehensive quiz
+                              </p>
                             </div>
-                            <h4 className="text-xl font-bold text-indigo-900">
-                              Additional Information
-                            </h4>
                           </div>
-                          <div className="text-indigo-800 prose max-w-none">
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: activeItemDetail.additionalData,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
 
-                    {/* Only show placeholder if itemContent is null or doesn't exist */}
-                    {!activeItemDetail?.itemContent &&
-                      !isItemLoading &&
-                      !itemError && (
-                        <div className="text-center p-16 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 rounded-3xl mb-10 border border-gray-200 shadow-lg">
-                          <div
-                            className={`w-24 h-24 bg-gradient-to-r ${getContentTypeColor(
-                              activeContent.contentType
-                            )} rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg`}
-                          >
-                            <div className="text-white">
-                              {getContentTypeIcon(
-                                activeContent.contentType,
-                                48
+                          {/* Enhanced Quiz Info Cards */}
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 text-center border border-amber-100 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                              <div className="p-3 bg-gradient-to-r from-primary-yellow to-secondary-yellow rounded-xl w-fit mx-auto mb-3">
+                                <Clock size={24} className="text-white" />
+                              </div>
+                              <div className="text-2xl font-bold text-gray-800 mb-1">
+                                {activeContent.timeLimit || "30:00"}
+                              </div>
+                              <div className="text-sm text-gray-600 font-semibold">
+                                Time Limit
+                              </div>
+                            </div>
+
+                            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 text-center border border-amber-100 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                              <div className="p-3 bg-gradient-to-r from-primary-yellow to-secondary-yellow rounded-xl w-fit mx-auto mb-3">
+                                <PenLine size={24} className="text-white" />
+                              </div>
+                              <div className="text-2xl font-bold text-gray-800 mb-1">
+                                Multiple
+                              </div>
+                              <div className="text-sm text-gray-600 font-semibold">
+                                Question Types
+                              </div>
+                            </div>
+
+                            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 text-center border border-amber-100 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                              <div className="p-3 bg-gradient-to-r from-primary-yellow to-secondary-yellow rounded-xl w-fit mx-auto mb-3">
+                                <CheckCircle size={24} className="text-white" />
+                              </div>
+                              <div className="text-2xl font-bold text-gray-800 mb-1">
+                                Instant
+                              </div>
+                              <div className="text-sm text-gray-600 font-semibold">
+                                Feedback
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Enhanced Start Quiz Section */}
+                          <div className="bg-gradient-to-r from-white to-amber-50 rounded-2xl p-8 border border-amber-200 shadow-inner">
+                            <div className="text-center">
+                              <div className="mb-6">
+                                <h4 className="text-xl font-bold text-gray-800 mb-2">
+                                  Ready to Begin?
+                                </h4>
+                                <p className="text-gray-600">
+                                  Take your time and read each question
+                                  carefully. You can navigate between questions
+                                  freely.
+                                </p>
+                              </div>
+
+                              <Button
+                                onClick={() =>
+                                  handleStartActivity(
+                                    "quiz",
+                                    activeContent.learningContentId
+                                  )
+                                }
+                                disabled={isStartingQuiz || !user}
+                                className={`${TailwindStyle.HIGHLIGHT_FRAME} px-10 py-4 text-lg font-bold shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                              >
+                                {isStartingQuiz ? (
+                                  <>
+                                    <Loader2
+                                      size={24}
+                                      className="mr-3 animate-spin"
+                                    />
+                                    Creating Quiz Attempt...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Play size={24} className="mr-3" />
+                                    Start Quiz Assessment
+                                  </>
+                                )}
+                              </Button>
+
+                              {!user && (
+                                <div className="mt-6 p-4 bg-amber-100 border border-amber-200 rounded-xl">
+                                  <p className="text-amber-800 font-medium flex items-center justify-center">
+                                    <AlertCircle size={18} className="mr-2" />
+                                    Please log in to start the quiz assessment
+                                  </p>
+                                </div>
+                              )}
+
+                              {user && (
+                                <div className="mt-6 flex items-center justify-center space-x-6 text-sm text-gray-600">
+                                  <div className="flex items-center">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                    <span>
+                                      Navigate freely between questions
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center">
+                                    <div className="w-2 h-2 bg-primary-yellow rounded-full mr-2"></div>
+                                    <span>Auto-save progress</span>
+                                  </div>
+                                  <div className="flex items-center">
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                                    <span>Instant results</span>
+                                  </div>
+                                </div>
                               )}
                             </div>
                           </div>
-                          <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                            {activeContent.title}
-                          </h3>
-                          <p className="text-gray-600 mb-8 max-w-lg mx-auto text-lg">
-                            This{" "}
-                            {getContentTypeLabel(
-                              activeContent.contentType
-                            ).toLowerCase()}{" "}
-                            content is being prepared and will be available
-                            soon. Stay tuned!
-                          </p>
-                          <div className="inline-flex items-center px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-600">
-                            <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                            Coming Soon
+                        </div>
+                      </div>
+                    ) : activeContent.contentType === 1 ? (
+                      // Enhanced Challenge Content Section
+                      <div className="mb-10">
+                        <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 rounded-3xl p-8 border border-purple-200 shadow-xl">
+                          <div className="flex items-center mb-8">
+                            <div className="p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl mr-6 shadow-lg">
+                              <Award size={32} className="text-white" />
+                            </div>
+                            <div>
+                              <h3 className="text-3xl font-bold text-gray-800 mb-3">
+                                Practical Challenge
+                              </h3>
+                              <p className="text-gray-700 text-lg font-medium">
+                                Apply your knowledge in this hands-on challenge
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="bg-gradient-to-r from-white to-purple-50 rounded-2xl p-8 border border-purple-200 shadow-inner">
+                            <div className="text-center">
+                              <Button
+                                onClick={() =>
+                                  handleStartActivity(
+                                    "challenge",
+                                    activeContent.learningContentId
+                                  )
+                                }
+                                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-10 py-4 rounded-2xl text-lg font-bold shadow-xl transition-all duration-300 transform hover:scale-105"
+                              >
+                                <Award size={24} className="mr-3" />
+                                Begin Challenge
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      )}
+                      </div>
+                    ) : (
+                      // For reading content (contentType 0) - only show "content being prepared" if no itemContent
+                      !activeItemDetail?.itemContent && (
+                        <div className="mb-10">
+                          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 border border-gray-200 text-center shadow-lg">
+                            <div className="p-4 bg-gray-300 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                              <FileText size={32} className="text-gray-600" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                              Content is being prepared
+                            </h3>
+                            <p className="text-gray-600">
+                              This content is being prepared and will be
+                              available soon. Stay tuned!
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    )}
 
-                    {/* Bottom action buttons section */}
-                    <div className="flex items-center justify-between pt-8 border-t border-gray-200">
-                      <div className="flex space-x-4">
-                        {activeContent.contentType === 2 && (
+                    {/* Navigation buttons - Only show for reading content (contentType 0) */}
+                    {activeContent.contentType === 0 && (
+                      <div className="flex items-center justify-between pt-8 border-t border-gray-200">
+                        {/* Empty div for spacing - no mark as complete button here since it's handled above */}
+                        <div></div>
+
+                        {/* Navigation buttons */}
+                        <div className="flex space-x-3">
                           <Button
                             onClick={() =>
-                              handleStartActivity(
-                                "quiz",
-                                activeContent.learningContentId
-                              )
+                              setActiveSection(Math.max(0, activeSection - 1))
                             }
-                            className={TailwindStyle.HIGHLIGHT_FRAME}
+                            disabled={activeSection === 0}
+                            variant="outline"
+                            className="px-6 py-3 rounded-xl border-2 border-gray-300 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                           >
-                            <PenLine size={20} className="mr-3" />
-                            Start Quiz
+                            ← Previous
                           </Button>
-                        )}
-
-                        {activeContent.contentType === 1 && (
                           <Button
                             onClick={() =>
-                              handleStartActivity(
-                                "challenge",
-                                activeContent.learningContentId
+                              setActiveSection(
+                                Math.min(
+                                  learningContents.length - 1,
+                                  activeSection + 1
+                                )
                               )
                             }
-                            className={TailwindStyle.HIGHLIGHT_FRAME}
+                            disabled={
+                              activeSection === learningContents.length - 1
+                            }
+                            variant="outline"
+                            className="px-6 py-3 rounded-xl border-2 border-gray-300 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                           >
-                            <Award size={20} className="mr-3" />
-                            Begin Challenge
+                            Next →
                           </Button>
-                        )}
+                        </div>
                       </div>
-
-                      {/* Enhanced Navigation buttons */}
-                      <div className="flex space-x-3">
-                        <Button
-                          onClick={() =>
-                            setActiveSection(Math.max(0, activeSection - 1))
-                          }
-                          disabled={activeSection === 0}
-                          variant="outline"
-                          className="px-6 py-3 rounded-xl border-2 border-gray-300 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                        >
-                          ← Previous
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            setActiveSection(
-                              Math.min(
-                                learningContents.length - 1,
-                                activeSection + 1
-                              )
-                            )
-                          }
-                          disabled={
-                            activeSection === learningContents.length - 1
-                          }
-                          variant="outline"
-                          className="px-6 py-3 rounded-xl border-2 border-gray-300 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                        >
-                          Next →
-                        </Button>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 )}
               </>

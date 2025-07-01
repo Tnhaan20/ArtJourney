@@ -7,224 +7,165 @@ import {
   Check,
   X,
   HelpCircle,
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { TailwindStyle } from "@/utils/Enum";
 import { toast } from "@/utils/Toast";
+import { useQuiz } from "@/hooks/Quiz/use-quiz";
+import useQuizStore from "@/domains/store/use-quiz-store"; // Import the quiz store
+
+// Helper function to convert time format (HH:MM:SS) to seconds - moved outside component
+const parseTimeToSeconds = (timeString) => {
+  if (!timeString) return 600; // Default 10 minutes
+
+  const parts = timeString.split(":");
+  if (parts.length === 3) {
+    // HH:MM:SS format
+    const hours = parseInt(parts[0], 10) || 0;
+    const minutes = parseInt(parts[1], 10) || 0;
+    const seconds = parseInt(parts[2], 10) || 0;
+    return hours * 3600 + minutes * 60 + seconds;
+  } else if (parts.length === 2) {
+    // MM:SS format
+    const minutes = parseInt(parts[0], 10) || 0;
+    const seconds = parseInt(parts[1], 10) || 0;
+    return minutes * 60 + seconds;
+  }
+
+  return 600; // Default fallback
+};
+
+// Helper function to format date in dd/MM/yyyy format
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
+// Helper function to format date and time in dd/MM/yyyy HH:mm format
+const formatDateTime = (dateString) => {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
 
 export default function Quiz() {
-  const { courseId, moduleId } = useParams();
+  const { courseId, moduleId, subModuleId, learningContentId } = useParams();
   const navigate = useNavigate();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
-  const [isQuizComplete, setIsQuizComplete] = useState(false);
-  const [quizData, setQuizData] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  // Mock quiz data based on courseId and moduleId
+  // Use Zustand store
+  const {
+    quizAttemptId,
+    attemptData, // Get the full attempt data
+    timeLimit,
+    selectedAnswers,
+    currentQuestionIndex,
+    isQuizComplete,
+    updateSelectedAnswer,
+    setCurrentQuestionIndex,
+    setIsQuizComplete,
+    updateAttemptData,
+    resetQuizState,
+    clearQuizAttempt,
+    getAttemptSummary,
+  } = useQuizStore();
+
+  // Convert time limit to seconds
+  const initialTimeInSeconds = timeLimit ? parseTimeToSeconds(timeLimit) : 600; // Default 10 minutes
+
+  const [timeLeft, setTimeLeft] = useState(initialTimeInSeconds);
+
+  // Use the real API hook
+  const { getQuizByLearningContent } = useQuiz();
+  const {
+    data: quizResponse,
+    isLoading,
+    error,
+  } = getQuizByLearningContent(learningContentId, 1, 10);
+
+  // Log quiz attempt information with the correct structure
   useEffect(() => {
-    // In a real application, this would be an API call
-    const fetchQuizData = () => {
-      setLoading(true);
-      console.log(
-        `Fetching quiz data for course: ${courseId}, module: ${moduleId}`
-      );
+    if (quizAttemptId && attemptData) {
+      console.log("Quiz Attempt Details:", {
+        attemptId: quizAttemptId,
+        startedAt: attemptData.startedAt,
+        learningContentId: attemptData.learningContentId,
+        userId: attemptData.userId,
+        totalPossibleScore: attemptData.totalPossibleScore,
+        isCompleted: attemptData.isCompleted,
+        timeLimit: timeLimit,
+      });
+    } else {
+      console.warn("No quiz attempt data found in Zustand store");
+    }
+  }, [quizAttemptId, attemptData, timeLimit]);
 
-      // Simulating API delay
-      setTimeout(() => {
-        // Mock data structure based on course and module
-        const quizDataMap = {
-          // Course 1 (Art History)
-          1: {
-            // Module 1 (Early Christian Art)
-            1: {
-              title: "Early Christian Art Quiz",
-              description:
-                "Test your knowledge about Early Christian Art and its characteristics.",
-              timeLimit: 600, // 10 minutes in seconds
-              passingScore: 80,
-              questions: [
-                {
-                  id: 1,
-                  question:
-                    "Which of the following was a common symbol in Early Christian Art?",
-                  options: [
-                    { id: "a", text: "Fish (Ichthys)" },
-                    { id: "b", text: "Eagle" },
-                    { id: "c", text: "Lion" },
-                    { id: "d", text: "Dragon" },
-                  ],
-                  correctAnswer: "a",
-                  explanation:
-                    "The fish (Ichthys) was one of the most important symbols in Early Christian art, representing Christ through the Greek acronym for 'Jesus Christ, Son of God, Savior'.",
-                },
-                {
-                  id: 2,
-                  question:
-                    "Where can most surviving examples of early Christian art be found?",
-                  options: [
-                    { id: "a", text: "Constantinople" },
-                    { id: "b", text: "The Catacombs of Rome" },
-                    { id: "c", text: "Jerusalem" },
-                    { id: "d", text: "Athens" },
-                  ],
-                  correctAnswer: "b",
-                  explanation:
-                    "The Catacombs of Rome contain most of the surviving examples of early Christian art, as these underground burial chambers were decorated with Christian symbols and scenes.",
-                },
-                {
-                  id: 3,
-                  question: "What is the oldest surviving church building?",
-                  options: [
-                    { id: "a", text: "The Hagia Sophia" },
-                    { id: "b", text: "St. Peter's Basilica" },
-                    { id: "c", text: "The Dura-Europos church" },
-                    { id: "d", text: "The Church of the Holy Sepulchre" },
-                  ],
-                  correctAnswer: "c",
-                  explanation:
-                    "The Dura-Europos church in Syria is considered the oldest surviving church building, dating back to the 3rd century CE.",
-                },
-                {
-                  id: 4,
-                  question:
-                    "What was a key characteristic of Early Christian art?",
-                  options: [
-                    { id: "a", text: "Detailed portraits of Jesus" },
-                    {
-                      id: "b",
-                      text: "Use of symbolism rather than direct representation",
-                    },
-                    { id: "c", text: "Extensive use of gold leaf" },
-                    { id: "d", text: "3D sculptural elements" },
-                  ],
-                  correctAnswer: "b",
-                  explanation:
-                    "Early Christian art often used symbolism rather than direct representation, partly to avoid idolatry concerns and also as a way to convey complex theological ideas.",
-                },
-                {
-                  id: 5,
-                  question: "When did Early Christian art primarily develop?",
-                  options: [
-                    { id: "a", text: "1st-3rd centuries CE" },
-                    { id: "b", text: "2nd-6th centuries CE" },
-                    { id: "c", text: "7th-10th centuries CE" },
-                    { id: "d", text: "11th-13th centuries CE" },
-                  ],
-                  correctAnswer: "b",
-                  explanation:
-                    "Early Christian art developed primarily from the 2nd to the early 6th century CE, beginning in the late Roman Empire and continuing into the early Byzantine period.",
-                },
-              ],
-            },
-            // Module 2 (Byzantine Art)
-            2: {
-              title: "Byzantine Art Quiz",
-              description:
-                "Test your knowledge of Byzantine art forms and history.",
-              timeLimit: 600,
-              passingScore: 75,
-              questions: [
-                {
-                  id: 1,
-                  question:
-                    "Which building is considered the greatest achievement of Byzantine architecture?",
-                  options: [
-                    { id: "a", text: "St. Peter's Basilica" },
-                    { id: "b", text: "Hagia Sophia" },
-                    { id: "c", text: "Notre Dame Cathedral" },
-                    { id: "d", text: "Pantheon" },
-                  ],
-                  correctAnswer: "b",
-                  explanation:
-                    "The Hagia Sophia in Constantinople (modern Istanbul) is considered the greatest achievement of Byzantine architecture, known for its massive dome and innovative design.",
-                },
-                // More Byzantine art questions could be added here
-              ],
-            },
-          },
-          // Course 2 (Modern Art)
-          2: {
-            // Module data for Modern Art course
-            1: {
-              title: "Impressionism Quiz",
-              description:
-                "Test your knowledge of Impressionist painters and techniques.",
-              timeLimit: 500,
-              passingScore: 70,
-              questions: [
-                {
-                  id: 1,
-                  question:
-                    "Which artist is considered the founder of Impressionism?",
-                  options: [
-                    { id: "a", text: "Vincent van Gogh" },
-                    { id: "b", text: "Claude Monet" },
-                    { id: "c", text: "Pablo Picasso" },
-                    { id: "d", text: "Salvador Dalí" },
-                  ],
-                  correctAnswer: "b",
-                  explanation:
-                    "Claude Monet is widely considered the founder of the Impressionist movement, particularly with his painting 'Impression, Sunrise' which gave the movement its name.",
-                },
-                // More Impressionism questions could be added here
-              ],
-            },
-          },
-        };
+  // Transform API data to match component expectations
+  const quizData = React.useMemo(() => {
+    if (!quizResponse?.data?.items) return null;
 
-        // Try to get data for the specified course and module
-        if (quizDataMap[courseId] && quizDataMap[courseId][moduleId]) {
-          const data = quizDataMap[courseId][moduleId];
-          setQuizData(data);
-          setTimeLeft(data.timeLimit); // Set timer based on quiz data
-        } else {
-          // Fallback to generic quiz if the specific one is not found
-          console.log("Specific quiz not found, using generic quiz");
-          setQuizData({
-            title: `Course ${courseId} - Module ${moduleId} Quiz`,
-            description: "Test your knowledge from this module.",
-            timeLimit: 600,
-            passingScore: 80,
-            questions: [
-              {
-                id: 1,
-                question: `Sample question for Course ${courseId}, Module ${moduleId}`,
-                options: [
-                  { id: "a", text: "Option A" },
-                  { id: "b", text: "Option B" },
-                  { id: "c", text: "Option C" },
-                  { id: "d", text: "Option D" },
-                ],
-                correctAnswer: "a",
-                explanation: "This is an explanation for the correct answer.",
-              },
-              // Add more generic questions as needed
-            ],
-          });
-          setTimeLeft(600); // Default timer
-        }
+    const questions = quizResponse.data.items.map((item) => ({
+      id: item.questionId,
+      question: item.questionText,
+      type: item.questionType,
+      points: item.points,
+      orderIndex: item.orderIndex,
+      options: item.questionOptions
+        .sort((a, b) => a.orderIndex - b.orderIndex)
+        .map((option) => ({
+          id: option.questionOptionId,
+          text: option.optionText,
+          orderIndex: option.orderIndex,
+        })),
+      // For now, we'll set the first option as correct since API doesn't return correct answers
+      // In a real quiz, this would come from a separate API call during quiz creation
+      correctAnswer: item.questionOptions[0]?.questionOptionId,
+      explanation: `This is the explanation for question: ${item.questionText}`,
+    }));
 
-        setLoading(false);
-      }, 1000);
+    return {
+      title: `Quiz Assessment`,
+      description: "Test your knowledge and understanding.",
+      timeLimit: initialTimeInSeconds,
+      passingScore: 70,
+      questions: questions.sort((a, b) => a.orderIndex - b.orderIndex),
+      totalQuestions: quizResponse.data.totalCount,
+      attemptId: quizAttemptId,
+      attemptData: attemptData, // Include full attempt data
+      totalPossibleScore: attemptData?.totalPossibleScore || questions.length,
     };
+  }, [
+    quizResponse,
+    learningContentId,
+    initialTimeInSeconds,
+    quizAttemptId,
+    attemptData,
+  ]);
 
-    fetchQuizData();
-  }, [courseId, moduleId]);
-
-  // Timer countdown logic (unchanged)
+  // Timer countdown logic
   useEffect(() => {
-    if (loading || isQuizComplete) return;
+    if (isLoading || isQuizComplete || !quizData) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(timer);
-          // Auto-submit the quiz when time runs out
           handleQuizComplete();
           return 0;
         }
@@ -233,45 +174,95 @@ export default function Quiz() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [loading, isQuizComplete]);
+  }, [isLoading, isQuizComplete, quizData]);
 
   const handleAnswerSelect = (answerId) => {
-    if (!isAnswerSubmitted) {
-      setSelectedAnswer(answerId);
+    // Update Zustand store
+    updateSelectedAnswer(currentQuestionIndex, answerId);
+
+    // Optional: Auto-save answer to backend
+    if (quizAttemptId) {
+      console.log("Saving answer for attempt:", quizAttemptId, {
+        questionId: quizData.questions[currentQuestionIndex].id,
+        selectedAnswer: answerId,
+        attemptStartedAt: attemptData?.startedAt,
+      });
+      // You can implement auto-save logic here if needed
     }
   };
 
-  const handleAnswerSubmit = () => {
-    if (selectedAnswer === null) {
-      toast({
-        title: "Selection required",
-        description: "Please select an answer before submitting.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsAnswerSubmitted(true);
-    const currentQuestion = quizData.questions[currentQuestionIndex];
-
-    if (selectedAnswer === currentQuestion.correctAnswer) {
-      setScore(score + 1);
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < quizData.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
-      setIsAnswerSubmitted(false);
-    } else {
-      handleQuizComplete();
     }
   };
 
   const handleQuizComplete = () => {
     setIsQuizComplete(true);
-    // In a real app, you would submit the result to the server here
+
+    // Calculate final score
+    let correctAnswers = 0;
+    quizData.questions.forEach((question, index) => {
+      if (selectedAnswers[index] === question.correctAnswer) {
+        correctAnswers++;
+      }
+    });
+
+    // Update attempt data in store
+    updateAttemptData({
+      totalScore: correctAnswers,
+      isCompleted: true,
+      completedAt: new Date().toISOString(),
+      timeTaken: quizData.timeLimit - timeLeft, // Time taken in seconds
+    });
+
+    console.log("Quiz completed:", {
+      attemptId: quizAttemptId,
+      answers: selectedAnswers,
+      finalScore: correctAnswers,
+      totalPossible: quizData.questions.length,
+      timeTaken: quizData.timeLimit - timeLeft,
+      attemptSummary: getAttemptSummary(),
+    });
+
+    // Submit quiz results to backend
+    if (quizAttemptId) {
+      submitQuizResults(quizAttemptId, selectedAnswers, correctAnswers);
+    }
+  };
+
+  // Function to submit quiz results using the correct attempt ID
+  const submitQuizResults = async (attemptId, answers, score) => {
+    try {
+      const submissionData = {
+        attemptId: attemptId, // Use the attempt ID from API (137 in your example)
+        answers: answers,
+        totalScore: score,
+        timeTaken: quizData.timeLimit - timeLeft,
+        completedAt: new Date().toISOString(),
+        learningContentId: attemptData?.learningContentId,
+        userId: attemptData?.userId,
+      };
+
+      console.log("Submitting quiz results:", submissionData);
+
+      // Call your API to submit quiz results here
+      // Example:
+      // await submitQuizAttempt(attemptId, submissionData);
+    } catch (error) {
+      console.error("Error submitting quiz results:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit quiz results. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const formatTime = (seconds) => {
@@ -280,24 +271,127 @@ export default function Quiz() {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
+  const calculateScore = () => {
+    let correctAnswers = 0;
+    quizData.questions.forEach((question, index) => {
+      if (selectedAnswers[index] === question.correctAnswer) {
+        correctAnswers++;
+      }
+    });
+    return correctAnswers;
+  };
+
   const calculatePercentage = (score, total) => {
     return (score / total) * 100;
   };
 
-  // Updated to navigate back to the correct course/module page
   const handleBackToModule = () => {
-    navigate(`/learn/course/${courseId}/module/${moduleId}`);
+    // Clear quiz attempt data when leaving
+    clearQuizAttempt();
+    navigate(
+      `/learn/course/${courseId}/module/${moduleId}/submodule/${subModuleId}`
+    );
   };
 
-  if (loading) {
+  const canProceedToNext = () => {
+    return selectedAnswers[currentQuestionIndex] !== undefined;
+  };
+
+  const isQuizCompleteCheck = () => {
+    return quizData?.questions.every(
+      (_, index) => selectedAnswers[index] !== undefined
+    );
+  };
+
+  // Check if quiz attempt ID is missing
+  if (!quizAttemptId && !isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg">
+          <div className="flex flex-col items-center text-center">
+            <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Invalid Quiz Session
+            </h2>
+            <p className="text-gray-600 mb-4">
+              No valid quiz attempt found. Please start the quiz again.
+            </p>
+            <Button
+              onClick={handleBackToModule}
+              className="bg-primary-yellow hover:bg-amber-600 text-white"
+            >
+              Back to Module
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg">
           <div className="flex flex-col items-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-yellow mb-4"></div>
-            <p className="text-gray-600">
-              Loading quiz for Course {courseId}, Module {moduleId}...
+            <Loader2 className="h-12 w-12 animate-spin text-primary-yellow mb-4" />
+            <p className="text-gray-600">Loading quiz questions...</p>
+            {quizAttemptId && (
+              <p className="text-sm text-gray-500 mt-2">
+                Attempt ID: {quizAttemptId}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg">
+          <div className="flex flex-col items-center text-center">
+            <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Failed to Load Quiz
+            </h2>
+            <p className="text-gray-600 mb-4">
+              {error.message ||
+                "There was an error loading the quiz questions."}
             </p>
+            <Button
+              onClick={() => window.location.reload()}
+              className="bg-primary-yellow hover:bg-amber-600 text-white"
+            >
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No questions found
+  if (!quizData || quizData.questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg">
+          <div className="flex flex-col items-center text-center">
+            <HelpCircle className="h-12 w-12 text-gray-400 mb-4" />
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              No Quiz Questions Found
+            </h2>
+            <p className="text-gray-600 mb-4">
+              This learning content doesn't have any quiz questions yet.
+            </p>
+            <Button
+              onClick={handleBackToModule}
+              className="bg-primary-yellow hover:bg-amber-600 text-white"
+            >
+              Back to Module
+            </Button>
           </div>
         </div>
       </div>
@@ -328,112 +422,93 @@ export default function Quiz() {
                 {quizData.title}
               </h1>
               <p className="text-gray-600 mt-1">{quizData.description}</p>
-              <div className="text-xs text-gray-500 mt-1">
-                Course {courseId} • Module {moduleId}
-              </div>
+              {quizAttemptId && (
+                <div className="mt-2 text-xs text-gray-500 space-y-1">
+                  <p>Attempt ID: {quizAttemptId}</p>
+                  {attemptData?.startedAt && (
+                    <p>Started: {formatDateTime(attemptData.startedAt)}</p>
+                  )}
+                </div>
+              )}
             </div>
 
-            {/* Rest of the component remains the same */}
             {/* Progress Bar */}
             <div className="p-4 bg-white border-b border-gray-100">
-              <div className="flex items-center justify-between mb-1 text-sm text-gray-600">
-                <span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-600">
                   Question {currentQuestionIndex + 1} of{" "}
                   {quizData.questions.length}
                 </span>
-                <span>
-                  Score: {score}/
-                  {currentQuestionIndex + (isAnswerSubmitted ? 1 : 0)}
+                <span className="text-sm text-gray-600">
+                  {Object.keys(selectedAnswers).length} of{" "}
+                  {quizData.questions.length} answered
                 </span>
               </div>
               <Progress
-                value={(currentQuestionIndex / quizData.questions.length) * 100}
+                value={
+                  ((currentQuestionIndex + 1) / quizData.questions.length) * 100
+                }
                 className="h-2 bg-gray-200"
               >
                 <div
-                  className="h-full bg-primary-yellow rounded-full"
+                  className="h-full bg-primary-yellow rounded-full transition-all duration-300"
                   style={{
                     width: `${
-                      (currentQuestionIndex / quizData.questions.length) * 100
+                      ((currentQuestionIndex + 1) / quizData.questions.length) *
+                      100
                     }%`,
                   }}
                 ></div>
               </Progress>
             </div>
 
-            {/* Question Content - unchanged */}
+            {/* Question Content */}
             <div className="p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              <div className="mb-2">
+                <span className="text-sm text-gray-500">
+                  {quizData.questions[currentQuestionIndex].type} •{" "}
+                  {quizData.questions[currentQuestionIndex].points} point(s)
+                </span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-6">
                 {quizData.questions[currentQuestionIndex].question}
               </h2>
 
-              {/* Answer Options - unchanged */}
-              <div className="space-y-3">
+              {/* Answer Options */}
+              <div className="space-y-3 mb-8">
                 {quizData.questions[currentQuestionIndex].options.map(
                   (option) => (
                     <div
                       key={option.id}
-                      className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                        selectedAnswer === option.id
-                          ? isAnswerSubmitted
-                            ? option.id ===
-                              quizData.questions[currentQuestionIndex]
-                                .correctAnswer
-                              ? "bg-green-50 border-green-300"
-                              : "bg-red-50 border-red-300"
-                            : "bg-amber-50 border-amber-300"
-                          : "border-gray-200 hover:border-amber-300"
+                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
+                        selectedAnswers[currentQuestionIndex] === option.id
+                          ? "bg-amber-50 border-amber-300 shadow-sm"
+                          : "border-gray-200 hover:border-amber-300 hover:bg-amber-25"
                       }`}
                       onClick={() => handleAnswerSelect(option.id)}
                     >
                       <div className="flex items-start">
                         <div className="flex-shrink-0 mt-0.5">
-                          {isAnswerSubmitted &&
-                            option.id ===
-                              quizData.questions[currentQuestionIndex]
-                                .correctAnswer && (
-                              <Check className="h-5 w-5 text-green-600" />
-                            )}
-                          {isAnswerSubmitted &&
-                            selectedAnswer === option.id &&
-                            option.id !==
-                              quizData.questions[currentQuestionIndex]
-                                .correctAnswer && (
-                              <X className="h-5 w-5 text-red-600" />
-                            )}
-                          {(!isAnswerSubmitted ||
-                            (isAnswerSubmitted &&
-                              option.id !==
-                                quizData.questions[currentQuestionIndex]
-                                  .correctAnswer &&
-                              selectedAnswer !== option.id)) && (
-                            <div
-                              className={`h-5 w-5 border rounded-full flex items-center justify-center ${
-                                selectedAnswer === option.id
-                                  ? "border-primary-yellow bg-amber-50"
-                                  : "border-gray-300"
-                              }`}
-                            >
-                              <span className="text-sm font-medium text-gray-700">
-                                {option.id.toUpperCase()}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="ml-3">
-                          <p
-                            className={`text-sm font-medium ${
-                              isAnswerSubmitted
-                                ? option.id ===
-                                  quizData.questions[currentQuestionIndex]
-                                    .correctAnswer
-                                  ? "text-green-800"
-                                  : selectedAnswer === option.id
-                                  ? "text-red-800"
-                                  : "text-gray-800"
-                                : "text-gray-800"
+                          <div
+                            className={`h-5 w-5 border rounded-full flex items-center justify-center transition-all duration-200 ${
+                              selectedAnswers[currentQuestionIndex] ===
+                              option.id
+                                ? "border-primary-yellow bg-primary-yellow"
+                                : "border-gray-300"
                             }`}
                           >
+                            {selectedAnswers[currentQuestionIndex] ===
+                            option.id ? (
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            ) : (
+                              <span className="text-xs font-medium text-gray-700">
+                                {String.fromCharCode(65 + option.orderIndex)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm font-medium text-gray-800">
                             {option.text}
                           </p>
                         </div>
@@ -443,55 +518,58 @@ export default function Quiz() {
                 )}
               </div>
 
-              {/* Explanation - unchanged */}
-              {isAnswerSubmitted && (
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
-                  <div className="flex">
-                    <HelpCircle className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-medium text-blue-800 mb-1">
-                        Explanation
-                      </h4>
-                      <p className="text-sm text-blue-700">
-                        {quizData.questions[currentQuestionIndex].explanation}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Navigation Buttons */}
+              <div className="flex items-center justify-between">
+                <Button
+                  onClick={handlePreviousQuestion}
+                  disabled={currentQuestionIndex === 0}
+                  variant="outline"
+                  className="flex items-center px-4 py-2 border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft size={16} className="mr-1" />
+                  Previous
+                </Button>
 
-              {/* Action Buttons - unchanged */}
-              <div className="mt-8 flex justify-end">
-                {!isAnswerSubmitted ? (
-                  <Button
-                    onClick={handleAnswerSubmit}
-                    className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2`}
-                    disabled={selectedAnswer === null}
-                  >
-                    Submit Answer
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleNextQuestion}
-                    className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2`}
-                  >
-                    {currentQuestionIndex < quizData.questions.length - 1
-                      ? "Next Question"
-                      : "Finish Quiz"}
-                  </Button>
-                )}
+                <div className="flex space-x-3">
+                  {currentQuestionIndex < quizData.questions.length - 1 ? (
+                    <Button
+                      onClick={handleNextQuestion}
+                      disabled={!canProceedToNext()}
+                      className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2 flex items-center`}
+                    >
+                      Next
+                      <ChevronRight size={16} className="ml-1" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleQuizComplete}
+                      disabled={!isQuizCompleteCheck()}
+                      className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2`}
+                    >
+                      Complete Quiz
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         ) : (
-          // Quiz Results - update back button
+          // Quiz Results - Same as before
           <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="bg-amber-50 p-6 border-b border-amber-100">
               <h1 className="text-xl font-bold text-gray-800">Quiz Complete</h1>
               <p className="text-gray-600 mt-1">Here's how you did!</p>
-              <div className="text-xs text-gray-500 mt-1">
-                Course {courseId} • Module {moduleId}
-              </div>
+              {attemptData && (
+                <div className="mt-2 text-xs text-gray-500">
+                  <p>
+                    Attempt #{quizAttemptId} completed at{" "}
+                    {formatDateTime(new Date().toISOString())}
+                  </p>
+                  {attemptData.startedAt && (
+                    <p>Started: {formatDateTime(attemptData.startedAt)}</p>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="p-8">
@@ -499,21 +577,25 @@ export default function Quiz() {
                 <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-amber-100 mb-4">
                   <span className="text-3xl font-bold text-amber-700">
                     {calculatePercentage(
-                      score,
+                      calculateScore(),
                       quizData.questions.length
                     ).toFixed(0)}
                     %
                   </span>
                 </div>
                 <h2 className="text-xl font-bold text-gray-800 mb-2">
-                  {calculatePercentage(score, quizData.questions.length) >=
-                  quizData.passingScore
+                  {calculatePercentage(
+                    calculateScore(),
+                    quizData.questions.length
+                  ) >= quizData.passingScore
                     ? "Congratulations!"
                     : "Almost there!"}
                 </h2>
                 <p className="text-gray-600">
-                  {calculatePercentage(score, quizData.questions.length) >=
-                  quizData.passingScore
+                  {calculatePercentage(
+                    calculateScore(),
+                    quizData.questions.length
+                  ) >= quizData.passingScore
                     ? "You passed the quiz successfully."
                     : "You didn't quite reach the passing score. Consider reviewing the material and trying again."}
                 </p>
@@ -523,7 +605,7 @@ export default function Quiz() {
                 <div className="flex justify-between mb-2">
                   <span className="font-medium text-gray-700">Your Score</span>
                   <span className="font-medium text-gray-700">
-                    {score}/{quizData.questions.length} questions
+                    {calculateScore()}/{quizData.questions.length} questions
                   </span>
                 </div>
                 <div className="flex justify-between mb-2">
@@ -534,10 +616,24 @@ export default function Quiz() {
                     {quizData.passingScore}%
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between mb-2">
                   <span className="font-medium text-gray-700">Time Spent</span>
                   <span className="font-medium text-gray-700">
                     {formatTime(quizData.timeLimit - timeLeft)}
+                  </span>
+                </div>
+                {attemptData?.startedAt && (
+                  <div className="flex justify-between mb-2">
+                    <span className="font-medium text-gray-700">Started</span>
+                    <span className="font-medium text-gray-700">
+                      {formatDateTime(attemptData.startedAt)}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Completed</span>
+                  <span className="font-medium text-gray-700">
+                    {formatDateTime(new Date().toISOString())}
                   </span>
                 </div>
               </div>
@@ -549,17 +645,18 @@ export default function Quiz() {
                 >
                   Return to Module
                 </Button>
-                {calculatePercentage(score, quizData.questions.length) <
-                  quizData.passingScore && (
+                {calculatePercentage(
+                  calculateScore(),
+                  quizData.questions.length
+                ) < quizData.passingScore && (
                   <Button
                     onClick={() => {
-                      // Reset quiz state
-                      setCurrentQuestionIndex(0);
-                      setSelectedAnswer(null);
-                      setIsAnswerSubmitted(false);
-                      setScore(0);
-                      setTimeLeft(quizData.timeLimit);
-                      setIsQuizComplete(false);
+                      // Reset quiz state in Zustand store
+                      resetQuizState();
+                      // Redirect back to module to start again
+                      navigate(
+                        `/learn/course/${courseId}/module/${moduleId}/submodule/${subModuleId}`
+                      );
                     }}
                     variant="outline"
                     className="border-primary-yellow text-primary-yellow hover:bg-amber-50"
