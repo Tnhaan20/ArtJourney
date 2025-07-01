@@ -6,8 +6,22 @@ export const AIProvider = ({ children }) => {
   const location = useLocation();
 
   // Pages where chat should be hidden
-  const excludedPaths = ["/signin", "/signup", "/admin", "/dashboard", "/quiz", "/email-verify"];
-  const shouldHideChat = excludedPaths.some(path => location.pathname.startsWith(path));
+  const excludedPaths = [
+    "/signin",
+    "/signup",
+    "/admin",
+    "/dashboard",
+    "/quiz",
+    "/email-verify",
+    "/server-error", // 500 error page
+    "/unauthorized", // 404-like error page
+    "/payment-callback", // Payment callback pages
+    "/challenge", // Challenge pages
+  ];
+
+  const shouldHideChat = excludedPaths.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   return (
     <>
