@@ -53,6 +53,15 @@ export const QueryKey = {
     GET_QUESTION: "learning-context-get-question",
   },
 
+  QUIZ: {
+    CREATE_QUIZ_TITLE: "quiz-create-title",
+    CREATE_QUIZ: "quiz-create",
+    GET_QUIZ_BY_CONTENT_ID: "quiz-get-by-content-id",
+    START_QUIZ: "quiz-start",
+    SUBMIT_QUIZ: "quiz-submit",
+
+  },
+
   AI: {
     SEND_MESSAGE: "ai-send-message",
     CREATE_SESSION: "ai-create-session",

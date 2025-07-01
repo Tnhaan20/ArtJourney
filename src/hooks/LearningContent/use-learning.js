@@ -60,10 +60,22 @@ export const useLearning = () => {
     },
   });
 
+  const getLearningContext = (subModuleId) => {
+    return useQuery({
+      queryKey: [QueryKey.LEARNING_CONTEXT.GET_LEARNING_CONTEXT, subModuleId],
+      queryFn: async () =>
+        await learningContextServices.get.getLearningContent(subModuleId),
+      enabled: !!subModuleId,
+      refetchOnWindowFocus: false,
+      retry: false,
+    });
+  };
+
   const getLearningContent = (subModuleId) => {
     return useQuery({
       queryKey: [QueryKey.LEARNING_CONTEXT.GET_LEARNING_CONTEXT, subModuleId],
-      queryFn: async () => await learningContextServices.get.getLearningContent(subModuleId),
+      queryFn: async () =>
+        await learningContextServices.get.getLearningContent(subModuleId),
       enabled: !!subModuleId,
       refetchOnWindowFocus: false,
       retry: false,
@@ -83,6 +95,7 @@ export const useLearning = () => {
 
   return {
     createLearningMutation,
+    getLearningContext,
     getLearningContent,
     createMarkAsComplete,
     getLearningItem,

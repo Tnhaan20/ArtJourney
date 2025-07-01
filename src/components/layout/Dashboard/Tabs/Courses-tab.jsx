@@ -31,10 +31,12 @@ export const CoursesTab = ({
   setShowCourseModal,
   setShowModuleModal,
   setShowSubModuleModal,
-  setShowLearningContextModal, // Add this prop
+  setShowLearningContextModal,
   setSelectedCourseId,
   setSelectedModuleId,
-  setSelectedSubModuleId, // Add this prop
+  setSelectedSubModuleId,
+  setSelectedLearningContentId, // Add this prop
+  setShowQuizModal, // Add this prop
 }) => {
   // Get data from API
   const { getAllCoursesQuery } = useCourse();
@@ -143,8 +145,10 @@ export const CoursesTab = ({
         setSelectedModuleId={setSelectedModuleId}
         setShowModuleModal={setShowModuleModal}
         setSelectedCourseId={setSelectedCourseId}
-        setShowLearningContextModal={setShowLearningContextModal} // Pass the prop
-        setSelectedSubModuleId={setSelectedSubModuleId} // Pass the prop
+        setShowLearningContextModal={setShowLearningContextModal}
+        setSelectedSubModuleId={setSelectedSubModuleId}
+        setSelectedLearningContentId={setSelectedLearningContentId} // Pass it down
+        setShowQuizModal={setShowQuizModal} // Pass it down
         onBackToCourses={handleBackToCourses}
       />
     );
@@ -269,8 +273,6 @@ export const CoursesTab = ({
                     </button>
                   </div>
                 </div>
-
-                
 
                 {/* Simplified Course Footer - removed Add Module button */}
                 <div className="border-t border-gray-200 pt-4">

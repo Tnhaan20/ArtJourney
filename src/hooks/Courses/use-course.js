@@ -25,6 +25,12 @@ export const useCourse = () => {
         variant: "destructive",
       });
     },
+    
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.COURSES.GET_ALL_COURSES],
+      });
+    },
   });
 
   const createUserEnroll = useMutation({

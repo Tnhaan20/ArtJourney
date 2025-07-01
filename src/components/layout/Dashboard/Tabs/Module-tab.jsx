@@ -16,6 +16,7 @@ import {
   CheckCircle,
   XCircle,
   Brain,
+  HelpCircle,
 } from "lucide-react";
 import { StatCard } from "@/components/layout/Dashboard/Stat-card";
 import { TailwindStyle } from "@/utils/Enum";
@@ -33,26 +34,32 @@ export const ModuleTab = ({
   setSelectedModuleId,
   setShowModuleModal,
   setSelectedCourseId,
-  setShowLearningContextModal,
+  setShowCombineModal = () => {},
   setSelectedSubModuleId,
+  setSelectedLearningContentId = () => {},
+  setShowQuizModal = () => {}, // Make sure this is properly received
   onBackToCourses,
 }) => {
   // All hooks at the top level
   const { getModuleQuery } = useModule();
   const { getSubModuleQuery } = useSubModule();
   const { getLearningContext } = useLearning();
-  
+
   // State hooks
   const [expandedSubModules, setExpandedSubModules] = useState(new Set());
-  
+
   // Main data query
-  const { data: moduleResponse, isLoading: isModuleLoading, error: isModuleError } = getModuleQuery(courseId);
+  const {
+    data: moduleResponse,
+    isLoading: isModuleLoading,
+    error: isModuleError,
+  } = getModuleQuery(courseId);
 
   // Simple data extraction
   const modules = useMemo(() => {
     return moduleResponse?.data || [];
   }, [moduleResponse]);
-  
+
   const safeExpandedModules = useMemo(() => {
     return expandedModules || new Set();
   }, [expandedModules]);
@@ -96,9 +103,7 @@ export const ModuleTab = ({
             <h3 className="text-lg font-semibold text-gray-900">
               Module Management
             </h3>
-            <p className="text-sm text-gray-600">
-              Course: {courseTitle}
-            </p>
+            <p className="text-sm text-gray-600">Course: {courseTitle}</p>
           </div>
         </div>
         <div className="flex space-x-3">
@@ -108,8 +113,8 @@ export const ModuleTab = ({
           </button>
           <button
             onClick={() => {
-              setSelectedCourseId(courseId);
-              setShowModuleModal(true);
+              if (setSelectedCourseId) setSelectedCourseId(courseId);
+              if (setShowModuleModal) setShowModuleModal(true);
             }}
             className={`flex items-center space-x-2 px-4 py-2 rounded-xl ${TailwindStyle.HIGHLIGHT_FRAME}`}
           >
@@ -168,7 +173,7 @@ export const ModuleTab = ({
                 } else {
                   newExpanded.add(module.moduleId);
                 }
-                setExpandedModules(newExpanded);
+                if (setExpandedModules) setExpandedModules(newExpanded);
               }}
               expandedSubModules={expandedSubModules}
               setExpandedSubModules={setExpandedSubModules}
@@ -176,7 +181,9 @@ export const ModuleTab = ({
               setShowSubModuleModal={setShowSubModuleModal}
               setSelectedSubModuleId={setSelectedSubModuleId}
               setSelectedCourseId={setSelectedCourseId}
-              setShowLearningContextModal={setShowLearningContextModal}
+              setShowCombineModal={setShowCombineModal}
+              setSelectedLearningContentId={setSelectedLearningContentId}
+              setShowQuizModal={setShowQuizModal} // Pass it down
               getSubModuleQuery={getSubModuleQuery}
               getLearningContext={getLearningContext}
             />
@@ -186,11 +193,11 @@ export const ModuleTab = ({
             <div className="text-gray-500 text-lg mb-4">
               No modules available for this course yet.
             </div>
-            
+
             <button
               onClick={() => {
-                setSelectedCourseId(courseId);
-                setShowModuleModal(true);
+                if (setSelectedCourseId) setSelectedCourseId(courseId);
+                if (setShowModuleModal) setShowModuleModal(true);
               }}
               className={`flex items-center space-x-2 px-6 py-3 rounded-xl mx-auto ${TailwindStyle.HIGHLIGHT_FRAME}`}
             >
@@ -204,7 +211,7 @@ export const ModuleTab = ({
   );
 };
 
-// Separate component for each module card to isolate hook calls
+// ModuleCard component
 const ModuleCard = ({
   module,
   index,
@@ -217,37 +224,47 @@ const ModuleCard = ({
   setShowSubModuleModal,
   setSelectedSubModuleId,
   setSelectedCourseId,
-  setShowLearningContextModal,
+  setShowCombineModal = () => {},
+  setSelectedLearningContentId = () => {},
+  setShowQuizModal = () => {}, // Make sure this is received
   getSubModuleQuery,
   getLearningContext,
 }) => {
   // Hook calls in separate component - always same number
   const subModuleQuery = getSubModuleQuery(module.moduleId);
-  const { data: subModuleResponse, isLoading: isSubModuleLoading, error: subModuleError } = subModuleQuery;
+  const {
+    data: subModuleResponse,
+    isLoading: isSubModuleLoading,
+    error: subModuleError,
+  } = subModuleQuery;
 
   // Extract sub-modules
   const moduleSubModules = useMemo(() => {
-    if (subModuleResponse?.status === 0 && subModuleResponse?.data && Array.isArray(subModuleResponse.data)) {
-      return subModuleResponse.data.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    if (
+      subModuleResponse?.status === 0 &&
+      subModuleResponse?.data &&
+      Array.isArray(subModuleResponse.data)
+    ) {
+      return subModuleResponse.data.sort(
+        (a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)
+      );
     }
     return [];
   }, [subModuleResponse]);
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      {/* Module content */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex space-x-4">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
-            <div className="text-white font-bold text-lg">
-              {index + 1}
-            </div>
+            <div className="text-white font-bold text-lg">{index + 1}</div>
           </div>
           <div className="flex-1">
             <div className="flex items-center space-x-3 mb-2">
               <h4 className="text-lg font-semibold text-gray-900">
                 {module.moduleTitle}
               </h4>
-              
               <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
                 {moduleSubModules.length} Sub-Modules
               </span>
@@ -256,7 +273,9 @@ const ModuleCard = ({
               {module.description}
             </p>
             <div className="flex items-center space-x-4 text-sm text-gray-500">
-              <span>Created: {new Date(module.createdAt).toLocaleDateString()}</span>
+              <span>
+                Created: {new Date(module.createdAt).toLocaleDateString()}
+              </span>
               {module.createdBy && (
                 <>
                   <span>•</span>
@@ -288,7 +307,6 @@ const ModuleCard = ({
 
       {/* Module Statistics */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-        
         <div className="text-center">
           <div className="text-2xl font-bold text-gray-900">
             {moduleSubModules.length}
@@ -297,14 +315,12 @@ const ModuleCard = ({
         </div>
         <div className="text-center">
           <div className="text-2xl font-bold text-gray-900">
-            {moduleSubModules.filter(sm => sm.isActive).length}
+            {moduleSubModules.filter((sm) => sm.isActive).length}
           </div>
           <div className="text-sm text-gray-600">Active</div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold text-gray-900">
-            0
-          </div>
+          <div className="text-2xl font-bold text-gray-900">0</div>
           <div className="text-sm text-gray-600">Learning Contexts</div>
         </div>
       </div>
@@ -321,8 +337,8 @@ const ModuleCard = ({
             </h5>
             <button
               onClick={() => {
-                setSelectedModuleId(module.moduleId);
-                setShowSubModuleModal(true);
+                if (setSelectedModuleId) setSelectedModuleId(module.moduleId);
+                if (setShowSubModuleModal) setShowSubModuleModal(true);
               }}
               className={`flex items-center space-x-2 px-3 py-1 text-sm rounded-md cursor-pointer ${TailwindStyle.HIGHLIGHT_FRAME}`}
             >
@@ -363,7 +379,9 @@ const ModuleCard = ({
                   }}
                   setSelectedSubModuleId={setSelectedSubModuleId}
                   setSelectedCourseId={setSelectedCourseId}
-                  setShowLearningContextModal={setShowLearningContextModal}
+                  setShowCombineModal={setShowCombineModal}
+                  setSelectedLearningContentId={setSelectedLearningContentId}
+                  setShowQuizModal={setShowQuizModal} // Pass it down
                   getLearningContext={getLearningContext}
                 />
               ))}
@@ -383,7 +401,7 @@ const ModuleCard = ({
   );
 };
 
-// Separate component for each sub-module card
+// SubModuleCard component with improved key generation
 const SubModuleCard = ({
   subModule,
   courseId,
@@ -391,38 +409,68 @@ const SubModuleCard = ({
   onToggleExpanded,
   setSelectedSubModuleId,
   setSelectedCourseId,
-  setShowLearningContextModal,
+  setShowCombineModal = () => {},
+  setSelectedLearningContentId = () => {},
+  setShowQuizModal = () => {},
   getLearningContext,
 }) => {
   // Hook calls in separate component - always same number
-  const learningContextQuery = getLearningContext ? getLearningContext(subModule.subModuleId) : null;
+  const learningContextQuery = getLearningContext
+    ? getLearningContext(subModule.subModuleId)
+    : null;
   const { data: learningContextResponse } = learningContextQuery || {};
 
-  // Extract learning contexts
+  // Extract learning contexts with better validation and filtering
   const learningContexts = useMemo(() => {
-    if (learningContextResponse?.status === 0 && learningContextResponse?.data && Array.isArray(learningContextResponse.data)) {
-      return learningContextResponse.data.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    if (
+      learningContextResponse?.status === 0 &&
+      learningContextResponse?.data &&
+      Array.isArray(learningContextResponse.data)
+    ) {
+      return learningContextResponse.data
+        .filter((context) => {
+          // More strict validation
+          return (
+            context &&
+            typeof context === "object" &&
+            (context.learningContextId ||
+              context.learningContentId ||
+              context.id)
+          );
+        })
+        .map((context, fallbackIndex) => ({
+          ...context,
+          // Ensure we have some form of unique identifier
+          uniqueId:
+            context.learningContextId ||
+            context.learningContentId ||
+            context.id ||
+            `fallback-${subModule.subModuleId}-${fallbackIndex}`,
+        }))
+        .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
     }
     return [];
-  }, [learningContextResponse]);
+  }, [learningContextResponse, subModule.subModuleId]);
 
   return (
     <div className="space-y-2">
       {/* Sub-Module Card */}
       <div
         className={`bg-white border rounded-lg p-4 ${
-          subModule.isActive 
-            ? 'border-gray-200 bg-white' 
-            : 'border-gray-300 bg-gray-50 opacity-75'
+          subModule.isActive
+            ? "border-gray-200 bg-white"
+            : "border-gray-300 bg-gray-50 opacity-75"
         }`}
       >
         <div className="flex items-start justify-between">
           <div className="flex space-x-3">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-              subModule.isActive 
-                ? 'bg-gradient-to-br from-green-400 to-blue-500' 
-                : 'bg-gray-400'
-            }`}>
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                subModule.isActive
+                  ? "bg-gradient-to-br from-green-400 to-blue-500"
+                  : "bg-gray-400"
+              }`}
+            >
               <div className="text-white font-bold text-sm">
                 {subModule.displayOrder || 0}
               </div>
@@ -432,12 +480,13 @@ const SubModuleCard = ({
                 <h6 className="font-medium text-gray-900">
                   {subModule.subModuleTitle}
                 </h6>
-                
-                <span className={`inline-flex items-center space-x-1 px-2 py-1 text-xs font-medium rounded-full ${
-                  subModule.isActive 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'
-                }`}>
+                <span
+                  className={`inline-flex items-center space-x-1 px-2 py-1 text-xs font-medium rounded-full ${
+                    subModule.isActive
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
                   {subModule.isActive ? (
                     <>
                       <CheckCircle className="w-3 h-3" />
@@ -458,23 +507,27 @@ const SubModuleCard = ({
                 {subModule.description}
               </p>
               <div className="flex items-center space-x-3 text-xs text-gray-500">
-                
-                <span>Created: {new Date(subModule.createdAt).toLocaleDateString()}</span>
+                <span>
+                  Created: {new Date(subModule.createdAt).toLocaleDateString()}
+                </span>
                 <span>•</span>
                 <span>By: {subModule.createdBy}</span>
               </div>
             </div>
           </div>
           <div className="flex items-center space-x-1">
-            {/* Add Learning Context Button */}
+            {/* Add Content Button - Opens CombineModal */}
             <button
               onClick={() => {
-                setSelectedSubModuleId(subModule.subModuleId);
-                setSelectedCourseId(courseId);
-                setShowLearningContextModal(true);
+                if (setSelectedSubModuleId)
+                  setSelectedSubModuleId(subModule.subModuleId);
+                if (setSelectedCourseId) setSelectedCourseId(courseId);
+                if (setSelectedLearningContentId)
+                  setSelectedLearningContentId(null);
+                if (setShowCombineModal) setShowCombineModal(true);
               }}
               className="p-1 text-gray-400 hover:text-indigo-600 rounded transition-colors"
-              title="Add Learning Context"
+              title="Add Learning Content or Quiz"
             >
               <Brain className="w-3 h-3" />
             </button>
@@ -503,71 +556,173 @@ const SubModuleCard = ({
       {isExpanded && (
         <div className="ml-8 space-y-2">
           {learningContexts.length > 0 ? (
-            learningContexts.map((context) => (
-              <div
-                key={context.learningContextId}
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex space-x-2">
-                    <div className="w-6 h-6 bg-gradient-to-br from-indigo-400 to-purple-500 rounded flex items-center justify-center">
-                      <div className="text-white font-bold text-xs">
-                        {context.displayOrder || 0}
+            learningContexts.map((context, index) => {
+              // Generate truly unique key using multiple fallbacks
+              const generateUniqueKey = () => {
+                if (
+                  context.learningContextId &&
+                  context.learningContextId !== "undefined"
+                ) {
+                  return `context-${context.learningContextId}`;
+                }
+                if (
+                  context.learningContentId &&
+                  context.learningContentId !== "undefined"
+                ) {
+                  return `content-${context.learningContentId}`;
+                }
+                if (context.id && context.id !== "undefined") {
+                  return `id-${context.id}`;
+                }
+                if (context.uniqueId && context.uniqueId !== "undefined") {
+                  return `unique-${context.uniqueId}`;
+                }
+                // Final fallback with timestamp to ensure uniqueness
+                return `fallback-${
+                  subModule.subModuleId
+                }-${index}-${Date.now()}-${Math.random()}`;
+              };
+
+              const uniqueKey = generateUniqueKey();
+
+              // Debug log to check for duplicates
+              console.log(`Generated key: ${uniqueKey} for context:`, {
+                learningContextId: context.learningContextId,
+                learningContentId: context.learningContentId,
+                id: context.id,
+                title: context.title,
+                index,
+              });
+
+              return (
+                <div
+                  key={uniqueKey}
+                  className="bg-gray-50 border border-gray-200 rounded-lg p-3"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex space-x-2">
+                      <div className="w-6 h-6 bg-gradient-to-br from-indigo-400 to-purple-500 rounded flex items-center justify-center">
+                        <div className="text-white font-bold text-xs">
+                          {context.displayOrder || index + 1}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h7 className="font-medium text-gray-900 text-sm">
-                          {context.title}
-                        </h7>
-                        
-                        {context.video && (
-                          <span className="inline-flex items-center space-x-1 px-1 py-0.5 text-xs font-medium rounded bg-purple-100 text-purple-800">
-                            <Video className="w-2 h-2" />
-                            <span>Video</span>
-                          </span>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <h6 className="font-medium text-gray-900 text-sm">
+                            {context.title || "Untitled Content"}
+                          </h6>
+                          {context.video && (
+                            <span className="inline-flex items-center space-x-1 px-1 py-0.5 text-xs font-medium rounded bg-purple-100 text-purple-800">
+                              <Video className="w-2 h-2" />
+                              <span>Video</span>
+                            </span>
+                          )}
+                          {context.timeLimit && (
+                            <span className="inline-flex items-center space-x-1 px-1 py-0.5 text-xs font-medium rounded bg-orange-100 text-orange-800">
+                              <Clock className="w-2 h-2" />
+                              <span>Timed</span>
+                            </span>
+                          )}
+                          {/* Show Quiz badge if contentType is 2 */}
+                          {context.contentType === 2 && (
+                            <span className="inline-flex items-center space-x-1 px-1 py-0.5 text-xs font-medium rounded bg-green-100 text-green-800">
+                              <HelpCircle className="w-2 h-2" />
+                              <span>Quiz</span>
+                            </span>
+                          )}
+                        </div>
+                        {context.content && (
+                          <p className="text-xs text-gray-600 mb-1">
+                            {context.content.substring(0, 100)}
+                            {context.content.length > 100 && "..."}
+                          </p>
                         )}
-                        {context.timeLimit && (
-                          <span className="inline-flex items-center space-x-1 px-1 py-0.5 text-xs font-medium rounded bg-orange-100 text-orange-800">
-                            <Clock className="w-2 h-2" />
-                            <span>Timed</span>
-                          </span>
-                        )}
-                      </div>
-                      {context.content && (
-                        <p className="text-xs text-gray-600 mb-1">
-                          {context.content.substring(0, 100)}
-                          {context.content.length > 100 && '...'}
+                        {/* Debug info - remove in production */}
+                        <p className="text-xs text-blue-600 bg-blue-50 p-1 rounded mt-1">
+                          ID:{" "}
+                          {context.learningContextId ||
+                            context.learningContentId ||
+                            context.id ||
+                            "No ID"}{" "}
+                          | Type: {context.contentType || "Unknown"}
                         </p>
-                      )}
-                      
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <button className="p-1 text-gray-400 hover:text-gray-600">
-                      <Edit className="w-2 h-2" />
-                    </button>
-                    <button className="p-1 text-gray-400 hover:text-red-600">
-                      <Trash2 className="w-2 h-2" />
-                    </button>
+                    <div className="flex items-center space-x-1">
+                      {/* Show Add Quiz Questions button only if contentType is 2 and has valid ID */}
+                      {context.contentType === 2 &&
+                        (context.learningContextId ||
+                          context.learningContentId) && (
+                          <button
+                            onClick={() => {
+                              const validId =
+                                context.learningContextId ||
+                                context.learningContentId;
+                              console.log("=== QUIZ BUTTON CLICKED ===");
+                              console.log("Learning context:", context);
+                              console.log("Valid ID found:", validId);
+                              console.log("Content type:", context.contentType);
+                              console.log("Available setters:", {
+                                setSelectedLearningContentId:
+                                  typeof setSelectedLearningContentId,
+                                setShowQuizModal: typeof setShowQuizModal,
+                              });
+
+                              if (setSelectedLearningContentId && validId) {
+                                setSelectedLearningContentId(validId);
+                                console.log(
+                                  "✅ Set learning content ID to:",
+                                  validId
+                                );
+                              } else {
+                                console.error(
+                                  "❌ Cannot set learning content ID - missing setter or ID"
+                                );
+                              }
+
+                              if (setShowQuizModal) {
+                                setShowQuizModal(true);
+                                console.log("✅ Opening QuizModal");
+                              } else {
+                                console.error(
+                                  "❌ Cannot open QuizModal - missing setter"
+                                );
+                              }
+                            }}
+                            className="p-1 text-green-600 hover:text-green-800 rounded transition-colors bg-green-50 hover:bg-green-100"
+                            title="Add Quiz Questions"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        )}
+                      <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <Edit className="w-2 h-2" />
+                      </button>
+                      <button className="p-1 text-gray-400 hover:text-red-600">
+                        <Trash2 className="w-2 h-2" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="text-center py-4 text-gray-500">
               <Brain className="w-8 h-8 mx-auto mb-2 text-gray-300" />
               <p className="text-sm">No learning contexts yet</p>
               <button
                 onClick={() => {
-                  setSelectedSubModuleId(subModule.subModuleId);
-                  setSelectedCourseId(courseId);
-                  setShowLearningContextModal(true);
+                  if (setSelectedSubModuleId)
+                    setSelectedSubModuleId(subModule.subModuleId);
+                  if (setSelectedCourseId) setSelectedCourseId(courseId);
+                  if (setSelectedLearningContentId)
+                    setSelectedLearningContentId(null);
+                  if (setShowCombineModal) setShowCombineModal(true);
                 }}
                 className={`inline-flex items-center space-x-1 px-2 py-1 mt-2 text-xs rounded ${TailwindStyle.HIGHLIGHT_FRAME}`}
               >
                 <Plus className="w-2 h-2" />
-                <span>Add Learning Context</span>
+                <span>Add Learning Content</span>
               </button>
             </div>
           )}

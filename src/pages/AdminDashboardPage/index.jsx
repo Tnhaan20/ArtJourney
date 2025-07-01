@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/layout/Dashboard/Sidebar";
 import { Header } from "@/components/layout/Dashboard/Header";
 import  CourseModal from "@/components/layout/Dashboard/Modals/CourseModal";
 import { ModuleModal } from "@/components/layout/Dashboard/Modals/ModuleModal";
-import { LearningContextModal } from "@/components/layout/Dashboard/Modals/LearningContextModal";
+import { CombineModal } from "@/components/layout/Dashboard/Modals/CombineModal";
 import { OverviewTab } from "@/components/layout/Dashboard/Tabs/Overview-tab";
 import { FinancialTab } from "@/components/layout/Dashboard/Tabs/Financial-tab";
 import { UsersTab } from "@/components/layout/Dashboard/Tabs/Users-tab";
@@ -14,6 +14,7 @@ import { ContentTab } from "@/components/layout/Dashboard/Tabs/Content-tab";
 import { SettingsTab } from "@/components/layout/Dashboard/Tabs/Settings-tab";
 import HistoricalPeriodModal from "@/components/layout/Dashboard/Modals/HistoricalPeriodModal";
 import { SubModuleModal } from "@/components/layout/Dashboard/Modals/SubModuleModal";
+import { QuizModal } from "@/components/layout/Dashboard/Modals/Learn&Quiz/QuizModal";
 
 const ArtJourneyAdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -22,15 +23,22 @@ const ArtJourneyAdminDashboard = () => {
   const [showCourseModal, setShowCourseModal] = useState(false);
   const [showModuleModal, setShowModuleModal] = useState(false);
   const [showSubModuleModal, setShowSubModuleModal] = useState(false);
-  const [showLearningContextModal, setShowLearningContextModal] =
-    useState(false);
+  const [showCombineModal, setShowCombineModal] = useState(false);
   const [expandedCourses, setExpandedCourses] = useState(new Set());
   const [expandedModules, setExpandedModules] = useState(new Set());
   const [showHistoricalPeriodModal, setShowHistoricalPeriodModal] =
     useState(false);
+  const [showRegionModal, setShowRegionModal] = useState(false);
+
+  // State for IDs
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [selectedModuleId, setSelectedModuleId] = useState(null);
   const [selectedSubModuleId, setSelectedSubModuleId] = useState(null);
+  const [selectedLearningContentId, setSelectedLearningContentId] =
+    useState(null);
+
+  // Quiz Modal state
+  const [showQuizModal, setShowQuizModal] = useState(false);
 
   // Handler functions
   const handleCreateHistoricalPeriod = () => {
@@ -71,10 +79,12 @@ const ArtJourneyAdminDashboard = () => {
             setShowCourseModal={setShowCourseModal}
             setShowModuleModal={setShowModuleModal}
             setShowSubModuleModal={setShowSubModuleModal}
-            setShowLearningContextModal={setShowLearningContextModal}
+            setShowCombineModal={setShowCombineModal}
             setSelectedCourseId={setSelectedCourseId}
             setSelectedModuleId={setSelectedModuleId}
             setSelectedSubModuleId={setSelectedSubModuleId}
+            setSelectedLearningContentId={setSelectedLearningContentId}
+            setShowQuizModal={setShowQuizModal}
           />
         );
       case "quizzes":
@@ -94,11 +104,11 @@ const ArtJourneyAdminDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <div className="flex inset-y-0 left-0 fixed h-screen">
-        <Sidebar
-          sidebarOpen={sidebarOpen}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
+      <Sidebar
+        sidebarOpen={sidebarOpen}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
       </div>
 
       {/* Main Content Area */}
@@ -109,11 +119,13 @@ const ArtJourneyAdminDashboard = () => {
       >
         {/* Fixed Header */}
         <div className="flex-shrink-0">
-          <Header
-            activeTab={activeTab}
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-          />
+        <Header
+          activeTab={activeTab}
+          setSidebarOpen={setSidebarOpen}
+          sidebarOpen={sidebarOpen}
+          onCreateHistoricalPeriod={handleCreateHistoricalPeriod}
+          onCreateRegion={handleCreateRegion}
+        />
         </div>
 
         {/* Scrollable Content */}
@@ -154,16 +166,18 @@ const ArtJourneyAdminDashboard = () => {
         />
       )}
 
-      {showLearningContextModal && (
-        <LearningContextModal
-          isOpen={showLearningContextModal}
+      {showCombineModal && (
+        <CombineModal
+          isOpen={showCombineModal}
           onClose={() => {
-            setShowLearningContextModal(false);
+            setShowCombineModal(false);
             setSelectedSubModuleId(null);
             setSelectedCourseId(null);
+            setSelectedLearningContentId(null);
           }}
           subModuleId={selectedSubModuleId}
           courseId={selectedCourseId}
+          learningContentId={selectedLearningContentId}
         />
       )}
 
@@ -171,6 +185,19 @@ const ArtJourneyAdminDashboard = () => {
         <HistoricalPeriodModal
           onClose={() => setShowHistoricalPeriodModal(false)}
           onSave={handleSaveHistoricalPeriod}
+        />
+      )}
+
+      {/* Quiz Modal */}
+      {showQuizModal && (
+        <QuizModal
+          isOpen={showQuizModal}
+          onClose={() => {
+            console.log("Closing QuizModal");
+            setShowQuizModal(false);
+            setSelectedLearningContentId(null);
+          }}
+          learningContentId={selectedLearningContentId}
         />
       )}
     </div>
