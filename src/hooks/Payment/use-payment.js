@@ -13,7 +13,6 @@ export const usePayment = () => {
       await paymentServices.post.createPayment(payload),
 
     onSuccess: async (data) => {
-      console.log("Payment response:", data);
 
       // Check if response contains checkout URL
       if (data?.checkoutUrl) {

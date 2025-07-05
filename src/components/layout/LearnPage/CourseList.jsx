@@ -565,9 +565,9 @@ export default function CourseList() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        <Link to={`/learn/course/${course.courseId}`} className="text-xl font-bold text-gray-900 hover:text-primary-yellow mb-2">
                           {course.courseTitle}
-                        </h3>
+                        </Link>
                         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                           {course.courseDescription}
                         </p>

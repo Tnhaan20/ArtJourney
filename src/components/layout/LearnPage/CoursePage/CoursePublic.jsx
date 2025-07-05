@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Clock,
@@ -11,6 +11,8 @@ import {
   Award,
   Target,
   AlertCircle,
+  Loader2,
+  Globe,
 } from "lucide-react";
 import { useCourse } from "@/hooks/Courses/use-course";
 import { useUserEnrollForm } from "@/hooks/Courses/use-course-form";
@@ -18,6 +20,7 @@ import { useAuthStore } from "@/domains/store/use-auth-store";
 import { usePaymentForm } from "@/hooks/Payment/use-payment-form";
 import { TailwindStyle } from "@/utils/Enum";
 import { assets } from "@/assets/assets";
+import { parseLearningOutcomes } from "@/utils/learningOutcome";
 
 export default function CoursePublic({ courseId, isAuthenticated }) {
   const navigate = useNavigate();
@@ -39,113 +42,52 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
   const { onSubmit: createPayment, isLoading: isCreatingPayment } =
     usePaymentForm();
 
-  // Helper function to get learning outcomes array - Updated for object handling
+  // Helper function to get learning outcomes array - Updated to use utility
   const getLearningOutcomes = () => {
-    const courseLearningOutcomes = course?.learningOutcomes;
+    const course = courseData?.data;
 
-    // Check if learningOutcomes exists and is an array
-    if (
-      Array.isArray(courseLearningOutcomes) &&
-      courseLearningOutcomes.length > 0
-    ) {
-      return courseLearningOutcomes;
-    }
-
-    // Check if it's an object (like {"oc1":"tst", "oc2":"test2"})
-    if (
-      typeof courseLearningOutcomes === "object" &&
-      courseLearningOutcomes !== null &&
-      !Array.isArray(courseLearningOutcomes)
-    ) {
-      const objectValues = Object.values(courseLearningOutcomes).filter(
-        (value) => typeof value === "string" && value.trim().length > 0
-      );
-
-      if (objectValues.length > 0) {
-        return objectValues;
-      }
-    }
-
-    // If it's a string, handle multiple formats
-    if (
-      typeof courseLearningOutcomes === "string" &&
-      courseLearningOutcomes.trim()
-    ) {
-      // First, normalize line breaks (handle \r\n, \r, \n)
-      const normalizedText = courseLearningOutcomes
-        .replace(/\r\n/g, "\n")
-        .replace(/\r/g, "\n");
-
-      // Try to split by different delimiters
-      let splitOutcomes = [];
-
-      // Method 1: Split by line breaks
-      if (normalizedText.includes("\n")) {
-        splitOutcomes = normalizedText
-          .split("\n")
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0)
-          // Remove common list prefixes
-          .map((item) =>
-            item
-              .replace(/^[-•*]\s*/, "")
-              .replace(/^\d+\.\s*/, "")
-              .trim()
-          )
-          .filter((item) => item.length > 0);
-      }
-
-      // Method 2: If no line breaks, try semicolons
-      if (splitOutcomes.length === 0 && normalizedText.includes(";")) {
-        splitOutcomes = normalizedText
-          .split(";")
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0);
-      }
-
-      // Method 3: If no semicolons, try commas
-      if (splitOutcomes.length === 0 && normalizedText.includes(",")) {
-        splitOutcomes = normalizedText
-          .split(",")
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0);
-      }
-
-      // Method 4: If no commas, try bullets/dashes
-      if (splitOutcomes.length === 0) {
-        splitOutcomes = normalizedText
-          .split(/[•-]/)
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0);
-      }
-
-      // Method 5: If still no splits, try numbered lists
-      if (splitOutcomes.length === 0) {
-        splitOutcomes = normalizedText
-          .split(/\d+\./)
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0);
-      }
-
-      // If we found valid splits, return them
-      if (splitOutcomes.length > 0) {
-        return splitOutcomes;
-      }
-
-      // If no valid splits found, return as single item
-      return [normalizedText];
-    }
-
-    // Fall back to default outcomes
-    return [
+    // Use the utility function to parse learning outcomes from course data
+    return parseLearningOutcomes(course, [
       "Master fundamental concepts and techniques",
       "Develop critical thinking skills",
       "Understand key principles and applications",
       "Create practical projects",
       "Build comprehensive knowledge",
       "Apply learning to real-world scenarios",
-    ];
+    ]);
   };
+
+  // Helper function to get course goals text
+  const getCourseGoalsText = () => {
+    const course = courseData?.data;
+
+    // First try to get learning outcomes using the utility
+    const outcomes = parseLearningOutcomes(course, []);
+
+    if (outcomes.length > 0) {
+      // Join the first 2-3 outcomes for a concise description
+      return outcomes.slice(0, 3).join(", ");
+    }
+
+    // Fallback to course description or default text
+    return (
+      course?.description ||
+      "Master comprehensive knowledge and practical skills in this subject area"
+    );
+  };
+
+  // Auto reload when enrollment is successful
+  useEffect(() => {
+    if (isSuccess) {
+      // Show success message for 2 seconds then reload
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+
+      // Cleanup timer if component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess]);
 
   // Handle start learning/purchase button click
   const handleCourseAction = async () => {
@@ -157,18 +99,13 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
     // If course is free (price = 0), enroll directly
     if (course?.price === 0) {
       try {
-        console.log(
-          `🎓 Starting enrollment for user ${user.id} in course ${courseId}`
-        );
-
+        
         await enrollUser(user.id, courseId);
 
-        console.log("✅ Enrollment successful, navigating to course...");
-
-        setTimeout(() => {
-          navigate(`/learn/course/${courseId}`);
-        }, 1000);
-      } catch (error) {}
+        // Success state will be handled by useEffect above
+      } catch (error) {
+        console.error("Enrollment failed:", error);
+      }
     } else {
       // If course has price, create payment
       try {
@@ -188,7 +125,9 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         };
 
         await createPayment(paymentData);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Payment creation failed:", error);
+      }
     }
   };
 
@@ -242,18 +181,104 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
     }
   };
 
+  // Enhanced loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Loading course</div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-xl max-w-md mx-4">
+          {/* Animated spinner */}
+          <div className="relative mb-6">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-yellow border-t-transparent mx-auto"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Globe className="h-6 w-6 text-primary-yellow" />
+            </div>
+          </div>
+
+          {/* Loading text */}
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            Loading Course Preview
+          </h3>
+          <p className="text-gray-600 mb-4">
+            {isAuthenticated
+              ? "Preparing your course preview..."
+              : "Loading course information..."}
+          </p>
+
+          {/* Progress dots */}
+          <div className="flex justify-center space-x-2">
+            <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse delay-75"></div>
+            <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse delay-150"></div>
+          </div>
+
+          {/* Course info if authenticated */}
+          {isAuthenticated && user && (
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <div className="flex items-center justify-center text-sm text-gray-500">
+                <BookOpen className="h-4 w-4 mr-2" />
+                <span>Welcome, {user.name || user.email}!</span>
+              </div>
+            </div>
+          )}
+
+          {/* Public access note if not authenticated */}
+          {!isAuthenticated && (
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <div className="flex items-center justify-center text-sm text-gray-500">
+                <Globe className="h-4 w-4 mr-2" />
+                <span>Viewing as guest</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
 
+  // Enhanced error state
   if (error) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg text-red-600">Error loading course preview</div>
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+        <div className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md mx-4">
+          <div className="text-red-500 text-6xl mb-6">🚫</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Course Not Available
+          </h2>
+          <p className="text-gray-600 mb-6">
+            We couldn't load this course preview. It might be temporarily
+            unavailable or you don't have access to it.
+          </p>
+
+          {/* Error details */}
+          <div className="bg-red-50 p-4 rounded-lg border border-red-200 mb-6">
+            <p className="text-sm text-red-600">
+              Error: {error.message || "Failed to load course data"}
+            </p>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium"
+            >
+              Try Again
+            </button>
+            <Link
+              to="/learn"
+              className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+            >
+              Browse Other Courses
+            </Link>
+          </div>
+
+          {/* Help text */}
+          <div className="mt-6 pt-4 border-t border-gray-200">
+            <p className="text-xs text-gray-500">
+              If this problem persists, please contact support
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -387,9 +412,12 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
 
             {isSuccess && (
               <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-sm text-green-600">
-                  ✅ Successfully enrolled! Redirecting to course...
-                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-green-600 border-t-transparent"></div>
+                  <p className="text-sm text-green-600">
+                    ✅ Successfully enrolled! Refreshing page...
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -417,7 +445,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         </div>
       </div>
 
-      {/* Course Overview Cards */}
+      {/* Course Overview Cards - Updated Course Goals section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg p-6 shadow-md">
           <div className="flex items-center space-x-3 mb-4">
@@ -426,10 +454,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
             </div>
             <h3 className="text-lg font-semibold">Course Goals</h3>
           </div>
-          <p className="text-gray-600">
-            {course?.learningOutcomes ||
-              "Master comprehensive knowledge and practical skills in this subject area"}
-          </p>
+          <p className="text-gray-600">{getCourseGoalsText()}</p>
         </div>
 
         <div className="bg-white rounded-lg p-6 shadow-md">
