@@ -208,11 +208,7 @@ export default function GoogleCallback() {
                       ? "Verifying Google account"
                       : "Setting up profile"}
                   </span>
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse"></div>
-                    <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse delay-75"></div>
-                    <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse delay-150"></div>
-                  </div>
+                  
                 </div>
 
                 {/* Progress Bar */}
