@@ -3,12 +3,11 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/domains/store/use-auth-store";
 import { AuthServices } from "@/domains/services/Auth/auth.services";
 import { useToast } from "@/utils/Toast";
-import Cookies from "js-cookie";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle, AlertCircle, User, Shield } from "lucide-react";
 import { TailwindStyle } from "@/utils/Enum";
+import { Link } from "react-router-dom";
 
 export default function GoogleCallback() {
-  
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { isAuthenticated, user, login } = useAuthStore();
@@ -19,10 +18,10 @@ export default function GoogleCallback() {
   const [isError, setIsError] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => { 
+  useEffect(() => {
     const isPendingGoogleAuth =
       sessionStorage.getItem("google_auth_pending") === "true";
-      
+
     // Process the callback as soon as the component mounts
     const handleGoogleCallback = async () => {
       try {
@@ -36,15 +35,12 @@ export default function GoogleCallback() {
             "Processing Google sign-in flow with direct user data fetch"
           );
 
-
           // Remove the pending flag since we're handling it now
           sessionStorage.removeItem("google_auth_pending");
 
-           try {
-             // Call the /me endpoint to get the user data
+          try {
+            // Call the /me endpoint to get the user data
 
-             
-            
             const userResponse = await AuthServices.get.me();
             console.log("User response from /me API:", userResponse);
 
@@ -165,57 +161,190 @@ export default function GoogleCallback() {
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primary-white">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-primary-yellow mb-4">
-            {isLoading ? "Completing Google Sign In..." : ""}
-            {isError ? "Sign In Failed" : ""}
-            {authCheckComplete ? "Sign In Successful!" : ""}
-            {!isLoading && !isError && !authCheckComplete
-              ? "Processing..."
-              : ""}
-          </h2>
+          {/* Header */}
+          <div className="mb-8">
+            <div className="w-16 h-16 bg-gradient-to-r from-primary-yellow to-secondary-yellow rounded-full flex items-center justify-center mx-auto mb-4">
+              <Shield className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              {isLoading && "Completing Google Sign In"}
+              {isError && "Authentication Failed"}
+              {authCheckComplete && "Welcome Back!"}
+              {!isLoading &&
+                !isError &&
+                !authCheckComplete &&
+                "Processing Account"}
+            </h2>
+            <p className="text-gray-600 text-sm">
+              {isLoading && "Securely connecting with Google"}
+              {isError && "There was an issue with your sign-in"}
+              {authCheckComplete && "Successfully authenticated with Google"}
+              {!isLoading &&
+                !isError &&
+                !authCheckComplete &&
+                "Setting up your session"}
+            </p>
+          </div>
 
+          {/* Loading State */}
           {(isLoading || (!isError && !authCheckComplete)) && (
-            <div className="flex flex-col items-center">
-              <Loader2 className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-yellow mb-4"></Loader2>
-              <p className="text-gray-600 mt-2">
-                {isLoading
-                  ? "Verifying your Google account..."
-                  : "Setting up your profile..."}
-              </p>
+            <div className="flex flex-col items-center space-y-6">
+              {/* Enhanced Loading Animation */}
+              <div className="relative">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-yellow border-t-transparent"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <User className="h-6 w-6 text-primary-yellow" />
+                </div>
+              </div>
+
+              {/* Loading Steps */}
+              <div className="w-full space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">
+                    {isLoading
+                      ? "Verifying Google account"
+                      : "Setting up profile"}
+                  </span>
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse delay-75"></div>
+                    <div className="w-2 h-2 bg-primary-yellow rounded-full animate-pulse delay-150"></div>
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-primary-yellow to-secondary-yellow h-2 rounded-full transition-all duration-1000"
+                    style={{
+                      width: isLoading ? "60%" : "90%",
+                    }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Status Messages */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 w-full">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-blue-800">
+                      {isLoading
+                        ? "Authenticating with Google..."
+                        : "Finalizing your session..."}
+                    </p>
+                    <p className="text-xs text-blue-600">
+                      This may take a few moments
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
+          {/* Error State */}
           {isError && (
-            <div className="text-red-600 mt-4">
-              <p>
-                {error?.message ||
-                  googleRefetchErrorData?.message ||
-                  "An error occurred during sign in. Please try again."}
-              </p>
+            <div className="flex flex-col items-center space-y-6">
+              {/* Error Icon */}
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertCircle className="w-8 h-8 text-red-600" />
+              </div>
+
+              {/* Error Message */}
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 w-full">
+                <p className="text-red-800 text-sm font-medium mb-2">
+                  {error?.message || "Authentication failed"}
+                </p>
+                <p className="text-red-600 text-xs">
+                  Please try signing in again or contact support if the issue
+                  persists.
+                </p>
+              </div>
+
+              {/* Action Button */}
               <Link
                 to="/signin"
-                className={`${TailwindStyle.HIGHLIGHT_FRAME}`}
+                className="w-full bg-red-500 text-white py-3 px-6 rounded-lg hover:bg-red-600 transition-colors font-medium"
               >
                 Return to Sign In
               </Link>
             </div>
           )}
 
+          {/* Success State */}
           {authCheckComplete && (
-            <div className="text-green-600 mt-4">
-              <p className="mb-4">
-                You've been successfully signed in with Google!
-                <br />
-                Redirecting you to dashboard...
-              </p>
-              <div className="flex justify-center">
-                <div className="animate-pulse h-2 w-24 bg-primary-yellow rounded"></div>
+            <div className="flex flex-col items-center space-y-6">
+              {/* Success Icon */}
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+
+              {/* Success Message */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 w-full">
+                <div className="text-center">
+                  <p className="text-green-800 font-medium mb-2">
+                    Welcome back{user?.name ? `, ${user.name}` : ""}!
+                  </p>
+                  <p className="text-green-600 text-sm mb-4">
+                    You've been successfully signed in with Google.
+                  </p>
+
+                  {/* User Info if available */}
+                  {user && (
+                    <div className="flex items-center justify-center space-x-3 p-3 bg-white rounded-lg">
+                      {user.avatar ? (
+                        <img
+                          src={user.avatar}
+                          alt="Profile"
+                          className="w-10 h-10 rounded-full"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 bg-primary-yellow rounded-full flex items-center justify-center">
+                          <User className="w-5 h-5 text-white" />
+                        </div>
+                      )}
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-gray-800">
+                          {user.name || user.email}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {user.role === 0
+                            ? "Student"
+                            : user.role === 1
+                            ? "Task Designer"
+                            : user.role === 2
+                            ? "Admin"
+                            : "User"}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Redirect Progress */}
+              <div className="w-full">
+                <p className="text-sm text-gray-600 mb-3">
+                  Redirecting to your dashboard...
+                </p>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full animate-pulse"></div>
+                </div>
               </div>
             </div>
           )}
+
+          {/* Footer */}
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <p className="text-xs text-gray-500">
+              Secured by Google Authentication
+            </p>
+          </div>
         </div>
       </div>
     </div>

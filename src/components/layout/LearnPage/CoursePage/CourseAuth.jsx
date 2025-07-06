@@ -235,7 +235,7 @@ export default function CourseAuth({ learningProgress, courseId }) {
                   </div>
                 </div>
 
-                <h1 className="text-5xl font-bold mb-6 leading-tight">
+                <h1 className="text-5xl mongro-bold font-bold mb-6 leading-tight">
                   {course?.title || "Course Title"}
                 </h1>
 
@@ -259,17 +259,13 @@ export default function CourseAuth({ learningProgress, courseId }) {
                         "6 weeks"}
                     </span>
                   </div>
-                  <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
-                    <Star size={20} className="text-primary-yellow mr-2" />
-                    <span className="font-medium">4.6 Rating</span>
-                  </div>
                 </div>
 
                 {/* Progress Bar */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                   <div className="flex justify-between items-center mb-3">
                     <span className="font-semibold">Your Progress</span>
-                    <span className="text-2xl font-bold text-primary-yellow">
+                    <span className="text-2xl mongro-bold font-bold text-primary-yellow">
                       {progressPercentage}%
                     </span>
                   </div>
@@ -294,7 +290,7 @@ export default function CourseAuth({ learningProgress, courseId }) {
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-8 shadow-2xl max-w-md">
                   <div className="flex items-center mb-6">
                     <Target size={24} className="text-primary-yellow mr-3" />
-                    <h3 className="text-xl font-bold text-gray-800">
+                    <h3 className="text-xl mongro-bold font-bold text-gray-800">
                       What You'll Learn
                     </h3>
                   </div>
@@ -317,7 +313,6 @@ export default function CourseAuth({ learningProgress, courseId }) {
                       +{learningOutcomes.length - 6} more learning outcomes
                     </p>
                   )}
-
                 </div>
               </div>
             </div>
@@ -361,7 +356,7 @@ export default function CourseAuth({ learningProgress, courseId }) {
                           {moduleIndex + 1}
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold text-gray-900 mb-1">
+                          <h3 className="text-xl mongro-bold font-bold text-gray-900 mb-1">
                             {module.moduleTitle}
                           </h3>
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
