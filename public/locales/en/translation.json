@@ -737,5 +737,51 @@
       "button": "Search",
       "quickSearch": "Popular searches"
     }
+  },
+  "ranking": {
+    "defaultUser": "Art Journey Student",
+    "subtitle": "Global Leaderboard Champion",
+    "currentRank": "Current Rank",
+    "totalScore": "Total Score",
+    "challengesCompleted": "Challenges",
+    "totalPlayers": "Total Players",
+    "error": {
+      "title": "Unable to load leaderboard",
+      "message": "Please try again later."
+    },
+    "tabs": {
+      "allTime": "All Time Global",
+      "allTimeDesc": "Overall performance across all challenges",
+      "title": "Global Leaderboard",
+      "subtitle": "Compete with players worldwide",
+      "today": "Today",
+      "week": "This Week"
+    },
+    "topThree": "Top 3 Champions",
+    "topThreeDesc": "The ultimate challenge masters",
+    "noTopPlayers": "No Top Players Yet",
+    "noTopPlayersDesc": "Complete challenges to appear on the podium!",
+    "emptySlot": "Available",
+    "emptySlotDesc": "Compete to claim this spot!",
+    "you": "You",
+    "totalPoints": "Total Points",
+    "challenges": "challenges",
+    "first": "FIRST",
+    "second": "SECOND",
+    "third": "THIRD",
+    "leaderboard": "Global Leaderboard",
+    "noData": "No Rankings Available",
+    "noDataDesc": "Be the first to complete challenges and appear on the leaderboard!",
+    "showingRanks": "Showing ranks",
+    "loadMore": "Load More Players",
+    "table": {
+      "rank": "Rank",
+      "player": "Player",
+      "totalScore": "Total Score",
+      "challengesCompleted": "Challenges Completed",
+      "playerId": "Player ID",
+      "points": "points",
+      "challenges": "challenges"
+    }
   }
 }

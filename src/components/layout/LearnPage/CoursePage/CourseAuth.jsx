@@ -5,7 +5,9 @@ import courseHeaderBg from "@/assets/course/course-header.png";
 import CompletedBox from "@/components/elements/completedbox/Completed";
 import { useCourse } from "@/hooks/Courses/use-course";
 import { useAuthStore } from "@/domains/store/use-auth-store";
-import { parseLearningOutcomes } from "@/utils/learningOutcome"; // Import utility function
+import { useGamification } from "@/hooks/Gamification/use-gamification";
+import { useLeaderboard } from "@/hooks/Leaderboard/use-leaderboard";
+import { parseLearningOutcomes } from "@/utils/learningOutcome";
 import {
   ChevronRight,
   Loader2,
@@ -22,16 +24,42 @@ import {
   PenLine,
   Video,
   FileText,
+  Trophy,
+  Timer,
+  Gamepad2,
+  Zap,
+  Medal,
+  Crown,
+  TrendingUp,
+  User,
+  Calendar as CalendarIcon,
 } from "lucide-react";
 import { TailwindStyle } from "@/utils/Enum";
-import Timer from "@/lib/timer";
+import TimerUtil from "@/lib/timer";
 
 export default function CourseAuth({ learningProgress, courseId }) {
   const { getCoursesById } = useCourse();
+  const { getChallengeByCourse } = useGamification();
+  const { getLeaderboardByChallengeId } = useLeaderboard();
   const { getCurrentUser } = useAuthStore();
   const [expandedModules, setExpandedModules] = useState({});
+  const [activeTab, setActiveTab] = useState("course"); // New state for tabs
+  const [selectedChallengeId, setSelectedChallengeId] = useState(null);
 
   const { data: courseDetail, isLoading, error } = getCoursesById(courseId);
+  const {
+    data: challengeData,
+    isLoading: challengeLoading,
+    error: challengeError,
+  } = getChallengeByCourse(courseId);
+
+  // Get leaderboard data for selected challenge
+  const {
+    data: leaderboardData,
+    isLoading: leaderboardLoading,
+    error: leaderboardError,
+  } = getLeaderboardByChallengeId(selectedChallengeId);
+
   const { user } = getCurrentUser();
 
   // Toggle module expansion
@@ -40,6 +68,61 @@ export default function CourseAuth({ learningProgress, courseId }) {
       ...prev,
       [moduleId]: !prev[moduleId],
     }));
+  };
+
+  // Toggle challenges section
+  const toggleChallenges = () => {
+    setExpandedChallenges((prev) => !prev);
+  };
+
+  // Helper function to get challenge type icon
+  const getChallengeTypeIcon = (challengeType) => {
+    switch (challengeType) {
+      case "Drag&Drop":
+        return <Gamepad2 size={20} className="text-blue-500" />;
+      case "Quiz":
+        return <FileText size={20} className="text-green-500" />;
+      case "Drawing":
+        return <PenLine size={20} className="text-purple-500" />;
+      default:
+        return <Trophy size={20} className="text-amber-500" />;
+    }
+  };
+
+  // Helper function to format duration
+  const formatDuration = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
+  };
+
+  // Helper function to get challenge status
+  const getChallengeStatus = (challenge) => {
+    if (challenge.challengeSessions && challenge.challengeSessions.length > 0) {
+      return {
+        text: "Completed",
+        color: "green",
+        icon: <Medal size={16} className="text-green-600" />,
+      };
+    }
+    return {
+      text: "Not Started",
+      color: "gray",
+      icon: <Clock size={16} className="text-gray-500" />,
+    };
+  };
+
+  // Helper function to get highest score
+  const getHighestScore = (challenge) => {
+    if (
+      challenge.userChallengeHighestScores &&
+      challenge.userChallengeHighestScores.length > 0
+    ) {
+      return Math.max(
+        ...challenge.userChallengeHighestScores.map((score) => score.score)
+      );
+    }
+    return null;
   };
 
   // Helper function to get progress status
@@ -126,7 +209,30 @@ export default function CourseAuth({ learningProgress, courseId }) {
     const courseLearningOutcomes = course?.learningOutcomes;
 
     // Use the utility function to parse learning outcomes
-    return parseLearningOutcomes(courseLearningOutcomes, defaultLearningOutcomes);
+    return parseLearningOutcomes(
+      courseLearningOutcomes,
+      defaultLearningOutcomes
+    );
+  };
+
+  // Format date for leaderboard
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Get rank display
+  const getRankDisplay = (rank) => {
+    if (rank === 1) return "🥇";
+    if (rank === 2) return "🥈";
+    if (rank === 3) return "🥉";
+    return `#${rank}`;
   };
 
   if (isLoading) {
@@ -166,6 +272,7 @@ export default function CourseAuth({ learningProgress, courseId }) {
   }
 
   const course = courseDetail?.data;
+  const challenges = challengeData?.data || [];
   const progressPercentage =
     course?.courseCompletionPercentage || calculateProgress();
   const courseImage = course?.coverImageUrl || courseHeaderBg;
@@ -255,7 +362,7 @@ export default function CourseAuth({ learningProgress, courseId }) {
                   <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
                     <Clock size={20} className="text-primary-yellow mr-2" />
                     <span className="font-medium">
-                      {Timer().formatHoursToDays(course?.remainingTime) ||
+                      {TimerUtil().formatHoursToDays(course?.remainingTime) ||
                         "6 weeks"}
                     </span>
                   </div>
@@ -320,195 +427,551 @@ export default function CourseAuth({ learningProgress, courseId }) {
         </div>
       </div>
 
-      {/* Course Content Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Course Curriculum
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Explore all modules and lessons in this course. Track your progress
-            and continue where you left off.
-          </p>
+      {/* Tab Navigation */}
+      <div className="w-7xl mx-auto px-4 pt-5 sm:px-6 lg:px-8">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg mb-8">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setActiveTab("course")}
+              className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 ${
+                activeTab === "course"
+                  ? `${TailwindStyle.HIGHLIGHT_FRAME}`
+                  : "text-gray-600 hover:text-primary-yellow hover:bg-amber-50"
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <BookOpen size={20} />
+                <span>Course Content</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("challenges")}
+              className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 ${
+                activeTab === "challenges"
+                  ? `${TailwindStyle.HIGHLIGHT_FRAME}`
+                  : "text-gray-600 hover:text-primary-yellow hover:bg-amber-50"
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Trophy size={20} />
+                <span>Challenges</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("leaderboard")}
+              className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 ${
+                activeTab === "leaderboard"
+                  ? `${TailwindStyle.HIGHLIGHT_FRAME}`
+                  : "text-gray-600 hover:text-primary-yellow hover:bg-amber-50"
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Crown size={20} />
+                <span>Leaderboard</span>
+              </div>
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Course Modules */}
-        <div className="space-y-6">
-          {course?.moduleCourseDetailScreenResponseDTOs?.map(
-            (module, moduleIndex) => {
-              const moduleProgress = calculateModuleProgress(module);
-              const isExpanded = expandedModules[module.moduleId];
+      {/* Tab Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        {/* Course Content Tab */}
+        {activeTab === "course" && (
+          <div className="space-y-6">
+            {course?.moduleCourseDetailScreenResponseDTOs?.map(
+              (module, moduleIndex) => {
+                const moduleProgress = calculateModuleProgress(module);
+                const isExpanded = expandedModules[module.moduleId];
 
-              return (
-                <div
-                  key={module.moduleId}
-                  className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
-                >
-                  {/* Module Header */}
+                return (
                   <div
-                    className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"
-                    onClick={() => toggleModule(module.moduleId)}
+                    key={module.moduleId}
+                    className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="bg-gradient-to-r from-primary-yellow to-secondary-yellow text-white rounded-xl px-4 py-2 font-bold shadow-lg">
-                          {moduleIndex + 1}
-                        </div>
-                        <div>
-                          <h3 className="text-xl mongro-bold font-bold text-gray-900 mb-1">
-                            {module.moduleTitle}
-                          </h3>
-                          <div className="flex items-center space-x-4 text-sm text-gray-500">
-                            <span>
-                              {module.subModuleCourseDetailScreenResponseDTOs
-                                ?.length || 0}{" "}
-                              lessons
-                            </span>
-                            <span>•</span>
-                            <span>{moduleProgress}% complete</span>
+                    {/* Module Header */}
+                    <div
+                      className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+                      onClick={() => toggleModule(module.moduleId)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="bg-gradient-to-r from-primary-yellow to-secondary-yellow text-white rounded-xl px-4 py-2 font-bold shadow-lg">
+                            {moduleIndex + 1}
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4">
-                        {/* Progress Circle */}
-                        <div className="relative w-12 h-12">
-                          <svg
-                            className="w-12 h-12 transform -rotate-90"
-                            viewBox="0 0 36 36"
-                          >
-                            <path
-                              className="text-gray-300"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              fill="transparent"
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
-                            <path
-                              className="text-primary-yellow"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              fill="transparent"
-                              strokeDasharray={`${moduleProgress}, 100`}
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-bold text-gray-700">
-                              {moduleProgress}%
-                            </span>
+                          <div>
+                            <h3 className="text-xl mongro-bold font-bold text-gray-900 mb-1">
+                              {module.moduleTitle}
+                            </h3>
+                            <div className="flex items-center space-x-4 text-sm text-gray-500">
+                              <span>
+                                {module.subModuleCourseDetailScreenResponseDTOs
+                                  ?.length || 0}{" "}
+                                lessons
+                              </span>
+                              <span>•</span>
+                              <span>{moduleProgress}% complete</span>
+                            </div>
                           </div>
                         </div>
 
-                        {/* Expand/Collapse Icon */}
-                        {isExpanded ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                        <div className="flex items-center space-x-4">
+                          {/* Progress Circle */}
+                          <div className="relative w-12 h-12">
+                            <svg
+                              className="w-12 h-12 transform -rotate-90"
+                              viewBox="0 0 36 36"
+                            >
+                              <path
+                                className="text-gray-300"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                fill="transparent"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              />
+                              <path
+                                className="text-primary-yellow"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                fill="transparent"
+                                strokeDasharray={`${moduleProgress}, 100`}
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              />
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-xs font-bold text-gray-700">
+                                {moduleProgress}%
+                              </span>
+                            </div>
+                          </div>
 
-                  {/* Module Content - Expandable */}
-                  {isExpanded && (
-                    <div className="border-t border-gray-100 bg-gray-50/50">
-                      <div className="p-6">
-                        <div className="space-y-4">
-                          {module.subModuleCourseDetailScreenResponseDTOs?.map(
-                            (subModule, subIndex) => (
-                              <div
-                                key={`${module.moduleId}-${subModule.subModuleId}-${subIndex}`}
-                                className="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-all duration-200"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center space-x-3">
-                                    <div className="bg-secondary-yellow text-primary-blue rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
-                                      {subIndex + 1}
-                                    </div>
-                                    <Link
-                                      to={`/learn/course/${courseId}/module/${module.moduleId}/submodule/${subModule.subModuleId}`}
-                                      className="font-semibold text-gray-800 hover:text-primary-yellow transition-colors group flex items-center"
-                                    >
-                                      <span>{subModule.subModuleTitle}</span>
-                                      <ChevronRight className="w-4 h-4 ml-2 text-gray-400 group-hover:text-primary-yellow transition-colors" />
-                                    </Link>
-                                  </div>
-                                </div>
-
-                                {/* Sub-module content */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                  {subModule.learningContentDetailScreenResponseDTOs?.map(
-                                    (content, contentIndex) => {
-                                      const status = getProgressStatus(
-                                        content.userLearningProgressStatus
-                                      );
-
-                                      return (
-                                        <div
-                                          key={`${module.moduleId}-${subModule.subModuleId}-${content.learningContentId}`}
-                                          className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-white hover:shadow-sm transition-all duration-200"
-                                        >
-                                          <div className="flex items-center space-x-3">
-                                            <CompletedBox
-                                              isCompleted={isCompleted(
-                                                content.userLearningProgressStatus
-                                              )}
-                                              className="flex-shrink-0"
-                                              size={16}
-                                            />
-                                            {getContentIcon(
-                                              content.contentType
-                                            )}
-                                            <div className="min-w-0 flex-1">
-                                              <p className="text-sm font-medium text-gray-900 truncate">
-                                                {content.learningContentTitle}
-                                              </p>
-                                              <span
-                                                className={`text-xs px-2 py-1 rounded-full font-medium inline-block mt-1 ${
-                                                  status.color === "green"
-                                                    ? "bg-green-100 text-green-700"
-                                                    : status.color === "blue"
-                                                    ? "bg-blue-100 text-blue-700"
-                                                    : "bg-gray-100 text-gray-600"
-                                                }`}
-                                              >
-                                                {status.text}
-                                              </span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      );
-                                    }
-                                  )}
-                                </div>
-                              </div>
-                            )
+                          {/* Expand/Collapse Icon */}
+                          {isExpanded ? (
+                            <ChevronUp className="w-6 h-6 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-6 h-6 text-gray-400" />
                           )}
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              );
-            }
-          )}
 
-          {/* No modules message */}
-          {(!course?.moduleCourseDetailScreenResponseDTOs ||
-            course.moduleCourseDetailScreenResponseDTOs.length === 0) && (
-            <div className="text-center py-16 bg-white rounded-2xl border border-gray-200 shadow-lg">
-              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-700 mb-2">
-                Course Modules Coming Soon!
-              </h3>
-              <p className="text-gray-600">
-                We're preparing amazing content for you. Stay tuned!
-              </p>
+                    {/* Module Content - Expandable */}
+                    {isExpanded && (
+                      <div className="border-t border-gray-100 bg-gray-50/50">
+                        <div className="p-6">
+                          <div className="space-y-4">
+                            {module.subModuleCourseDetailScreenResponseDTOs?.map(
+                              (subModule, subIndex) => (
+                                <div
+                                  key={`${module.moduleId}-${subModule.subModuleId}-${subIndex}`}
+                                  className="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-all duration-200"
+                                >
+                                  <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center space-x-3">
+                                      <div className="bg-secondary-yellow text-primary-blue rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                        {subIndex + 1}
+                                      </div>
+                                      <Link
+                                        to={`/learn/course/${courseId}/module/${module.moduleId}/submodule/${subModule.subModuleId}`}
+                                        className="font-semibold text-gray-800 hover:text-primary-yellow transition-colors group flex items-center"
+                                      >
+                                        <span>{subModule.subModuleTitle}</span>
+                                        <ChevronRight className="w-4 h-4 ml-2 text-gray-400 group-hover:text-primary-yellow transition-colors" />
+                                      </Link>
+                                    </div>
+                                  </div>
+
+                                  {/* Sub-module content */}
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {subModule.learningContentDetailScreenResponseDTOs?.map(
+                                      (content, contentIndex) => {
+                                        const status = getProgressStatus(
+                                          content.userLearningProgressStatus
+                                        );
+
+                                        return (
+                                          <div
+                                            key={`${module.moduleId}-${subModule.subModuleId}-${content.learningContentId}`}
+                                            className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-white hover:shadow-sm transition-all duration-200"
+                                          >
+                                            <div className="flex items-center space-x-3">
+                                              <CompletedBox
+                                                isCompleted={isCompleted(
+                                                  content.userLearningProgressStatus
+                                                )}
+                                                className="flex-shrink-0"
+                                                size={16}
+                                              />
+                                              {getContentIcon(
+                                                content.contentType
+                                              )}
+                                              <div className="min-w-0 flex-1">
+                                                <p className="text-sm font-medium text-gray-900 truncate">
+                                                  {content.learningContentTitle}
+                                                </p>
+                                                <span
+                                                  className={`text-xs px-2 py-1 rounded-full font-medium inline-block mt-1 ${
+                                                    status.color === "green"
+                                                      ? "bg-green-100 text-green-700"
+                                                      : status.color === "blue"
+                                                      ? "bg-blue-100 text-blue-700"
+                                                      : "bg-gray-100 text-gray-600"
+                                                  }`}
+                                                >
+                                                  {status.text}
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        );
+                                      }
+                                    )}
+                                  </div>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+            )}
+
+            {/* No modules message */}
+            {(!course?.moduleCourseDetailScreenResponseDTOs ||
+              course.moduleCourseDetailScreenResponseDTOs.length === 0) && (
+              <div className="text-center py-16 bg-white rounded-2xl border border-gray-200 shadow-lg">
+                <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-700 mb-2">
+                  Course Modules Coming Soon!
+                </h3>
+                <p className="text-gray-600">
+                  We're preparing amazing content for you. Stay tuned!
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Challenges Tab */}
+        {activeTab === "challenges" && (
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <Trophy className="w-8 h-8 text-amber-500" />
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">
+                      Course Challenges
+                    </h3>
+                    <p className="text-gray-600">
+                      Test your knowledge and compete with others
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium">
+                  {challenges.length} Challenge
+                  {challenges.length > 1 ? "s" : ""}
+                </div>
+              </div>
+
+              {challengeLoading ? (
+                <div className="flex justify-center items-center py-12">
+                  <Loader2 className="animate-spin w-8 h-8 text-amber-500 mr-3" />
+                  <span className="text-gray-600">Loading challenges...</span>
+                </div>
+              ) : challengeError ? (
+                <div className="text-center py-12 text-red-600">
+                  <Trophy className="w-16 h-16 mx-auto mb-4 text-red-400" />
+                  <p>Unable to load challenges</p>
+                </div>
+              ) : challenges.length === 0 ? (
+                <div className="text-center py-12">
+                  <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-700 mb-2">
+                    No Challenges Yet
+                  </h3>
+                  <p className="text-gray-600">
+                    Challenges will be available soon!
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {challenges.map((challenge) => {
+                    const status = getChallengeStatus(challenge);
+                    const highestScore = getHighestScore(challenge);
+
+                    return (
+                      <div
+                        key={challenge.id}
+                        className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200 p-6 hover:shadow-lg transition-all duration-300"
+                      >
+                        {/* Challenge Header */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            {getChallengeTypeIcon(challenge.challengeType)}
+                            <div className="bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs font-medium">
+                              {challenge.challengeType}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {status.icon}
+                            <span
+                              className={`text-xs font-medium ${
+                                status.color === "green"
+                                  ? "text-green-600"
+                                  : "text-gray-500"
+                              }`}
+                            >
+                              {status.text}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Challenge Info */}
+                        <div className="mb-4">
+                          <h4 className="font-bold text-gray-900 mb-2">
+                            {challenge.name}
+                          </h4>
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                            {challenge.description}
+                          </p>
+
+                          {/* Challenge Stats */}
+                          <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+                            <div className="flex items-center space-x-1">
+                              <Timer size={14} />
+                              <span>
+                                {formatDuration(challenge.durationSeconds)}
+                              </span>
+                            </div>
+                            {highestScore !== null && (
+                              <div className="flex items-center space-x-1">
+                                <Zap size={14} />
+                                <span className="font-medium text-amber-600">
+                                  Best: {highestScore}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Challenge Actions */}
+                        <div className="flex items-center justify-between">
+                          <div className="text-xs text-gray-500">
+                            {challenge.challengeSessions.length > 0 ? (
+                              <span>
+                                Played {challenge.challengeSessions.length} time
+                                {challenge.challengeSessions.length > 1
+                                  ? "s"
+                                  : ""}
+                              </span>
+                            ) : (
+                              <span>Ready to play</span>
+                            )}
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() =>
+                                setSelectedChallengeId(challenge.id)
+                              }
+                              className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center space-x-1"
+                            >
+                              <TrendingUp size={12} />
+                              <span>Leaderboard</span>
+                            </button>
+                            <Link
+                              to={`/course/${courseId}/challenge/${challenge.id}`}
+                              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:from-amber-600 hover:to-orange-600 transition-all duration-200 flex items-center space-x-1"
+                            >
+                              <Play size={12} />
+                              <span>
+                                {challenge.challengeSessions.length > 0
+                                  ? "Play"
+                                  : "Start"}
+                              </span>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* Leaderboard Tab */}
+        {activeTab === "leaderboard" && (
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <Crown className="w-8 h-8 text-amber-500" />
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">
+                      Challenge Leaderboard
+                    </h3>
+                    <p className="text-gray-600">
+                      See how you rank against other players
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Challenge Selection */}
+              {challenges.length > 0 && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Challenge
+                  </label>
+                  <select
+                    value={selectedChallengeId || ""}
+                    onChange={(e) => setSelectedChallengeId(e.target.value)}
+                    className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  >
+                    <option value="">Choose a challenge...</option>
+                    {challenges.map((challenge) => (
+                      <option key={challenge.id} value={challenge.id}>
+                        {challenge.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Leaderboard Content */}
+              {!selectedChallengeId ? (
+                <div className="text-center py-12">
+                  <Crown className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-700 mb-2">
+                    Select a Challenge
+                  </h3>
+                  <p className="text-gray-600">
+                    Choose a challenge to view its leaderboard
+                  </p>
+                </div>
+              ) : leaderboardLoading ? (
+                <div className="flex justify-center items-center py-12">
+                  <Loader2 className="animate-spin w-8 h-8 text-amber-500 mr-3" />
+                  <span className="text-gray-600">Loading leaderboard...</span>
+                </div>
+              ) : leaderboardError ? (
+                <div className="text-center py-12 text-red-600">
+                  <Crown className="w-16 h-16 mx-auto mb-4 text-red-400" />
+                  <p>Unable to load leaderboard</p>
+                </div>
+              ) : !leaderboardData?.data?.leaderboard?.length ? (
+                <div className="text-center py-12">
+                  <Crown className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-700 mb-2">
+                    No Rankings Yet
+                  </h3>
+                  <p className="text-gray-600">
+                    Be the first to complete this challenge!
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  
+
+                  {/* Leaderboard Table */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                            Rank
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                            Player
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                            Score
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                            Time
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                            Date
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {leaderboardData.data.leaderboard.map(
+                          (player, index) => (
+                            <tr
+                              key={player.userId}
+                              className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                                player.userId === user?.id ? "bg-amber-50" : ""
+                              }`}
+                            >
+                              <td className="py-4 px-4">
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-2xl">
+                                    {getRankDisplay(player.rank)}
+                                  </span>
+                                  <span className="font-medium text-gray-900">
+                                    {player.rank}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="py-4 px-4">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                                    <User className="w-5 h-5 text-white" />
+                                  </div>
+                                  <div>
+                                    <div className="font-medium text-gray-900">
+                                      {player.username}
+                                      {player.userId === user?.id && (
+                                        <span className="ml-2 text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">
+                                          You
+                                        </span>
+                                      )}
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="py-4 px-4">
+                                <div className="flex items-center space-x-2">
+                                  <Zap className="w-4 h-4 text-amber-500" />
+                                  <span className="font-bold text-amber-600">
+                                    {player.highestScore}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="py-4 px-4">
+                                <div className="flex items-center space-x-2">
+                                  <Timer className="w-4 h-4 text-blue-500" />
+                                  <span className="text-gray-700">
+                                    {formatDuration(player.timeTaken)}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="py-4 px-4">
+                                <div className="flex items-center space-x-2">
+                                  <CalendarIcon className="w-4 h-4 text-gray-500" />
+                                  <span className="text-gray-600 text-sm">
+                                    {formatDate(player.attemptedAt)}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

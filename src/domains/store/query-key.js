@@ -71,6 +71,20 @@ export const QueryKey = {
     GET_SESSION_BY_ID: "ai-get-session-by-id",
   },
 
+  CHALLENGE: {
+    GET_CHALLENGE_BY_COURSE: "challenge-get-by-course",
+    GET_CHALLENGE_BY_ID: "challenge-get-by-id",
+    CREATE_CHALLENGE: "challenge-create",
+    CREATE_CHALLENGE_SESSION: "challenge-create-session",
+    CREATE_ARTWORKS: "challenge-create-artworks",
+    CREATE_ARTWORK_DETAIL: "challenge-create-artwork-detail",
+  },
+
+  LEADERBOARD: {
+    GET_GLOBAL_LEADERBOARD: "leaderboard-get-global",
+    GET_LEADERBOARD_BY_CHALLENGE: "leaderboard-get-by-challenge",
+  },
+
   PAYMENT: {
     CREATE_PAYMENT_LINK: "payment-create-link",
   },

@@ -16,17 +16,24 @@ export const AIProvider = ({ children }) => {
     "/server-error", // 500 error page
     "/unauthorized", // 404-like error page
     "/payment-callback", // Payment callback pages
-    "/challenge", // Challenge pages
+    "/challenge", // Challenge pages (legacy)
+    "/course/challenge/", // Challenge pages (legacy)
+    "course/", // This will match any course-related route including challenges
   ];
 
   const shouldHideChat = excludedPaths.some((path) =>
     location.pathname.startsWith(path)
   );
 
+  // Additional specific check for challenge routes
+  const isChallengeRoute = /^\/course\/\d+\/challenge\/\d+/.test(
+    location.pathname
+  );
+
   return (
     <>
       {children}
-      {!shouldHideChat && <AIChat />}
+      {!shouldHideChat && !isChallengeRoute && <AIChat />}
     </>
   );
 };

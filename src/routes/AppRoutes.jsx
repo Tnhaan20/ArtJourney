@@ -341,7 +341,7 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="challenge/course/:courseId/module/:moduleId"
+        path="course/:courseId/challenge/:challengeId"
         element={
           <Suspense fallback={<PageLoader />}>
             <ProtectedRoute restrictAdmin={true}>
