@@ -737,5 +737,51 @@
       "button": "Tìm Kiếm",
       "quickSearch": "Tìm kiếm phổ biến"
     }
+  },
+  "ranking": {
+    "defaultUser": "Học viên Art Journey",
+    "subtitle": "Nhà vô địch bảng xếp hạng toàn cầu",
+    "currentRank": "Hạng hiện tại",
+    "totalScore": "Tổng điểm",
+    "challengesCompleted": "Thử thách",
+    "totalPlayers": "Tổng số người chơi",
+    "error": {
+      "title": "Không thể tải bảng xếp hạng",
+      "message": "Vui lòng thử lại sau."
+    },
+    "tabs": {
+      "allTime": "Toàn thời gian",
+      "allTimeDesc": "Hiệu suất tổng thể trên tất cả thử thách",
+      "title": "Bảng xếp hạng toàn cầu",
+      "subtitle": "Thi đấu với người chơi trên toàn thế giới",
+      "today": "Hôm nay",
+      "week": "Tuần này"
+    },
+    "topThree": "Top 3 nhà vô địch",
+    "topThreeDesc": "Những bậc thầy thử thách tối thượng",
+    "noTopPlayers": "Chưa có người chơi hàng đầu",
+    "noTopPlayersDesc": "Hoàn thành thử thách để xuất hiện trên bục podium!",
+    "emptySlot": "Có sẵn",
+    "emptySlotDesc": "Thi đấu để giành vị trí này!",
+    "you": "Bạn",
+    "totalPoints": "Tổng điểm",
+    "challenges": "thử thách",
+    "first": "NHẤT",
+    "second": "NHÌ",
+    "third": "BA",
+    "leaderboard": "Bảng xếp hạng toàn cầu",
+    "noData": "Không có bảng xếp hạng",
+    "noDataDesc": "Hãy là người đầu tiên hoàn thành thử thách và xuất hiện trên bảng xếp hạng!",
+    "showingRanks": "Hiển thị hạng",
+    "loadMore": "Tải thêm người chơi",
+    "table": {
+      "rank": "Hạng",
+      "player": "Người chơi",
+      "totalScore": "Tổng điểm",
+      "challengesCompleted": "Thử thách đã hoàn thành",
+      "playerId": "ID người chơi",
+      "points": "điểm",
+      "challenges": "thử thách"
+    }
   }
 }
