@@ -326,6 +326,8 @@
   },
   "pricing": {
     "title": "Gói thành viên và Bảng giá",
+          "signInToPurchase": "Đăng nhập để mua",
+
     "subtitle": "Chọn gói phù hợp cho hành trình học tập của bạn",
     "billing": {
       "monthly": "Hàng tháng",

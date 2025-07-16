@@ -1,11 +1,90 @@
-import { TailwindStyle } from '@/utils/Enum';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { TailwindStyle } from "@/utils/Enum";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Check, Star, Crown, Zap } from "lucide-react";
+import { Check, Star, Crown, Zap, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/domains/store/use-auth-store";
+import { usePaymentForm } from "@/hooks/Payment/use-payment-form";
 
 export default function HomePrice() {
   const { t } = useTranslation();
+  const { onSubmit: createPayment, isLoading: isCreatingPayment } =
+    usePaymentForm();
+  const { user, isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+
+  // Separate loading states for each plan
+  const [loadingStates, setLoadingStates] = useState({
+    monthly: false,
+    yearly: false,
+  });
+
+  const handlePayment = async (billingType) => {
+    if (!isAuthenticated) {
+      navigate("/signin", {
+        replace: true,
+        state: {
+          from: "/home",
+          action: "payment",
+          plan: billingType,
+        },
+      });
+      return;
+    }
+
+    // Set loading state for specific plan
+    setLoadingStates((prev) => ({
+      ...prev,
+      [billingType]: true,
+    }));
+
+    try {
+      if (billingType === "monthly") {
+        const paymentData = {
+          buyerName: user?.name || user?.firstName || "Student",
+          buyerEmail: user?.email || "",
+          buyerPhone: user?.phone || "0354545454",
+          description: `thanh toan premium`,
+          items: [
+            {
+              name: "premium 1 thang",
+              quantity: 1,
+              price: 99000,
+            },
+          ],
+        };
+
+        await createPayment(paymentData);
+      } else if (billingType === "yearly") {
+        const paymentData = {
+          buyerName: user?.name || user?.firstName || "Student",
+          buyerEmail: user?.email || "",
+          buyerPhone: user?.phone || "0354545454",
+          description: `thanh toan premium`,
+          items: [
+            {
+              name: "premium 12 thang",
+              quantity: 1,
+              price: 990000,
+            },
+          ],
+        };
+
+        await createPayment(paymentData);
+      }
+
+      // Loading will be cleared automatically on redirect
+    } catch (error) {
+      console.error("Payment creation failed:", error);
+
+      // Clear loading state on error
+      setLoadingStates((prev) => ({
+        ...prev,
+        [billingType]: false,
+      }));
+    }
+  };
 
   return (
     <div className="py-20 bg-gradient-to-br from-gray-50 to-white">
@@ -68,14 +147,6 @@ export default function HomePrice() {
                   </div>
                 ))}
               </div>
-
-              {/* Button */}
-              <Link
-                to="/pay/per-course"
-                className="w-full py-3 px-4 border-2 border-primary-yellow text-primary-yellow rounded-xl font-semibold hover:bg-primary-yellow hover:text-white transition-all duration-300 inline-flex items-center justify-center"
-              >
-                {t("home.pricing.plans.perCourse.button")}
-              </Link>
             </div>
           </div>
 
@@ -114,7 +185,9 @@ export default function HomePrice() {
                   <p className="text-sm text-yellow-100 mt-1">
                     {t("home.pricing.plans.monthly.period")}
                   </p>
-                  <div className={`mt-2 inline-block ${TailwindStyle.HIGHLIGHT_FRAME} text-xs px-3 py-1 rounded-full`}>
+                  <div
+                    className={`mt-2 inline-block ${TailwindStyle.HIGHLIGHT_FRAME} text-xs px-3 py-1 rounded-full`}
+                  >
                     Best Value!
                   </div>
                 </div>
@@ -138,13 +211,25 @@ export default function HomePrice() {
                   ))}
                 </div>
 
-                {/* Button */}
-                <Link
-                  to="/pay/monthly"
-                  className="w-full py-3 px-4 bg-white text-primary-yellow rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 inline-flex items-center justify-center shadow-lg transform hover:scale-105"
+                <button
+                  type="submit"
+                  onClick={() => handlePayment("monthly")}
+                  disabled={loadingStates.monthly}
+                  className={` w-full py-4 ${
+                    TailwindStyle.HIGHLIGHT_FRAME
+                  } text-white rounded-full text-lg font-bold 
+                                    transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block text-center
+                                    ${
+                                      loadingStates.monthly
+                                        ? "opacity-30 cursor-not-allowed"
+                                        : ""
+                                    }
+                                    `}
                 >
-                  {t("home.pricing.plans.monthly.button")}
-                </Link>
+                  {loadingStates.monthly
+                    ? "Processing..."
+                    : t("home.pricing.plans.monthly.button")}
+                </button>
               </div>
             </div>
           </div>
@@ -203,18 +288,28 @@ export default function HomePrice() {
                 ))}
               </div>
 
-              {/* Button */}
-              <Link
-                to="/pay/annual"
-                className="w-full py-3 px-4 border-2 border-secondary-blue text-primary-blue rounded-xl font-semibold hover:bg-primary-blue hover:text-white transition-all duration-300 inline-flex items-center justify-center"
+              <button
+                type="submit"
+                onClick={() => handlePayment("yearly")}
+                disabled={loadingStates.yearly}
+                className={` w-full py-4 ${
+                  TailwindStyle.HIGHLIGHT_FRAME
+                } text-white rounded-full text-lg font-bold 
+                                    transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block text-center
+                                    ${
+                                      loadingStates.yearly
+                                        ? "opacity-70 cursor-not-allowed"
+                                        : "cursor-pointer"
+                                    }
+                                    `}
               >
-                {t("home.pricing.plans.annual.button")}
-              </Link>
+                {loadingStates.yearly
+                  ? "Processing..."
+                  : t("home.pricing.plans.annual.button")}
+              </button>
             </div>
           </div>
         </div>
-
-       
       </div>
 
       {/* View Full Plans Button */}

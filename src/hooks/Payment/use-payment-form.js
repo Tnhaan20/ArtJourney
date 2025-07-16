@@ -11,7 +11,7 @@ export const usePaymentForm = () => {
     const form = useForm({
         resolver: zodResolver(PaymentSchema), 
         defaultValues: {
-                buyerName: "Nhan",
+                buyerName: "",
                 buyerEmail: "",
                 buyerPhone: "0365666666",
                 description: "thanh toan khoa hoc",

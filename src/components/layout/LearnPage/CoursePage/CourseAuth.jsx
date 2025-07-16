@@ -8,6 +8,8 @@ import { useAuthStore } from "@/domains/store/use-auth-store";
 import { useGamification } from "@/hooks/Gamification/use-gamification";
 import { useLeaderboard } from "@/hooks/Leaderboard/use-leaderboard";
 import { parseLearningOutcomes } from "@/utils/learningOutcome";
+import { useReviewCourseForm } from "@/hooks/Courses/use-course-form";
+
 import {
   ChevronRight,
   Loader2,
@@ -33,6 +35,8 @@ import {
   TrendingUp,
   User,
   Calendar as CalendarIcon,
+  MessageSquare,
+  Send,
 } from "lucide-react";
 import { TailwindStyle } from "@/utils/Enum";
 import TimerUtil from "@/lib/timer";
@@ -61,6 +65,16 @@ export default function CourseAuth({ learningProgress, courseId }) {
   } = getLeaderboardByChallengeId(selectedChallengeId);
 
   const { user } = getCurrentUser();
+
+  const {
+    form: reviewForm,
+    onSubmit: submitReview,
+    isLoading: isSubmittingReview,
+  } = useReviewCourseForm();
+
+  const { getReviewedCourse } = useCourse();
+  const { data: courseReviews, isLoading: reviewsLoading } =
+    getReviewedCourse(courseId);
 
   // Toggle module expansion
   const toggleModule = (moduleId) => {
@@ -94,6 +108,168 @@ export default function CourseAuth({ learningProgress, courseId }) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}m ${remainingSeconds}s`;
+  };
+
+  // Add this style tag in the component
+  const reviewStyles = `
+.radio {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: row-reverse;
+}
+
+.radio > input {
+  position: absolute;
+  appearance: none;
+}
+
+.radio > label {
+  cursor: pointer;
+  font-size: 30px;
+  position: relative;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.radio > label > svg {
+  fill: #666;
+  transition: fill 0.3s ease;
+}
+
+.radio > label::before,
+.radio > label::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #ff9e0b;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  animation: particle-explosion 1s ease-out;
+}
+
+.radio > label::before {
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+}
+
+.radio > label::after {
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+}
+
+.radio > label:hover::before,
+.radio > label:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.5);
+}
+
+.radio > label:hover {
+  transform: scale(1.2);
+  animation: pulse 0.6s infinite alternate;
+}
+
+.radio > label:hover > svg,
+.radio > label:hover ~ label > svg {
+  fill: #ff9e0b;
+  filter: drop-shadow(0 0 15px rgba(255, 158, 11, 0.9));
+  animation: shimmer 1s ease infinite alternate;
+}
+
+.radio > input:checked + label > svg,
+.radio > input:checked + label ~ label > svg {
+  fill: #ff9e0b;
+  filter: drop-shadow(0 0 15px rgba(255, 158, 11, 0.9));
+  animation: pulse 0.8s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+@keyframes particle-explosion {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0.5); }
+}
+
+@keyframes shimmer {
+  0% { filter: drop-shadow(0 0 10px rgba(255, 158, 11, 0.5)); }
+  100% { filter: drop-shadow(0 0 20px rgba(255, 158, 11, 1)); }
+}
+
+.radio > input:checked + label:hover > svg,
+.radio > input:checked + label:hover ~ label > svg {
+  fill: #e58e09;
+}
+
+.radio > label:hover > svg,
+.radio > label:hover ~ label > svg {
+  fill: #ff9e0b;
+}
+
+.radio input:checked ~ label svg {
+  fill: #ffa723;
+}
+`;
+
+
+  const handleReviewSubmit = async (data) => {
+    try {
+      const reviewData = {
+        ...data,
+        courseId: parseInt(courseId), // Thêm courseId vào payload
+        rating: parseInt(data.rating), // Chuyển đổi rating thành integer
+      };
+
+
+      await submitReview(reviewData);
+      reviewForm.reset();
+    } catch (error) {
+      console.error("Review submission error:", error);
+    }
+  };
+
+  // Get star display for existing reviews - Updated to show number rating
+  const getStarDisplay = (rating) => {
+    return (
+      <div className="flex items-center space-x-1">
+        <div className="ml-2 flex">
+          {Array.from({ length: 5 }, (_, index) => (
+            <svg
+              key={index}
+              className={`w-4 h-4 ${
+                index < rating ? "text-amber-400" : "text-gray-300"
+              }`}
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Debug: Watch form state
+  const watchedValues = reviewForm.watch();
+ 
+
+  // Format review date
+  const formatReviewDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   // Helper function to get challenge status
@@ -468,6 +644,19 @@ export default function CourseAuth({ learningProgress, courseId }) {
               <div className="flex items-center justify-center space-x-2">
                 <Crown size={20} />
                 <span>Leaderboard</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("reviews")}
+              className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 ${
+                activeTab === "reviews"
+                  ? `${TailwindStyle.HIGHLIGHT_FRAME}`
+                  : "text-gray-600 hover:text-primary-yellow hover:bg-amber-50"
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <MessageSquare size={20} />
+                <span>Reviews</span>
               </div>
             </button>
           </div>
@@ -876,8 +1065,6 @@ export default function CourseAuth({ learningProgress, courseId }) {
                 </div>
               ) : (
                 <div>
-                  
-
                   {/* Leaderboard Table */}
                   <div className="overflow-x-auto">
                     <table className="w-full">
@@ -933,7 +1120,6 @@ export default function CourseAuth({ learningProgress, courseId }) {
                                         </span>
                                       )}
                                     </div>
-                                    
                                   </div>
                                 </div>
                               </td>
@@ -969,6 +1155,204 @@ export default function CourseAuth({ learningProgress, courseId }) {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Reviews Tab */}
+        {activeTab === "reviews" && (
+          <div className="space-y-6">
+            <style>{reviewStyles}</style>
+
+            {/* Review Form - Updated */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg">
+              <div className="p-6">
+                <div className="flex items-center space-x-3 mb-6">
+                  <MessageSquare className="w-8 h-8 text-amber-500" />
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">
+                      Share Your Review
+                    </h3>
+                    <p className="text-gray-600">
+                      Help others by sharing your experience with this course
+                    </p>
+                  </div>
+                </div>
+
+                <form
+                  onSubmit={reviewForm.handleSubmit(handleReviewSubmit)}
+                  className="space-y-6"
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-4">
+                      Rate this course *
+                    </label>
+                    <div className="radio">
+                      {[5, 4, 3, 2, 1].map((rating) => (
+                        <React.Fragment key={rating}>
+                          <input
+                            id={`rating-${rating}`}
+                            type="radio"
+                            name="rating"
+                            value={rating.toString()}
+                            {...reviewForm.register("rating", {
+                              required: "Please select a rating",
+                              transform: {
+                                input: (value) => value?.toString(),
+                                output: (e) => parseInt(e.target.value),
+                              },
+                            })}
+                          />
+                          <label
+                            htmlFor={`rating-${rating}`}
+                            title={`${rating} stars`}
+                          >
+                            <svg
+                              viewBox="0 0 576 512"
+                              height="1em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"></path>
+                            </svg>
+                          </label>
+                        </React.Fragment>
+                      ))}
+                    </div>
+                    {reviewForm.formState.errors.rating && (
+                      <p className="mt-2 text-sm text-red-600">
+                        {reviewForm.formState.errors.rating.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Feedback Section - Updated */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Your Review *
+                    </label>
+                    <textarea
+                      {...reviewForm.register("feedBack")}
+                      rows={4}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+                      placeholder="Share your thoughts about this course..."
+                    />
+                    {reviewForm.formState.errors.feedBack && (
+                      <p className="mt-2 text-sm text-red-600">
+                        {reviewForm.formState.errors.feedBack.message}
+                      </p>
+                    )}
+                    <p className="mt-1 text-xs text-gray-500">
+                      {watchedValues.feedBack?.length || 0} characters
+                    </p>
+                  </div>
+                  {/* Submit Button - Updated */}
+                  <button
+                    type="submit"
+                    disabled={isSubmittingReview}
+                    className={`w-full flex items-center justify-center space-x-2 py-3 px-6 ${
+                      TailwindStyle.HIGHLIGHT_FRAME
+                    } text-white rounded-lg font-medium transition-all duration-200 hover:shadow-lg ${
+                      isSubmittingReview
+                        ? "opacity-75 cursor-not-allowed"
+                        : "hover:scale-105"
+                    }`}
+                  >
+                    {isSubmittingReview ? (
+                      <>
+                        <div className="cursor-not-allowed">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Submitting...</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        <span>Submit Review</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            {/* Existing Reviews - Updated display */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-3">
+                    <MessageSquare className="w-6 h-6 text-amber-500" />
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Course Reviews
+                    </h3>
+                  </div>
+                  {courseReviews?.data?.length > 0 && (
+                    <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
+                      {courseReviews.data.length} Review
+                      {courseReviews.data.length > 1 ? "s" : ""}
+                    </div>
+                  )}
+                </div>
+
+                {reviewsLoading ? (
+                  <div className="flex justify-center items-center py-12">
+                    <Loader2 className="animate-spin w-8 h-8 text-amber-500 mr-3" />
+                    <span className="text-gray-600">Loading reviews...</span>
+                  </div>
+                ) : !courseReviews?.data?.length ? (
+                  <div className="text-center py-12">
+                    <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-gray-700 mb-2">
+                      No Reviews Yet
+                    </h3>
+                    <p className="text-gray-600">
+                      Be the first to review this course!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {courseReviews.data.map((review) => (
+                      <div
+                        key={review.courseReviewId}
+                        className="bg-gray-50 rounded-xl p-6 border border-gray-200"
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-full overflow-hidden">
+                              <img
+                                src={
+                                  review.avatarUrl ||
+                                  "https://www.svgrepo.com/show/452030/avatar-default.svg"
+                                }
+                                alt={review.fullName}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">
+                                {review.fullName}
+                                {review.userId === user?.id && (
+                                  <span className="ml-2 text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">
+                                    You
+                                  </span>
+                                )}
+                              </h4>
+                              <p className="text-sm text-gray-500">
+                                {formatReviewDate(review.createdAt)}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            {getStarDisplay(review.rating)}
+                          </div>
+                        </div>
+                        <p className="text-gray-700 leading-relaxed">
+                          {review.feedback}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -29,6 +29,8 @@ export const QueryKey = {
     SEARCH_COURSES: "course-search",
     GET_COURSE_BY_ID: "course-get-by-id",
     GET_COURSE_BY_ID_GUEST: "course-get-by-id-guest",
+    REVIEW_COURSE: "course-review",
+    GET_COURSE_REVIEW: "course-get-review", 
     USER: {
       GET_USER_COURSE_INFO: "course-get-user-course-info",
       ENROLL_USER_COURSE: "course-enroll-user-course",

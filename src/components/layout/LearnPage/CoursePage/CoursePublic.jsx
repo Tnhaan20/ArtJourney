@@ -13,6 +13,8 @@ import {
   AlertCircle,
   Loader2,
   Globe,
+  MessageSquare,
+  User,
 } from "lucide-react";
 import { useCourse } from "@/hooks/Courses/use-course";
 import { useUserEnrollForm } from "@/hooks/Courses/use-course-form";
@@ -41,6 +43,11 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
   // Use payment form hook
   const { onSubmit: createPayment, isLoading: isCreatingPayment } =
     usePaymentForm();
+
+  // Add review hooks
+  const { getReviewedCourse } = useCourse();
+  const { data: courseReviews, isLoading: reviewsLoading } =
+    getReviewedCourse(courseId);
 
   // Helper function to get learning outcomes array - Updated to use utility
   const getLearningOutcomes = () => {
@@ -99,7 +106,6 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
     // If course is free (price = 0), enroll directly
     if (course?.price === 0) {
       try {
-        
         await enrollUser(user.id, courseId);
 
         // Success state will be handled by useEffect above
@@ -179,6 +185,30 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         showPrice: true,
       };
     }
+  };
+
+  // Format review date
+  const formatReviewDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  // Get star display for existing reviews
+  const getStarDisplay = (rating) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <span
+        key={index}
+        className={`text-lg ${
+          index < rating ? "text-yellow-400" : "text-gray-300"
+        }`}
+      >
+        ★
+      </span>
+    ));
   };
 
   // Enhanced loading state
@@ -638,7 +668,98 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
         </div>
       </div>
 
-      {/* Call to Action */}
+      {/* Course Reviews Section - Add before Call to Action */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <MessageSquare className="w-6 h-6 text-amber-500" />
+            <h3 className="text-xl font-bold text-gray-900">Course Reviews</h3>
+          </div>
+          {courseReviews?.data?.length > 0 && (
+            <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
+              {courseReviews.data.length} Review
+              {courseReviews.data.length > 1 ? "s" : ""}
+            </div>
+          )}
+        </div>
+
+        {reviewsLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <Loader2 className="animate-spin w-8 h-8 text-amber-500 mr-3" />
+            <span className="text-gray-600">Loading reviews...</span>
+          </div>
+        ) : !courseReviews?.data?.length ? (
+          <div className="text-center py-12">
+            <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-700 mb-2">
+              No Reviews Yet
+            </h3>
+            <p className="text-gray-600">
+              {isAuthenticated
+                ? "Be the first to review this course!"
+                : "Sign in to see and write reviews for this course."}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {courseReviews.data.map((review) => (
+              <div
+                key={review.courseReviewId}
+                className="bg-gray-50 rounded-xl p-6 border border-gray-200"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-full overflow-hidden">
+                      <img
+                        src={
+                          review.avatarUrl ||
+                          "https://www.svgrepo.com/show/452030/avatar-default.svg"
+                        }
+                        alt={review.fullName}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">
+                        {review.fullName}
+                      </h4>
+                      <p className="text-sm text-gray-500">
+                        {formatReviewDate(review.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    {getStarDisplay(review.rating)}
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  {review.feedback}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Encourage to sign in if not authenticated */}
+        {!isAuthenticated && courseReviews?.data?.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="text-center">
+              <p className="text-gray-600 mb-4">
+                Want to share your experience?
+              </p>
+              <Link
+                to="/signin"
+                className={`inline-flex items-center space-x-2 px-6 py-3 ${TailwindStyle.HIGHLIGHT_FRAME} text-white rounded-lg font-medium transition-all duration-200 hover:shadow-lg`}
+              >
+                <MessageSquare className="w-5 h-5" />
+                <span>Sign In to Write a Review</span>
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Call to Action - existing section */}
       {!isAuthenticated && (
         <div className="bg-gradient-to-r from-primary-yellow to-orange-400 rounded-lg p-8 text-white text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>

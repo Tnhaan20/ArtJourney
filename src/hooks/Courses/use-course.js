@@ -59,6 +59,49 @@ export const useCourse = () => {
       },
     });
 
+  const createCourseReview = useMutation({
+    mutationKey: [QueryKey.COURSES.REVIEW_COURSE],
+    mutationFn: async (payload) => {
+      return await courseService.post.reviewCourse(payload);
+    },
+
+    onSuccess: async (data) => {
+      toast({
+        title: "Course reviewed successfully",
+        description: data.message,
+        variant: "success",
+      });
+    },
+
+    onError: async (error) => {
+      toast({
+        title: "Course review failed",
+        description: error.response?.data?.errors?.[0].message,
+        variant: "destructive",
+      });
+    },
+
+    onSettled: (variables) => {
+      // Lấy courseId từ variables (payload đã truyền vào)
+      const { courseId } = variables;
+
+      console.log(courseId);
+      
+      // Invalidate course detail cache với courseId cụ thể
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.COURSES.GET_COURSE_BY_ID, courseId],
+      });
+    },
+  });
+
+
+  const getReviewedCourse = (courseId) => {
+    return useQuery({
+      queryKey: [QueryKey.COURSES.GET_COURSE_REVIEW, courseId],
+      queryFn: async () => await courseService.get.getReviewedCourse(courseId),
+    });
+  };
+
   const getCourseQuery = useQuery({
     queryKey: [QueryKey.COURSES.GET_COURSE],
     queryFn: async () => await courseService.get.getCourse(1, 10),
@@ -117,5 +160,7 @@ export const useCourse = () => {
     useGetCoursePublic,
     getUserLearningProgress,
     useGetEnrolledCousreOfUser,
+    createCourseReview,
+    getReviewedCourse
   };
 };

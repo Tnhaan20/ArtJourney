@@ -17,9 +17,19 @@ export const courseService = {
         `/user-course-infos`, data
       );
       return res.data;
-    }
+    },
+
+    reviewCourse: async (data) => {
+      const res = await axiosInstance.post(`/course-reviews`, data);
+      return res.data;
+    },
   },
   get: {
+    getReviewedCourse: async (courseId) => {
+      const res = await axiosInstance.get(`/course-reviews/course/${courseId}`);
+      return res.data;
+    },
+    
     getCourse: async (page, size) => {
       const res = await axiosInstance.get(`/courses?page=${page}&size=${size}`);
       return res.data;

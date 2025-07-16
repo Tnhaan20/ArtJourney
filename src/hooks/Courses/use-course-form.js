@@ -2,6 +2,7 @@ import { useCourse } from "./use-course";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  courseReviewSchema,
   useCourseSchema,
   userEnrollCourse,
 } from "@/domains/schema/Courses/courses.schema";
@@ -68,6 +69,31 @@ export const useCourseForm = () => {
     onSubmit,
     isLoading: createCourseMutation.isPending,
   };
+};
+
+export const useReviewCourseForm = () => {
+  const form = useForm({
+    resolver: zodResolver(courseReviewSchema),
+    defaultValues: {
+  courseId: 0,
+  rating: "",
+  feedBack: ""
+},
+    mode: "onChange",
+  });
+
+  const { createCourseReview } = useCourse();
+
+   const onSubmit = async (data) => {
+     await createCourseReview.mutateAsync(data);
+     form.reset();
+   };
+
+   return {
+     form,
+     onSubmit,
+     isLoading: createCourseReview.isPending,
+   };
 };
 
 export const useUserEnrollForm = () => {

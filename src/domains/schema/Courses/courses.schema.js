@@ -77,3 +77,16 @@ export const userEnrollCourse = z.object({
     .positive("Course ID must be a positive number")
     .max(9223372036854775807n, "Course ID exceeds maximum value"), // int64 max
 });
+
+export const courseReviewSchema = z.object({
+  courseId: z.number(),
+
+  rating: z.string()
+    .min(1, "Rating is required"),
+
+  feedBack: z
+    .string()
+    .min(1, "Feedback is required")
+    .min(10, "Feedback must be at least 10 characters")
+    .max(1000, "Feedback cannot exceed 1000 characters"),
+});

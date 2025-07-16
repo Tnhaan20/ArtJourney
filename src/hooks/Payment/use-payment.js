@@ -16,11 +16,7 @@ export const usePayment = () => {
 
       // Check if response contains checkout URL
       if (data?.checkoutUrl) {
-        toast({
-          title: "Payment link created successfully",
-          description: "Redirecting to payment gateway...",
-          variant: "success",
-        });
+        
 
         
         // Redirect to checkout URL after short delay
@@ -36,15 +32,6 @@ export const usePayment = () => {
       }
     },
 
-    onError: (error) => {
-      console.error("Payment creation failed:", error);
-      toast({
-        title: "Payment creation failed",
-        description:
-          error.response?.data?.message || "Failed to create payment link",
-        variant: "destructive",
-      });
-    },
 
     onSettled: () => {
       queryClient.invalidateQueries({
