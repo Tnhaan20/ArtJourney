@@ -82,17 +82,17 @@
     "pricing": {
       "title": "Membership and Pricing",
       "viewFullPlans": "View Full Pricing Plans",
+      "signInToPurchase": "Sign In to Purchase",
       "plans": {
         "perCourse": {
           "title": "Unique curriculum",
           "subtitle": "Learn a single course and earn a certificate",
-          "price": "40,000 VND",
-          "period": "/month",
-          "description": "Visit an individual course or Specialization page to purchase.",
+          "price": "0 - 40,000 VND",
+          "period": "/course",
+          "description": "Visit an individual course page to purchase.",
           "features": [
-            "Access all courses in the curriculum",
-            "Earn certificate upon completion after trial ends",
-            "3 day refund period"
+            "Access all learning materials in the course",
+            "Earn certificate upon completion after ends"
           ],
           "button": "Continue"
         },
@@ -101,11 +101,10 @@
           "subtitle": "Complete multiple courses and get certified in a short time",
           "price": "99,000 VND",
           "period": "/month",
-          "description": "Cancel anytime",
+          "description": "",
           "features": [
             "Access 10+ courses from Art Journey",
-            "Earn certificate upon completion after trial ends",
-            "3 day refund period"
+            "Earn certificate upon completion after trial ends"
           ],
           "button": "Continue"
         },
@@ -114,11 +113,10 @@
           "subtitle": "Combine flexibility and savings with long-term learning goals",
           "price": "990,000 VND",
           "period": "/year",
-          "description": "Cancel anytime",
+          "description": "",
           "features": [
             "Access 10+ courses from Art Journey",
-            "Save when you pay in advance for the year",
-            "7 day refund period"
+            "Save when you pay in advance for the year"
           ],
           "button": "Continue"
         }
@@ -350,10 +348,10 @@
       "monthly": {
         "title": "Monthly Subscription",
         "subtitle": "Unlimited premium content access",
-        "price": "90.000",
+        "price": "99.000",
         "currency": "VND",
         "period": "/month",
-        "description": "Cancel anytime",
+        "description": "",
         "badge": "Most Popular",
         "features": [
           "Unlimited access to all courses",
