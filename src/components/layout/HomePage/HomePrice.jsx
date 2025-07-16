@@ -239,7 +239,7 @@ export default function HomePrice() {
             {/* Savings Badge */}
             <div className="absolute top-4 right-4">
               <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">
-                Save 20%
+                Save 17%
               </div>
             </div>
 

@@ -22,6 +22,7 @@ export const useAuthStore = create(
               gender: userData.gender,
               birthday: userData.birthday,
               status: userData.status,
+              premium: userData.premiumStatus,
             },
             role: userData.role,
           });
@@ -59,6 +60,7 @@ export const useAuthStore = create(
                 gender: userData.gender,
                 birthday: userData.birthday,
                 status: userData.status,
+                premium: userData.premiumStatus,
               },
               role: userData.role,
               isAuthenticated: true,

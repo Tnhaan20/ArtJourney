@@ -10,6 +10,11 @@ export const userService = {
         const res = await axiosInstance.get(`/users`);
         return res.data;
       },
+
+      getPremium: async () => {
+        const res = await axiosInstance.get(`/users/premium-status`);
+        return res.data;
+      }
     },
     put:{
 

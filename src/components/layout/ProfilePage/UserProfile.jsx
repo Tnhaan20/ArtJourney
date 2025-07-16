@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "@/domains/store/use-auth-store";
 import { useToast } from "@/utils/Toast";
-import { Camera, Check, AlertCircle } from "lucide-react";
+import {
+  Camera,
+  Check,
+  AlertCircle,
+  Calendar,
+  Crown,
+  Star,
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter
+  CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,27 +23,31 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { TailwindStyle } from "@/utils/Enum";
-import { useAuth } from "@/hooks/Auth/use-auth"; // Import custom hook
+import { useAuth } from "@/hooks/Auth/use-auth";
+import { useUser } from "@/hooks/User/use-user"; // Import useUser hook
 
 export default function UserProfile() {
   const { user, login } = useAuthStore();
   const { toast } = useToast();
-  
-  // Sử dụng custom hook use-auth
+
+  // Sử dụng custom hooks
   const { useSendVerifyEmail } = useAuth();
+  const { getPremiumStatusQuery } = useUser(); // Get premium status
   const verifyEmailQuery = useSendVerifyEmail();
-  
+
   // Local state để quản lý trạng thái loading của việc gửi email
   const [isVerifyEmailLoading, setIsVerifyEmailLoading] = useState(false);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
     gender: user?.gender !== undefined ? user?.gender.toString() : "",
-    birthday: user?.birthday ? new Date(user.birthday).toISOString().split('T')[0] : "",
+    birthday: user?.birthday
+      ? new Date(user.birthday).toISOString().split("T")[0]
+      : "",
   });
-  
+
   // Cập nhật form khi user thay đổi
   useEffect(() => {
     if (user) {
@@ -44,7 +55,9 @@ export default function UserProfile() {
         name: user.name || "",
         email: user.email || "",
         gender: user.gender !== undefined ? user.gender.toString() : "",
-        birthday: user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : "",
+        birthday: user.birthday
+          ? new Date(user.birthday).toISOString().split("T")[0]
+          : "",
       });
     }
   }, [user]);
@@ -60,7 +73,7 @@ export default function UserProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitLoading(true);
-    
+
     try {
       // Chuyển đổi gender từ string thành number trước khi lưu
       const updatedUserData = {
@@ -69,10 +82,10 @@ export default function UserProfile() {
         gender: formData.gender !== "" ? parseInt(formData.gender) : undefined,
         birthday: formData.birthday,
       };
-      
+
       // Cập nhật dữ liệu trong store
       await login(updatedUserData);
-      
+
       toast({
         title: "Profile updated",
         description: "Your profile information has been updated successfully.",
@@ -95,7 +108,7 @@ export default function UserProfile() {
     try {
       // Gọi API thông qua hook
       const dataVerifyMail = await verifyEmailQuery.refetch();
-      
+
       // Hiển thị thông báo thành công sau khi API trả về
       toast({
         title: "Verification email sent",
@@ -112,6 +125,105 @@ export default function UserProfile() {
     } finally {
       setIsVerifyEmailLoading(false);
     }
+  };
+
+  // Format date function
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  // Render premium status section
+  const renderPremiumStatus = () => {
+    const premiumData = getPremiumStatusQuery.data?.data;
+    const isLoading = getPremiumStatusQuery.isLoading;
+
+    if (isLoading) {
+      return (
+        <div className="w-full mb-4">
+          <div className="bg-gray-100 rounded-lg p-3 animate-pulse">
+            <div className="h-4 bg-gray-300 rounded mb-2"></div>
+            <div className="h-3 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+      );
+    }
+
+    // If no premium data or user is FreeTier, show Free Tier
+    if (!premiumData || user?.premium === "FreeTier") {
+      return (
+        <div className="w-full mb-4">
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg p-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">
+                  Free Tier
+                </span>
+              </div>
+              <Badge
+                variant="secondary"
+                className="bg-gray-100 text-gray-600 text-xs"
+              >
+                Current Plan
+              </Badge>
+            </div>
+            <p className="text-xs text-gray-500">
+              Basic access to courses and features
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    // If has premium data, show premium status
+    return (
+      <div className="w-full mb-4">
+        <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4">
+          {/* Premium Header */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2">
+              <Crown className="w-4 h-4 text-amber-500" />
+              <span className="text-sm font-medium text-amber-800">
+                Premium Member
+              </span>
+            </div>
+            <Badge className="bg-amber-500 text-white text-xs">
+              <Star className="w-3 h-3 mr-1" />
+              {premiumData.status}
+            </Badge>
+          </div>
+
+          {/* Premium Details */}
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2 text-xs text-amber-700">
+              <Calendar className="w-3 h-3" />
+              <span>Subscribed: {formatDate(premiumData.subcriptionAt)}</span>
+            </div>
+            <div className="flex items-center space-x-2 text-xs text-amber-700">
+              <Calendar className="w-3 h-3" />
+              <span>Valid until: {formatDate(premiumData.endDate)}</span>
+            </div>
+          </div>
+
+          {/* Premium Description */}
+          <p className="text-xs text-amber-600 mt-2">
+            Full access to all courses and exclusive content
+          </p>
+
+          {/* Check if premium is expiring soon */}
+          {new Date(premiumData.endDate) - new Date() <
+            7 * 24 * 60 * 60 * 1000 && (
+            <div className="mt-2 p-2 bg-orange-100 border border-orange-200 rounded text-xs text-orange-700">
+              ⚠️ Your premium subscription expires soon!
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -148,6 +260,9 @@ export default function UserProfile() {
               <p className="font-medium text-lg">{user?.name}</p>
               <p className="text-gray-600">{user?.email}</p>
             </div>
+
+            {/* Render Premium Status */}
+            {renderPremiumStatus()}
 
             <div className="w-full text-center">
               {user?.status === 0 ? (
