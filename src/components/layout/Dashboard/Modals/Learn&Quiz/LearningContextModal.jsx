@@ -102,7 +102,7 @@ export const LearningContextModal = ({
             )}
             <div>
               <h2 className="text-xl font-semibold text-gray-900">
-                Create Learning Context
+                Create Learning Content
               </h2>
               <p className="text-sm text-gray-600 mt-1">
                 Sub-Module ID: {subModuleId} | Course ID: {courseId}
@@ -119,7 +119,10 @@ export const LearningContextModal = ({
 
         {/* Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="p-6 space-y-6">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="p-6 space-y-6"
+          >
             {/* Title */}
             <FormField
               control={form.control}
@@ -182,9 +185,14 @@ export const LearningContextModal = ({
                         <div className="text-sm text-gray-600 mb-2">
                           {selectedVideo ? (
                             <div>
-                              <p className="font-medium">{selectedVideo.name}</p>
+                              <p className="font-medium">
+                                {selectedVideo.name}
+                              </p>
                               <p className="text-xs text-gray-500">
-                                {(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB
+                                {(selectedVideo.size / (1024 * 1024)).toFixed(
+                                  2
+                                )}{" "}
+                                MB
                               </p>
                             </div>
                           ) : (
@@ -203,7 +211,8 @@ export const LearningContextModal = ({
                           )}
                         </div>
                         <p className="text-xs text-gray-500">
-                          Supported formats: MP4, AVI, MOV, WMV, WebM (Max: 100MB)
+                          Supported formats: MP4, AVI, MOV, WMV, WebM (Max:
+                          100MB)
                         </p>
                       </div>
                     </div>
@@ -241,7 +250,7 @@ export const LearningContextModal = ({
                           <Input
                             type="time"
                             placeholder="02:00"
-                            value={field.value || ''}
+                            value={field.value || ""}
                             onChange={(e) => {
                               field.onChange(e.target.value || null);
                             }}
@@ -249,7 +258,8 @@ export const LearningContextModal = ({
                             step="60"
                           />
                           <p className="text-xs text-gray-500">
-                            Set the time limit for this learning context (e.g., 02:30 for 2 hours 30 minutes)
+                            Set the time limit for this learning context (e.g.,
+                            02:30 for 2 hours 30 minutes)
                           </p>
                           {/* Debug info */}
                           <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded">
@@ -277,7 +287,9 @@ export const LearningContextModal = ({
                       min="1"
                       placeholder="1"
                       {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+                      onChange={(e) =>
+                        field.onChange(parseInt(e.target.value) || 1)
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -293,7 +305,7 @@ export const LearningContextModal = ({
                 <input type="hidden" {...field} value={parseInt(subModuleId)} />
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="courseId"
@@ -302,20 +314,7 @@ export const LearningContextModal = ({
               )}
             />
 
-            {/* Debug Button - Remove in production */}
-            <div className="border-t pt-4">
-              <Button
-                type="button"
-                onClick={() => {
-                  console.log("Current form values:", form.getValues());
-                  console.log("Form errors:", form.formState.errors);
-                  console.log("Time limit enabled:", timeLimitEnabled);
-                }}
-                className="bg-gray-500 hover:bg-gray-600 text-white"
-              >
-                Debug Form Values
-              </Button>
-            </div>
+            
 
             {/* Footer - Updated */}
             <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200">
@@ -342,7 +341,7 @@ export const LearningContextModal = ({
                 disabled={isLoading}
                 className="bg-blue-600 hover:bg-blue-700"
               >
-                {isLoading ? "Creating..." : "Create Learning Context"}
+                {isLoading ? "Creating..." : "Create Learning Content"}
               </Button>
             </div>
           </form>

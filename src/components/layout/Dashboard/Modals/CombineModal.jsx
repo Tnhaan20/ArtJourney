@@ -9,7 +9,6 @@ export const CombineModal = ({
   onClose,
   subModuleId,
   courseId,
-  learningContentId, // For reference if needed
 }) => {
   const [modalType, setModalType] = useState(null); // 'learning' or 'quizTitle'
 

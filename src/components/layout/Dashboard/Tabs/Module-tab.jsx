@@ -500,7 +500,7 @@ const SubModuleCard = ({
                   )}
                 </span>
                 <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800">
-                  {learningContexts.length} Learning Contexts
+                  {learningContexts.length} Learning Contents
                 </span>
               </div>
               <p className="text-sm text-gray-600 mb-2">
@@ -519,12 +519,51 @@ const SubModuleCard = ({
             {/* Add Content Button - Opens CombineModal */}
             <button
               onClick={() => {
-                if (setSelectedSubModuleId)
-                  setSelectedSubModuleId(subModule.subModuleId);
-                if (setSelectedCourseId) setSelectedCourseId(courseId);
-                if (setSelectedLearningContentId)
-                  setSelectedLearningContentId(null);
-                if (setShowCombineModal) setShowCombineModal(true);
+                console.log("=== ADD CONTENT BUTTON CLICKED ===");
+                console.log("SubModule ID:", subModule.subModuleId);
+                console.log("Course ID:", courseId);
+                console.log("Available setters:", {
+                  setSelectedSubModuleId: typeof setSelectedSubModuleId,
+                  setSelectedCourseId: typeof setSelectedCourseId,
+                  setShowCombineModal: typeof setShowCombineModal,
+                  setSelectedLearningContentId:
+                    typeof setSelectedLearningContentId,
+                });
+
+                try {
+                  // Use safe function calls with explicit checks
+                  if (typeof setSelectedSubModuleId === "function") {
+                    setSelectedSubModuleId(subModule.subModuleId);
+                    console.log("✅ Set subModule ID:", subModule.subModuleId);
+                  } else {
+                    console.warn("⚠️ setSelectedSubModuleId is not a function");
+                  }
+
+                  if (typeof setSelectedCourseId === "function") {
+                    setSelectedCourseId(courseId);
+                    console.log("✅ Set course ID:", courseId);
+                  } else {
+                    console.warn("⚠️ setSelectedCourseId is not a function");
+                  }
+
+                  if (typeof setSelectedLearningContentId === "function") {
+                    setSelectedLearningContentId(null);
+                    console.log("✅ Reset learning content ID");
+                  } else {
+                    console.warn(
+                      "⚠️ setSelectedLearningContentId is not a function"
+                    );
+                  }
+
+                  if (typeof setShowCombineModal === "function") {
+                    setShowCombineModal(true);
+                    console.log("✅ Opening CombineModal");
+                  } else {
+                    console.error("❌ setShowCombineModal is not a function");
+                  }
+                } catch (error) {
+                  console.error("❌ Error in button click handler:", error);
+                }
               }}
               className="p-1 text-gray-400 hover:text-indigo-600 rounded transition-colors"
               title="Add Learning Content or Quiz"
@@ -585,14 +624,7 @@ const SubModuleCard = ({
 
               const uniqueKey = generateUniqueKey();
 
-              // Debug log to check for duplicates
-              console.log(`Generated key: ${uniqueKey} for context:`, {
-                learningContextId: context.learningContextId,
-                learningContentId: context.learningContentId,
-                id: context.id,
-                title: context.title,
-                index,
-              });
+              
 
               return (
                 <div
@@ -639,12 +671,7 @@ const SubModuleCard = ({
                         )}
                         {/* Debug info - remove in production */}
                         <p className="text-xs text-blue-600 bg-blue-50 p-1 rounded mt-1">
-                          ID:{" "}
-                          {context.learningContextId ||
-                            context.learningContentId ||
-                            context.id ||
-                            "No ID"}{" "}
-                          | Type: {context.contentType || "Unknown"}
+                          Type: {context.contentType === 0 ? "Learning" : "Quiz"}
                         </p>
                       </div>
                     </div>
@@ -658,15 +685,7 @@ const SubModuleCard = ({
                               const validId =
                                 context.learningContextId ||
                                 context.learningContentId;
-                              console.log("=== QUIZ BUTTON CLICKED ===");
-                              console.log("Learning context:", context);
-                              console.log("Valid ID found:", validId);
-                              console.log("Content type:", context.contentType);
-                              console.log("Available setters:", {
-                                setSelectedLearningContentId:
-                                  typeof setSelectedLearningContentId,
-                                setShowQuizModal: typeof setShowQuizModal,
-                              });
+                             
 
                               if (setSelectedLearningContentId && validId) {
                                 setSelectedLearningContentId(validId);
@@ -682,7 +701,6 @@ const SubModuleCard = ({
 
                               if (setShowQuizModal) {
                                 setShowQuizModal(true);
-                                console.log("✅ Opening QuizModal");
                               } else {
                                 console.error(
                                   "❌ Cannot open QuizModal - missing setter"

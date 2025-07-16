@@ -79,7 +79,7 @@ const ArtJourneyAdminDashboard = () => {
             setShowCourseModal={setShowCourseModal}
             setShowModuleModal={setShowModuleModal}
             setShowSubModuleModal={setShowSubModuleModal}
-            setShowCombineModal={setShowCombineModal}
+            setShowCombineModal={setShowCombineModal} // ← Đảm bảo prop này được truyền
             setSelectedCourseId={setSelectedCourseId}
             setSelectedModuleId={setSelectedModuleId}
             setSelectedSubModuleId={setSelectedSubModuleId}

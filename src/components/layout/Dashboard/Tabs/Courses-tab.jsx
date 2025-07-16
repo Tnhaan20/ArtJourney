@@ -31,12 +31,12 @@ export const CoursesTab = ({
   setShowCourseModal,
   setShowModuleModal,
   setShowSubModuleModal,
-  setShowLearningContextModal,
+  setShowCombineModal, // ← Đảm bảo prop này được nhận
   setSelectedCourseId,
   setSelectedModuleId,
   setSelectedSubModuleId,
-  setSelectedLearningContentId, // Add this prop
-  setShowQuizModal, // Add this prop
+  setSelectedLearningContentId,
+  setShowQuizModal,
 }) => {
   // Get data from API
   const { getAllCoursesQuery } = useCourse();
@@ -145,10 +145,10 @@ export const CoursesTab = ({
         setSelectedModuleId={setSelectedModuleId}
         setShowModuleModal={setShowModuleModal}
         setSelectedCourseId={setSelectedCourseId}
-        setShowLearningContextModal={setShowLearningContextModal}
+        setShowCombineModal={setShowCombineModal} // ← Đảm bảo prop này được truyền xuống
         setSelectedSubModuleId={setSelectedSubModuleId}
-        setSelectedLearningContentId={setSelectedLearningContentId} // Pass it down
-        setShowQuizModal={setShowQuizModal} // Pass it down
+        setSelectedLearningContentId={setSelectedLearningContentId}
+        setShowQuizModal={setShowQuizModal}
         onBackToCourses={handleBackToCourses}
       />
     );
