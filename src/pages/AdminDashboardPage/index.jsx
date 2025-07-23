@@ -15,6 +15,7 @@ import { SettingsTab } from "@/components/layout/Dashboard/Tabs/Settings-tab";
 import HistoricalPeriodModal from "@/components/layout/Dashboard/Modals/HistoricalPeriodModal";
 import { SubModuleModal } from "@/components/layout/Dashboard/Modals/SubModuleModal";
 import { QuizModal } from "@/components/layout/Dashboard/Modals/Learn&Quiz/QuizModal";
+import { ChallengeModal } from "@/components/layout/Dashboard/Modals/ChallengeModal";
 
 const ArtJourneyAdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -29,12 +30,17 @@ const ArtJourneyAdminDashboard = () => {
   const [showHistoricalPeriodModal, setShowHistoricalPeriodModal] =
     useState(false);
   const [showRegionModal, setShowRegionModal] = useState(false);
+  const [showChallengeTab, setShowChallengeTab] = useState(false);
+  const [showCreateChallengeModal, setShowCreateChallengeModal] =
+    useState(false);
 
   // State for IDs
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [selectedModuleId, setSelectedModuleId] = useState(null);
   const [selectedSubModuleId, setSelectedSubModuleId] = useState(null);
   const [selectedLearningContentId, setSelectedLearningContentId] =
+    useState(null);
+  const [selectedCourseForChallenge, setSelectedCourseForChallenge] =
     useState(null);
 
   // Quiz Modal state
@@ -61,7 +67,22 @@ const ArtJourneyAdminDashboard = () => {
     setShowRegionModal(false);
   };
 
+  // Function to handle navigation back to courses from challenge tab
+  const handleBackToCourses = () => {
+    setShowChallengeTab(false);
+    setSelectedCourseForChallenge(null);
+  };
+
   const renderContent = () => {
+    if (showChallengeTab && selectedCourseForChallenge) {
+      return (
+        <ChallengesTab
+          selectedCourse={selectedCourseForChallenge}
+          onBackToCourses={handleBackToCourses}
+        />
+      );
+    }
+
     switch (activeTab) {
       case "overview":
         return <OverviewTab />;
@@ -85,12 +106,23 @@ const ArtJourneyAdminDashboard = () => {
             setSelectedSubModuleId={setSelectedSubModuleId}
             setSelectedLearningContentId={setSelectedLearningContentId}
             setShowQuizModal={setShowQuizModal}
+            setShowChallengeTab={setShowChallengeTab}
+            setSelectedCourseForChallenge={setSelectedCourseForChallenge}
           />
         );
       case "quizzes":
         return <QuizzesTab />;
       case "challenges":
-        return <ChallengesTab />;
+        return (
+          <ChallengesTab
+            setShowChallengeTab={setShowChallengeTab}
+            selectedCourse={selectedCourseForChallenge}
+            onBackToCourses={() => {
+              setShowChallengeTab(false);
+              setSelectedCourseForChallenge(null);
+            }}
+          />
+        );
       case "content":
         return <ContentTab />;
       case "settings":
@@ -104,11 +136,11 @@ const ArtJourneyAdminDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <div className="flex inset-y-0 left-0 fixed h-screen">
-      <Sidebar
-        sidebarOpen={sidebarOpen}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       </div>
 
       {/* Main Content Area */}
@@ -119,13 +151,13 @@ const ArtJourneyAdminDashboard = () => {
       >
         {/* Fixed Header */}
         <div className="flex-shrink-0">
-        <Header
-          activeTab={activeTab}
-          setSidebarOpen={setSidebarOpen}
-          sidebarOpen={sidebarOpen}
-          onCreateHistoricalPeriod={handleCreateHistoricalPeriod}
-          onCreateRegion={handleCreateRegion}
-        />
+          <Header
+            activeTab={activeTab}
+            setSidebarOpen={setSidebarOpen}
+            sidebarOpen={sidebarOpen}
+            onCreateHistoricalPeriod={handleCreateHistoricalPeriod}
+            onCreateRegion={handleCreateRegion}
+          />
         </div>
 
         {/* Scrollable Content */}
@@ -198,6 +230,15 @@ const ArtJourneyAdminDashboard = () => {
             setSelectedLearningContentId(null);
           }}
           learningContentId={selectedLearningContentId}
+        />
+      )}
+
+      {/* Challenge Modal */}
+      {showCreateChallengeModal && (
+        <ChallengeModal
+          isOpen={showCreateChallengeModal}
+          onClose={() => setShowCreateChallengeModal(false)}
+          selectedCourse={selectedCourseForChallenge}
         />
       )}
     </div>

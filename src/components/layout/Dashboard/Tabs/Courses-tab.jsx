@@ -14,6 +14,7 @@ import {
   Users,
   Star,
   BookOpen,
+  Trophy, // Add Trophy icon for gamification
 } from "lucide-react";
 import { StatCard } from "@/components/layout/Dashboard/Stat-card";
 import { TailwindStyle } from "@/utils/Enum";
@@ -31,12 +32,14 @@ export const CoursesTab = ({
   setShowCourseModal,
   setShowModuleModal,
   setShowSubModuleModal,
-  setShowCombineModal, // ← Đảm bảo prop này được nhận
+  setShowCombineModal,
   setSelectedCourseId,
   setSelectedModuleId,
   setSelectedSubModuleId,
   setSelectedLearningContentId,
   setShowQuizModal,
+  setShowChallengeTab, // Add this prop to navigate to challenge tab
+  setSelectedCourseForChallenge, // Add this prop to pass selected course
 }) => {
   // Get data from API
   const { getAllCoursesQuery } = useCourse();
@@ -111,6 +114,12 @@ export const CoursesTab = ({
   const handleBackToCourses = () => {
     setShowModuleView(false);
     setSelectedCourse(null);
+  };
+
+  // Function to handle gamification click
+  const handleGamificationClick = (course) => {
+    setSelectedCourseForChallenge(course);
+    setShowChallengeTab(true);
   };
 
   if (isLoading) {
@@ -257,6 +266,14 @@ export const CoursesTab = ({
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
+                    {/* Gamification/Challenge button */}
+                    <button
+                      onClick={() => handleGamificationClick(course)}
+                      className="p-2 text-gray-400 hover:text-yellow-600 transition-colors"
+                      title="Manage Challenges"
+                    >
+                      <Trophy className="w-4 h-4" />
+                    </button>
                     {/* Modified arrow button to show ModuleTab */}
                     <button
                       onClick={() => handleArrowClick(course)}

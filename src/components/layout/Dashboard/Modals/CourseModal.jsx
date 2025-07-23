@@ -110,24 +110,17 @@ export default function CourseModal({
 
   // Handle form submit
   const handleFormSubmit = async (data) => {
-    console.log("Form submit triggered");
-    console.log("Form data:", data);
-    console.log("Form errors:", form.formState.errors);
-
+   
     const isValid = await form.trigger();
-    console.log("Manual validation result:", isValid);
 
     if (!isValid) {
-      console.log("Form validation failed");
       return;
     }
 
     try {
       await onSubmit(data);
-      console.log("Submit successful");
       onClose();
     } catch (error) {
-      console.error("Submit error:", error);
     }
   };
 
@@ -135,8 +128,6 @@ export default function CourseModal({
     e.preventDefault();
     e.stopPropagation();
 
-    console.log("Submit button clicked");
-    console.log("Form values:", form.getValues());
 
     const formData = form.getValues();
     await handleFormSubmit(formData);

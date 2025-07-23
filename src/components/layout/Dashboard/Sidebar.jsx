@@ -48,7 +48,6 @@ export const Sidebar = ({ sidebarOpen, activeTab, setActiveTab }) => {
       items: [
         { id: "courses", label: "Courses", icon: GraduationCap },
         { id: "quizzes", label: "Quizzes", icon: BookOpen },
-        { id: "challenges", label: "Challenges", icon: Trophy },
         { id: "content", label: "Media Content", icon: ImageIcon },
       ],
     },

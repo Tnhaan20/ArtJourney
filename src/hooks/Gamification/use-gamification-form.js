@@ -46,7 +46,6 @@ export const useGamificationForm = () => {
       form,
       onSubmit: form.handleSubmit(onSubmit),
       isLoading: createChallengeMutation.isPending,
-      isSuccess: createChallengeMutation.isSuccess,
       error: createChallengeMutation.error,
     };
   };
