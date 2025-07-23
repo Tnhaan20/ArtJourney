@@ -94,6 +94,36 @@ export const useCourse = () => {
     },
   });
 
+  const deleteCourse = (courseId) => {
+    return useMutation({
+      mutationKey: [QueryKey.COURSES.DELETE_COURSE, courseId],
+      mutationFn: async (courseId) =>
+        await courseService.delete.removeCourse(courseId),
+
+      onSuccess: async (data) => {
+        toast({
+          title: "Course deleted successfully",
+          description: data.message,
+          variant: "success",
+        });
+      },
+
+      onError: async (error) => {
+        toast({
+          title: "Course review failed",
+          description: error.response?.data?.errors?.[0].message,
+          variant: "destructive",
+        });
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: [QueryKey.COURSES.GET_ALL_COURSES],
+        });
+      },
+    });
+  };
+
 
   const getReviewedCourse = (courseId) => {
     return useQuery({
@@ -149,6 +179,8 @@ export const useCourse = () => {
       enabled: !!userId && !!courseId,
     });
   };
+
+  
   
   return {
     createCourseMutation,
@@ -161,6 +193,7 @@ export const useCourse = () => {
     getUserLearningProgress,
     useGetEnrolledCousreOfUser,
     createCourseReview,
-    getReviewedCourse
+    getReviewedCourse,
+    deleteCourse,
   };
 };

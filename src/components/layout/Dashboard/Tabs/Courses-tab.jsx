@@ -42,12 +42,15 @@ export const CoursesTab = ({
   setSelectedCourseForChallenge, // Add this prop to pass selected course
 }) => {
   // Get data from API
-  const { getAllCoursesQuery } = useCourse();
+  const { getAllCoursesQuery, deleteCourse } = useCourse();
   const { data: coursesResponse, isLoading, error } = getAllCoursesQuery;
 
   // State to track which course is showing modules
   const [showModuleView, setShowModuleView] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+
+  // Create delete mutation
+  const deleteMutation = deleteCourse();
 
   // Extract and flatten all courses from all regions
   const allCourses = useMemo(() => {
@@ -120,6 +123,21 @@ export const CoursesTab = ({
   const handleGamificationClick = (course) => {
     setSelectedCourseForChallenge(course);
     setShowChallengeTab(true);
+  };
+
+  // Function to handle delete course
+  const handleDeleteCourse = async (courseId, courseTitle) => {
+    if (
+      window.confirm(
+        `Are you sure you want to delete "${courseTitle}"? This action cannot be undone.`
+      )
+    ) {
+      try {
+        await deleteMutation.mutateAsync(courseId);
+      } catch (error) {
+        console.error("Failed to delete course:", error);
+      }
+    }
   };
 
   if (isLoading) {
@@ -285,8 +303,19 @@ export const CoursesTab = ({
                     <button className="p-2 text-gray-400 hover:text-gray-600">
                       <Edit className="w-4 h-4" />
                     </button>
-                    <button className="p-2 text-gray-400 hover:red-600">
-                      <Trash2 className="w-4 h-4" />
+                    <button
+                      onClick={() =>
+                        handleDeleteCourse(course.id, course.title)
+                      }
+                      className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                      disabled={deleteMutation.isPending}
+                      title="Delete Course"
+                    >
+                      <Trash2
+                        className={`w-4 h-4 ${
+                          deleteMutation.isPending ? "animate-pulse" : ""
+                        }`}
+                      />
                     </button>
                   </div>
                 </div>
