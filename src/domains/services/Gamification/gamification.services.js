@@ -46,7 +46,10 @@ export const gamificationService = {
       );
       return res.data;
     },
-
+    getArtworkByChallenge: async (challengeId) => {
+      const res = await axiosInstance.get(`/challenge/${challengeId}/artworks`);
+      return res.data;
+    }
     
   },
   put: {},

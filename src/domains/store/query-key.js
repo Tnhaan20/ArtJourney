@@ -82,6 +82,7 @@ export const QueryKey = {
     CREATE_CHALLENGE_SESSION: "challenge-create-session",
     CREATE_ARTWORKS: "challenge-create-artworks",
     CREATE_ARTWORK_DETAIL: "challenge-create-artwork-detail",
+    GET_ARTWORK_BY_CHALLENGE: "challenge-get-artwork-by-challenge",
   },
 
   LEADERBOARD: {

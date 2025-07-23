@@ -104,7 +104,18 @@ export const useGamification = () => {
           refetchOnWindowFocus: false,
           retry: false,
         });
-      };
+    };
+
+  const getArtworkByChallenge = (challengeId) => {
+    return useQuery({
+      queryKey: [QueryKey.CHALLENGE.GET_ARTWORK_BY_CHALLENGE, challengeId],
+      queryFn: async () =>
+        await gamificationService.get.getArtworkByChallenge(challengeId),
+      enabled: !!challengeId,
+      refetchOnWindowFocus: false,
+      retry: false,
+    });
+  };
 
      const getChallengeById = (challengeId) => {
         return useQuery({
@@ -121,7 +132,8 @@ export const useGamification = () => {
     createChallengeMutation,
     getChallengeById,
     getChallengeByCourse,
-      createSession,
+    createSession,
+      getArtworkByChallenge,
     createArtwork,
     createArtworkDetail,    
   };

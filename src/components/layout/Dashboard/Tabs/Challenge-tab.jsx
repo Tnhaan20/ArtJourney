@@ -7,11 +7,13 @@ import {
   Users,
   Calendar,
   Award,
+  Settings, // Add Settings icon for challenge details
 } from "lucide-react";
 import { useState } from "react";
 import { useGamification } from "@/hooks/Gamification/use-gamification";
 import { TailwindStyle } from "@/utils/Enum";
 import { ChallengeModal } from "../Modals/ChallengeModal";
+import { MatchingModal } from "../Modals/MatchingModal"; // Import MatchingModal
 
 export const ChallengesTab = ({
   selectedCourse = null,
@@ -19,9 +21,11 @@ export const ChallengesTab = ({
 }) => {
   const { getChallengeByCourse } = useGamification();
 
-  // Local state for modal
+  // Local state for modals
   const [showCreateChallengeModal, setShowCreateChallengeModal] =
     useState(false);
+  const [showMatchingModal, setShowMatchingModal] = useState(false);
+  const [selectedChallenge, setSelectedChallenge] = useState(null);
 
   // Get challenges for the specific course
   const {
@@ -39,6 +43,25 @@ export const ChallengesTab = ({
     // Refetch challenges after modal closes to show newly created challenges
     if (selectedCourse?.id) {
       refetch();
+    }
+  };
+
+  // Handle matching modal close
+  const handleMatchingModalClose = () => {
+    setShowMatchingModal(false);
+    setSelectedChallenge(null);
+  };
+
+  // Handle challenge detail click
+  const handleChallengeDetail = (challenge) => {
+    if (challenge.challengeType === "Matching") {
+      setSelectedChallenge(challenge);
+      setShowMatchingModal(true);
+    } else {
+      // Handle other challenge types here in the future
+      console.log(
+        `Challenge type ${challenge.challengeType} not implemented yet`
+      );
     }
   };
 
@@ -96,9 +119,6 @@ export const ChallengesTab = ({
                 <p className="text-sm text-gray-600">
                   Course:{" "}
                   <span className="font-medium">{selectedCourse.title}</span>
-                  <span className="text-gray-400 ml-2">
-                    (ID: {selectedCourse.id})
-                  </span>
                 </p>
               )}
             </div>
@@ -187,6 +207,16 @@ export const ChallengesTab = ({
                         `Challenge ${index + 1}`}
                     </span>
                     <div className="flex space-x-1">
+                      {/* Challenge Detail Button - only show for matching challenges */}
+                      {challenge.challengeType === "Matching" && (
+                        <button
+                          onClick={() => handleChallengeDetail(challenge)}
+                          className="text-gray-400 hover:text-blue-600 transition-colors p-1"
+                          title="Configure Challenge Details"
+                        >
+                          <Settings className="w-4 h-4" />
+                        </button>
+                      )}
                       <button
                         className="text-gray-400 hover:text-yellow-600 transition-colors p-1"
                         title="Edit Challenge"
@@ -201,7 +231,6 @@ export const ChallengesTab = ({
                       </button>
                     </div>
                   </div>
-
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -275,6 +304,13 @@ export const ChallengesTab = ({
         isOpen={showCreateChallengeModal}
         onClose={handleModalClose}
         selectedCourse={selectedCourse}
+      />
+
+      {/* Matching Modal */}
+      <MatchingModal
+        isOpen={showMatchingModal}
+        onClose={handleMatchingModalClose}
+        selectedChallenge={selectedChallenge}
       />
     </>
   );
