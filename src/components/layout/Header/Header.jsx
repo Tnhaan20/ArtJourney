@@ -13,7 +13,7 @@ import { useState, useEffect, useRef } from "react";
 import MobileMenu from "./MobileMenu";
 import LanguageSwitcher from "@/components/elements/LanguageSwitcher/LanguageSwitcher";
 import { useAppTranslation } from "@/contexts/TranslationContext";
-import "./Header.css"; // Import the CSS file
+import "./Header.css"; 
 import { TailwindStyle } from "@/utils/Enum";
 import HightlightText from "@/components/elements/hightlight-text/Text";
 import { assets } from "@/assets/assets";
@@ -114,10 +114,10 @@ export default function Header() {
                 >
                   <div className="flex items-center gap-2">
                     {/* User Avatar */}
-                    {user?.avatar ? (
+                    {user?.avatarUrl ? (
                       <img
                         loading="lazy"
-                        src={user.avatar}
+                        src={user.avatarUrl}
                         alt="Profile"
                         className="w-6 h-6 object-cover rounded-full"
                       />

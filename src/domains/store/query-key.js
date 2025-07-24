@@ -8,7 +8,12 @@ export const QueryKey = {
     GET: "verify-email-get",
   },
 
-  GET_PREMIUM_STATUS: "get-premium-status",
+  USER: {
+    GET_PREMIUM_STATUS: "get-premium-status",
+    GET_USER_PROFILE: "get-user-profile",
+    UPDATE_PROFILE: "update-profile",
+  },
+
 
   REGIONS: {
     CREATE_REGION: "region-create",

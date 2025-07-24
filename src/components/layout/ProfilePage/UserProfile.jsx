@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "@/domains/store/use-auth-store";
 import { useToast } from "@/utils/Toast";
 import {
@@ -24,81 +24,123 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { TailwindStyle } from "@/utils/Enum";
 import { useAuth } from "@/hooks/Auth/use-auth";
-import { useUser } from "@/hooks/User/use-user"; // Import useUser hook
+import { useUser } from "@/hooks/User/use-user";
+import { useUserForm } from "@/hooks/User/use-user-form";
 
 export default function UserProfile() {
-  const { user, login } = useAuthStore();
+  const { user } = useAuthStore();
   const { toast } = useToast();
+  const fileInputRef = useRef(null);
 
   // Sử dụng custom hooks
   const { useSendVerifyEmail } = useAuth();
-  const { getPremiumStatusQuery } = useUser(); // Get premium status
+  const { getPremiumStatusQuery, getUserProfileQuery } = useUser();
+  const { updateUserProfileForm } = useUserForm();
   const verifyEmailQuery = useSendVerifyEmail();
 
-  // Local state để quản lý trạng thái loading của việc gửi email
-  const [isVerifyEmailLoading, setIsVerifyEmailLoading] = useState(false);
-  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  // Local state for avatar preview
+  const [avatarPreview, setAvatarPreview] = useState(null);
+    const [avatarFile, setAvatarFile] = useState(null);
 
-  const [formData, setFormData] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-    gender: user?.gender !== undefined ? user?.gender.toString() : "",
-    birthday: user?.birthday
-      ? new Date(user.birthday).toISOString().split("T")[0]
+  const [isVerifyEmailLoading, setIsVerifyEmailLoading] = useState(false);
+  const [formInitialized, setFormInitialized] = useState(false);
+
+  // Get user profile data
+  const {
+    data: userProfile,
+    isLoading: isProfileLoading,
+    refetch: refetchProfile,
+  } = getUserProfileQuery;
+  const currentUser = userProfile?.data || user;
+
+
+  
+  // Initialize form with user data
+  const {
+    form,
+    onSubmit,
+    isLoading: isUpdateLoading,
+  } = updateUserProfileForm({
+    fullName: currentUser?.fullName || currentUser?.name || "",
+    phoneNumber: currentUser?.phoneNumber || currentUser?.phone || "",
+    gender: currentUser?.gender || 0,
+    avatarUrl: currentUser?.avatarUrl || currentUser?.avatar || "",
+    birthday: currentUser?.birthday
+      ? new Date(currentUser.birthday).toISOString().slice(0, 10)
       : "",
   });
 
-  // Cập nhật form khi user thay đổi
+  // Effect to refetch profile data when component mounts
   useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || "",
-        email: user.email || "",
-        gender: user.gender !== undefined ? user.gender.toString() : "",
-        birthday: user.birthday
-          ? new Date(user.birthday).toISOString().split("T")[0]
+    if (!userProfile && !isProfileLoading) {
+      refetchProfile();
+    }
+  }, [userProfile, isProfileLoading, refetchProfile]);
+
+  // Effect to update form when user data changes
+  useEffect(() => {
+    if (currentUser && !formInitialized) {
+      form.reset({
+        fullName: currentUser?.fullName || "",
+        phoneNumber: currentUser?.phoneNumber || "",
+        gender: currentUser?.gender || 0,
+        avatarUrl: currentUser?.avatarUrl || "",
+        birthday: currentUser?.birthday
+          ? new Date(currentUser.birthday).toISOString().slice(0, 10)
           : "",
       });
+      setFormInitialized(true);
     }
-  }, [user]);
+  }, [currentUser, form, formInitialized]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  // Handle avatar upload
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        toast({
+          title: "Invalid file type",
+          description: "Please select an image file.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select an image smaller than 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarPreview(previewUrl);
+      setAvatarFile(file);
+
+      // Set the file in form data
+      form.setValue("avatarUrl", file);
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitLoading(true);
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
 
+  // Handle form submission
+  const handleFormSubmit = async (data) => {
     try {
-      // Chuyển đổi gender từ string thành number trước khi lưu
-      const updatedUserData = {
-        ...user,
-        fullName: formData.name,
-        gender: formData.gender !== "" ? parseInt(formData.gender) : undefined,
-        birthday: formData.birthday,
-      };
-
-      // Cập nhật dữ liệu trong store
-      await login(updatedUserData);
-
-      toast({
-        title: "Profile updated",
-        description: "Your profile information has been updated successfully.",
-        variant: "success",
-      });
+      await onSubmit(data);
+      setAvatarPreview(null); // Reset preview after successful update
+      await refetchProfile();
+      
+      setFormInitialized(false); // Allow form to be re-initialized with new data
     } catch (error) {
-      toast({
-        title: "Update failed",
-        description: error.message || "Failed to update profile information.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitLoading(false);
+      console.error("Form submission error:", error);
     }
   };
 
@@ -106,17 +148,13 @@ export default function UserProfile() {
   const handleResendVerification = async () => {
     setIsVerifyEmailLoading(true);
     try {
-      // Gọi API thông qua hook
       const dataVerifyMail = await verifyEmailQuery.refetch();
-
-      // Hiển thị thông báo thành công sau khi API trả về
       toast({
         title: "Verification email sent",
         description: dataVerifyMail.data.data,
         variant: "success",
       });
     } catch (error) {
-      // Xử lý lỗi và hiển thị thông báo lỗi
       toast({
         title: "Failed to send verification email",
         description: error.message || "Something went wrong. Please try again.",
@@ -152,8 +190,7 @@ export default function UserProfile() {
       );
     }
 
-    // If no premium data or user is FreeTier, show Free Tier
-    if (!premiumData || user?.premium === "FreeTier") {
+    if (!premiumData || currentUser?.premium === "FreeTier") {
       return (
         <div className="w-full mb-4">
           <div className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg p-3">
@@ -179,11 +216,9 @@ export default function UserProfile() {
       );
     }
 
-    // If has premium data, show premium status
     return (
       <div className="w-full mb-4">
         <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4">
-          {/* Premium Header */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
               <Crown className="w-4 h-4 text-amber-500" />
@@ -197,7 +232,6 @@ export default function UserProfile() {
             </Badge>
           </div>
 
-          {/* Premium Details */}
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-xs text-amber-700">
               <Calendar className="w-3 h-3" />
@@ -209,12 +243,10 @@ export default function UserProfile() {
             </div>
           </div>
 
-          {/* Premium Description */}
           <p className="text-xs text-amber-600 mt-2">
             Full access to all courses and exclusive content
           </p>
 
-          {/* Check if premium is expiring soon */}
           {new Date(premiumData.endDate) - new Date() <
             7 * 24 * 60 * 60 * 1000 && (
             <div className="mt-2 p-2 bg-orange-100 border border-orange-200 rounded text-xs text-orange-700">
@@ -225,6 +257,20 @@ export default function UserProfile() {
       </div>
     );
   };
+
+  if (isProfileLoading && !currentUser) {
+    return (
+      <div className="container mx-auto max-w-2xl py-10 px-4">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-300 rounded mb-6"></div>
+          <div className="flex flex-col md:flex-row gap-7">
+            <div className="w-full md:w-1/3 h-96 bg-gray-300 rounded"></div>
+            <div className="w-full md:w-2/3 h-96 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto max-w-2xl py-10 px-4">
@@ -239,33 +285,48 @@ export default function UserProfile() {
             <CardTitle>Profile Photo</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden bg-amber-50 mb-4">
-              {user?.avatar ? (
+            <div
+              className="relative w-32 h-32 rounded-full overflow-hidden bg-amber-50 mb-4 cursor-pointer group"
+              onClick={handleAvatarClick}
+            >
+              {avatarPreview || currentUser?.avatarUrl ? (
                 <img
-                  src={user.avatar}
+                  src={avatarPreview || currentUser.avatarUrl}
                   alt="Profile"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-amber-100 text-amber-800 text-2xl font-bold">
-                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                <div className="w-full h-full flex items-center justify-center bg-amber-100 text-amber-800 text-2xl font-bold group-hover:bg-amber-200 transition-colors">
+                  {currentUser?.fullName?.charAt(0)?.toUpperCase() || "U"}
                 </div>
               )}
-              <button className="absolute bottom-0 right-0 p-1.5 bg-primary-yellow rounded-full text-white">
-                <Camera size={16} />
-              </button>
+              <div className="absolute inset-0 flex items-center justify-center bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200">
+                <Camera
+                  className="text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                  size={24}
+                />
+              </div>
             </div>
 
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
+
             <div className="text-center mb-4">
-              <p className="font-medium text-lg">{user?.name}</p>
-              <p className="text-gray-600">{user?.email}</p>
+              <p className="font-medium text-lg">{currentUser?.fullName}</p>
+              <p className="text-gray-600">{currentUser?.email}</p>
             </div>
 
             {/* Render Premium Status */}
             {renderPremiumStatus()}
 
             <div className="w-full text-center">
-              {user?.status === 0 ? (
+              {currentUser?.status === 0 ? (
                 <Badge className="bg-green-600">
                   <Check size={14} className="mr-1" />
                   Verified
@@ -303,28 +364,44 @@ export default function UserProfile() {
             </CardDescription>
           </CardHeader>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={form.handleSubmit(handleFormSubmit)}>
             <CardContent className="space-y-4 gap-2 px-4 py-6">
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="fullName">Full Name</Label>
                   <Input
-                    id="name"
-                    name="name"
+                    id="fullName"
                     placeholder="Your name"
-                    value={formData.name}
-                    onChange={handleInputChange}
+                    {...form.register("fullName")}
                   />
+                  {form.formState.errors.fullName && (
+                    <p className="text-red-500 text-xs">
+                      {form.formState.errors.fullName.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber">Phone Number</Label>
+                  <Input
+                    id="phoneNumber"
+                    placeholder="Your phone number"
+                    {...form.register("phoneNumber")}
+                  />
+                  {form.formState.errors.phoneNumber && (
+                    <p className="text-red-500 text-xs">
+                      {form.formState.errors.phoneNumber.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
                   <Input
                     id="email"
-                    name="email"
                     type="email"
                     placeholder="Your email"
-                    value={formData.email}
+                    value={currentUser?.email || ""}
                     disabled
                   />
                   <p className="text-xs text-gray-500">
@@ -338,27 +415,32 @@ export default function UserProfile() {
                   <Label htmlFor="gender">Gender</Label>
                   <select
                     id="gender"
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
+                    {...form.register("gender", { valueAsNumber: true })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   >
-                    <option value="">Select gender</option>
-                    <option value="0">Male</option>
-                    <option value="1">Female</option>
-                    <option value="2">Other</option>
+                    <option value={0}>Male</option>
+                    <option value={1}>Female</option>
+                    <option value={2}>Other</option>
                   </select>
+                  {form.formState.errors.gender && (
+                    <p className="text-red-500 text-xs">
+                      {form.formState.errors.gender.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="birthday">Birthday</Label>
                   <Input
                     id="birthday"
-                    name="birthday"
                     type="date"
-                    value={formData.birthday}
-                    onChange={handleInputChange}
+                    {...form.register("birthday")}
                   />
+                  {form.formState.errors.birthday && (
+                    <p className="text-red-500 text-xs">
+                      {form.formState.errors.birthday.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -367,26 +449,16 @@ export default function UserProfile() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() =>
-                  setFormData({
-                    name: user?.name || "",
-                    email: user?.email || "",
-                    gender:
-                      user?.gender !== undefined ? user?.gender.toString() : "",
-                    birthday: user?.birthday
-                      ? new Date(user.birthday).toISOString().split("T")[0]
-                      : "",
-                  })
-                }
+                onClick={() => form.reset()}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                disabled={isSubmitLoading}
+                disabled={isUpdateLoading}
                 className={`${TailwindStyle.HIGHLIGHT_FRAME} rounded-md cursor-pointer`}
               >
-                {isSubmitLoading ? "Saving..." : "Save changes"}
+                {isUpdateLoading ? "Saving..." : "Save changes"}
               </Button>
             </CardFooter>
           </form>

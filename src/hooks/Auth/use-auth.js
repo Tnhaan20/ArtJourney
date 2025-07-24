@@ -4,7 +4,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/utils/Toast";
 import { QueryKey } from "@/domains/store/query-key";
 import { useAuthStore } from "@/domains/store/use-auth-store";
-import { useRoleStore, USER_ROLES } from "@/domains/store/use-role-store";
+import {
+  useRoleStore,
+  USER_ROLES,
+} from "@/domains/store/use-role-store";
 
 export const useAuth = () => {
   const { toast } = useToast();

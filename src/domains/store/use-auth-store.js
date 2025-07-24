@@ -14,15 +14,16 @@ export const useAuthStore = create(
           set({
             isAuthenticated: true,
             user: {
-              id: userData.userId,
+              userId: userData.userId,
               email: userData.email,
-              name: userData.fullName || "",
-              avatar: userData.avatarUrl,
+              fullName: userData.fullName || "",
+              avatarUrl: userData.avatarUrl,
               status: userData.status,
+              phoneNumber: userData.phoneNumber || "",
               gender: userData.gender,
               birthday: userData.birthday,
               status: userData.status,
-              premium: userData.premiumStatus,
+              premiumStatus: userData.premiumStatus,
             },
             role: userData.role,
           });
@@ -52,15 +53,16 @@ export const useAuthStore = create(
           if (userData) {
             set({
               user: {
-                id: userData.userId,
+                userId: userData.userId,
                 email: userData.email,
-                name: userData.fullName || "",
-                avatar: userData.avatarUrl,
+                fullName: userData.fullName || "",
+                avatarUrl: userData.avatarUrl,
                 status: userData.status,
+                phoneNumber: userData.phoneNumber || "",
                 gender: userData.gender,
                 birthday: userData.birthday,
                 status: userData.status,
-                premium: userData.premiumStatus,
+                premiumStatus: userData.premiumStatus,
               },
               role: userData.role,
               isAuthenticated: true,
