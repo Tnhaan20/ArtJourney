@@ -41,7 +41,7 @@ export default function CourseList() {
     data: enrolledCoursesResponse,
     isLoading: isEnrollLoading,
     error: enrollError,
-  } = useGetEnrolledCousreOfUser(user?.id);
+  } = useGetEnrolledCousreOfUser(user?.userId);
 
   // Extract regions data from API response
   const regions = coursesResponse?.data || [];

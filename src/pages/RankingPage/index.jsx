@@ -29,7 +29,7 @@ export default function RankingPage() {
     userId: player.userId,
     name: player.username,
     username: player.username,
-    avatar: `/api/placeholder/40/40`, // Default avatar since not provided in API
+    avatar: player.avatarUrl || "",
     score: player.totalScore,
     totalScore: player.totalScore,
     completedChallenges: player.challengesCompleted,

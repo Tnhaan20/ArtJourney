@@ -101,7 +101,7 @@ export default function SubModuleContent() {
     setIsStartingQuiz(true);
 
     try {
-      const result = await startQuiz(learningContentId, user.id);
+      const result = await startQuiz(learningContentId, user.userId);
 
       if (result.success) {
         // Get the time limit from activeContent
@@ -125,7 +125,7 @@ export default function SubModuleContent() {
           timeTaken: attemptData?.timeTaken,
           learningContentId:
             attemptData?.learningContentId || learningContentId,
-          userId: attemptData?.userId || user.id,
+          userId: attemptData?.userId || user.userId,
           userAnswers: attemptData?.userAnswers || [],
 
           // Additional fields for our quiz functionality

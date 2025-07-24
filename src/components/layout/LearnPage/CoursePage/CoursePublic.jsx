@@ -106,7 +106,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
     // If course is free (price = 0), enroll directly
     if (course?.price === 0) {
       try {
-        await enrollUser(user.id, courseId);
+        await enrollUser(user.userId, courseId);
 
         // Success state will be handled by useEffect above
       } catch (error) {

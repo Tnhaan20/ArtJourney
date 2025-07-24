@@ -16,9 +16,9 @@ export default function CourseDetail() {
     data: learningProgress,
     isLoading,
     error,
-  } = getUserLearningProgress(user?.id, courseId);
+  } = getUserLearningProgress(user?.userId, courseId);
 
-  console.log("User ID:", user?.id);
+  console.log("User ID:", user?.userId);
   console.log("Learning Progress Data:", learningProgress);
 
   // Enhanced loading state

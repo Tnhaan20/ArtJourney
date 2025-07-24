@@ -453,7 +453,7 @@ export default function CourseAuth({ learningProgress, courseId }) {
     course?.courseCompletionPercentage || calculateProgress();
   const courseImage = course?.coverImageUrl || courseHeaderBg;
   const userName = user?.name || "Student";
-  const userAvatar = user?.avatar || teamMember1;
+  const userAvatar = user?.avatarUrl || teamMember1;
   const learningOutcomes = getLearningOutcomes();
 
   return (
@@ -1108,13 +1108,17 @@ export default function CourseAuth({ learningProgress, courseId }) {
                               </td>
                               <td className="py-4 px-4">
                                 <div className="flex items-center space-x-3">
-                                  <div className="w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-                                    <User className="w-5 h-5 text-white" />
+                                  <div className="w-10 h-10 items-center justify-center">
+                                    <img
+                                      src={player.avatarUrl}
+                                      alt={player.username}
+                                      className="w-10 h-10 rounded-full flex"
+                                    />
                                   </div>
                                   <div>
                                     <div className="font-medium text-gray-900">
                                       {player.username}
-                                      {player.userId === user?.id && (
+                                      {player.userId === user?.userId && (
                                         <span className="ml-2 text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">
                                           You
                                         </span>
@@ -1260,8 +1264,8 @@ export default function CourseAuth({ learningProgress, courseId }) {
                     {isSubmittingReview ? (
                       <>
                         <div className="cursor-not-allowed">
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>Submitting...</span>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span>Submitting...</span>
                         </div>
                       </>
                     ) : (

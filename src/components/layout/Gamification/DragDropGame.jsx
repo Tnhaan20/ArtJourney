@@ -157,11 +157,11 @@ export default function DragDropGame({ courseId, challengeId, challengeData, cha
     }
 
     const sessionData = {
-      userId: user.id,
+      userId: user.userId,
       challengeId: parseInt(challengeId),
       score: Math.round(finalScore),
       timeTaken: totalTime,
-      isCompleted
+      isCompleted,
     };
 
     // Set form data and submit
