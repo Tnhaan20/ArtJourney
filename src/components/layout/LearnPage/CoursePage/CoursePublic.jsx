@@ -98,7 +98,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
 
   // Handle start learning/purchase button click
   const handleCourseAction = async () => {
-    if (!isAuthenticated || !user?.id) {
+    if (!isAuthenticated || !user?.userId) {
       navigate("/signin");
       return;
     }
