@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+const fileSchema = z.instanceof(File).optional();
+
+
 export const updateUserProfileSchema = z
   .object({
     fullName: z
@@ -24,11 +27,7 @@ export const updateUserProfileSchema = z
       .max(2, "Gender must be 0, 1, or 2")
       .optional(),
 
-    avatarUrl: z
-      .string()
-      .url("Avatar URL must be a valid URL")
-      .or(z.literal(""))
-      .optional(),
+    avatarUrl: fileSchema,
 
     birthday: z
       .string()

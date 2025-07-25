@@ -57,13 +57,13 @@ export default function UserProfile() {
   // Initialize form with user data
   const {
     form,
-    onSubmit,
+    onSubmit: handleSubmitForm, // Rename to avoid confusion
     isLoading: isUpdateLoading,
   } = updateUserProfileForm({
     fullName: "",
     phoneNumber: "",
     gender: 0,
-    avatarUrl: "",
+    avatarUrl: null,
     birthday: "",
   });
 
@@ -81,12 +81,12 @@ export default function UserProfile() {
         fullName: currentUser?.fullName || "",
         phoneNumber: currentUser?.phoneNumber || "",
         gender: currentUser?.gender || 0,
-        avatarUrl: currentUser?.avatarUrl || "",
+        // Don't include avatarUrl in form reset since it's a File type
         birthday: currentUser?.birthday
           ? new Date(currentUser.birthday).toISOString().slice(0, 10)
           : "",
       };
-      
+
       form.reset(formData);
       setOriginalFormData(formData);
       setFormInitialized(true);
@@ -96,16 +96,16 @@ export default function UserProfile() {
 
   // Watch form changes to detect if there are any modifications
   const watchedValues = form.watch();
-  
+
   useEffect(() => {
     if (formInitialized && originalFormData) {
-      const hasFormChanges = Object.keys(originalFormData).some(key => {
-        if (key === 'avatarUrl') return false; // Handle avatar separately
+      const hasFormChanges = Object.keys(originalFormData).some((key) => {
+        if (key === "avatarUrl") return false; // Handle avatar separately since it's a file
         return watchedValues[key] !== originalFormData[key];
       });
-      
+
       const hasAvatarChange = avatarFile !== null;
-      
+
       setHasChanges(hasFormChanges || hasAvatarChange);
     }
   }, [watchedValues, originalFormData, formInitialized, avatarFile]);
@@ -148,30 +148,38 @@ export default function UserProfile() {
   // Handle form submission
   const handleFormSubmit = async (data) => {
     try {
-      // Create FormData for file upload
-      const submitData = { ...data };
-      
-      // If there's a new avatar file, include it
-      if (avatarFile) {
-        submitData.avatarUrl = avatarFile;
-      } else {
-        // Keep the existing avatar URL if no new file
-        submitData.avatarUrl = originalFormData.avatarUrl;
-      }
+      // Prepare submission data with file
+      const submitData = {
+        fullName: data.fullName || "",
+        phoneNumber: data.phoneNumber || "",
+        gender: data.gender,
+        birthday: data.birthday || "",
+        avatarUrl: avatarFile, // Pass the File object directly
+      };
 
-      await onSubmit(submitData);
-      
+      console.log("Submitting data:");
+      console.log("fullName:", submitData.fullName);
+      console.log("phoneNumber:", submitData.phoneNumber);
+      console.log("gender:", submitData.gender);
+      console.log("birthday:", submitData.birthday);
+      console.log(
+        "avatarUrl:",
+        avatarFile ? `[File: ${avatarFile.name}]` : "null"
+      );
+
+      // Call the form hook's onSubmit directly with the data including the file
+      await handleSubmitForm(submitData);
+
       // Reset states after successful update
       setAvatarPreview(null);
       setAvatarFile(null);
       setHasChanges(false);
-      
+
       // Refetch profile and reinitialize form
       await refetchProfile();
       setFormInitialized(false);
-      
-      
-      
+
+    
     } catch (error) {
       console.error("Form submission error:", error);
       toast({
@@ -189,10 +197,10 @@ export default function UserProfile() {
       setAvatarPreview(null);
       setAvatarFile(null);
       setHasChanges(false);
-      
+
       // Reset file input
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
