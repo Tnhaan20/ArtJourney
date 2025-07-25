@@ -24,6 +24,8 @@ export const useAuthStore = create(
               birthday: userData.birthday,
               status: userData.status,
               premiumStatus: userData.premiumStatus,
+              loginCount: userData.loginCount,
+              isSurveyed: userData.isSurveyed || false,
             },
             role: userData.role,
           });
@@ -63,6 +65,8 @@ export const useAuthStore = create(
                 birthday: userData.birthday,
                 status: userData.status,
                 premiumStatus: userData.premiumStatus,
+                loginCount: userData.loginCount,
+                isSurveyed: userData.isSurveyed || false,
               },
               role: userData.role,
               isAuthenticated: true,
@@ -90,6 +94,19 @@ export const useAuthStore = create(
             isAuthenticated: false,
             user: null,
             role: null,
+          });
+        }
+      },
+
+      // Method to update survey status
+      updateSurveyStatus: (isSurveyed) => {
+        const state = get();
+        if (state.user) {
+          set({
+            user: {
+              ...state.user,
+              isSurveyed,
+            },
           });
         }
       },

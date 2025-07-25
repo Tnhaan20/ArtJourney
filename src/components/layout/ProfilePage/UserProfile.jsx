@@ -38,12 +38,13 @@ export default function UserProfile() {
   const { updateUserProfileForm } = useUserForm();
   const verifyEmailQuery = useSendVerifyEmail();
 
-  // Local state for avatar preview
+  // Local state for avatar preview and tracking changes
   const [avatarPreview, setAvatarPreview] = useState(null);
-    const [avatarFile, setAvatarFile] = useState(null);
-
+  const [avatarFile, setAvatarFile] = useState(null);
   const [isVerifyEmailLoading, setIsVerifyEmailLoading] = useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [originalFormData, setOriginalFormData] = useState({});
 
   // Get user profile data
   const {
@@ -53,21 +54,17 @@ export default function UserProfile() {
   } = getUserProfileQuery;
   const currentUser = userProfile?.data || user;
 
-
-  
   // Initialize form with user data
   const {
     form,
     onSubmit,
     isLoading: isUpdateLoading,
   } = updateUserProfileForm({
-    fullName: currentUser?.fullName || currentUser?.name || "",
-    phoneNumber: currentUser?.phoneNumber || currentUser?.phone || "",
-    gender: currentUser?.gender || 0,
-    avatarUrl: currentUser?.avatarUrl || currentUser?.avatar || "",
-    birthday: currentUser?.birthday
-      ? new Date(currentUser.birthday).toISOString().slice(0, 10)
-      : "",
+    fullName: "",
+    phoneNumber: "",
+    gender: 0,
+    avatarUrl: "",
+    birthday: "",
   });
 
   // Effect to refetch profile data when component mounts
@@ -80,7 +77,7 @@ export default function UserProfile() {
   // Effect to update form when user data changes
   useEffect(() => {
     if (currentUser && !formInitialized) {
-      form.reset({
+      const formData = {
         fullName: currentUser?.fullName || "",
         phoneNumber: currentUser?.phoneNumber || "",
         gender: currentUser?.gender || 0,
@@ -88,10 +85,30 @@ export default function UserProfile() {
         birthday: currentUser?.birthday
           ? new Date(currentUser.birthday).toISOString().slice(0, 10)
           : "",
-      });
+      };
+      
+      form.reset(formData);
+      setOriginalFormData(formData);
       setFormInitialized(true);
+      setHasChanges(false);
     }
   }, [currentUser, form, formInitialized]);
+
+  // Watch form changes to detect if there are any modifications
+  const watchedValues = form.watch();
+  
+  useEffect(() => {
+    if (formInitialized && originalFormData) {
+      const hasFormChanges = Object.keys(originalFormData).some(key => {
+        if (key === 'avatarUrl') return false; // Handle avatar separately
+        return watchedValues[key] !== originalFormData[key];
+      });
+      
+      const hasAvatarChange = avatarFile !== null;
+      
+      setHasChanges(hasFormChanges || hasAvatarChange);
+    }
+  }, [watchedValues, originalFormData, formInitialized, avatarFile]);
 
   // Handle avatar upload
   const handleAvatarChange = (event) => {
@@ -121,9 +138,6 @@ export default function UserProfile() {
       const previewUrl = URL.createObjectURL(file);
       setAvatarPreview(previewUrl);
       setAvatarFile(file);
-
-      // Set the file in form data
-      form.setValue("avatarUrl", file);
     }
   };
 
@@ -134,13 +148,52 @@ export default function UserProfile() {
   // Handle form submission
   const handleFormSubmit = async (data) => {
     try {
-      await onSubmit(data);
-      setAvatarPreview(null); // Reset preview after successful update
-      await refetchProfile();
+      // Create FormData for file upload
+      const submitData = { ...data };
       
-      setFormInitialized(false); // Allow form to be re-initialized with new data
+      // If there's a new avatar file, include it
+      if (avatarFile) {
+        submitData.avatarUrl = avatarFile;
+      } else {
+        // Keep the existing avatar URL if no new file
+        submitData.avatarUrl = originalFormData.avatarUrl;
+      }
+
+      await onSubmit(submitData);
+      
+      // Reset states after successful update
+      setAvatarPreview(null);
+      setAvatarFile(null);
+      setHasChanges(false);
+      
+      // Refetch profile and reinitialize form
+      await refetchProfile();
+      setFormInitialized(false);
+      
+      
+      
     } catch (error) {
       console.error("Form submission error:", error);
+      toast({
+        title: "Update failed",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle cancel - reset form to original values
+  const handleCancel = () => {
+    if (originalFormData) {
+      form.reset(originalFormData);
+      setAvatarPreview(null);
+      setAvatarFile(null);
+      setHasChanges(false);
+      
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -300,13 +353,20 @@ export default function UserProfile() {
                   {currentUser?.fullName?.charAt(0)?.toUpperCase() || "U"}
                 </div>
               )}
-              <div className="absolute inset-0 flex items-center justify-center bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200">
+              <div className="absolute inset-0 flex items-center justify-center hover:bg-[#1b1919b9] bg-opacity-90 group-hover:bg-opacity-50 transition-all duration-200">
                 <Camera
                   className="text-white opacity-0 group-hover:opacity-100 transition-opacity"
                   size={24}
                 />
               </div>
             </div>
+
+            {/* Show image change indicator */}
+            {avatarPreview && (
+              <p className="text-xs text-amber-600 mb-2">
+                New image selected - Save changes to update
+              </p>
+            )}
 
             {/* Hidden file input */}
             <input
@@ -449,14 +509,19 @@ export default function UserProfile() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => form.reset()}
+                onClick={handleCancel}
+                disabled={!hasChanges}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                disabled={isUpdateLoading}
-                className={`${TailwindStyle.HIGHLIGHT_FRAME} rounded-md cursor-pointer`}
+                disabled={isUpdateLoading || !hasChanges}
+                className={`${
+                  TailwindStyle.HIGHLIGHT_FRAME
+                } rounded-md cursor-pointer ${
+                  !hasChanges ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 {isUpdateLoading ? "Saving..." : "Save changes"}
               </Button>

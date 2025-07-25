@@ -8,6 +8,7 @@ import {
   UserCircle,
   ChevronDown,
   Flame,
+  LucideBookOpenCheck,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import MobileMenu from "./MobileMenu";
@@ -192,12 +193,12 @@ export default function Header() {
                       </Link>
 
                       <Link
-                        to="/settings"
+                        to="/my-survey"
                         className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-800 hover:bg-white/10 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
-                        <Settings size={18} className="text-gray-600" />
-                        <span>Settings</span>
+                        <LucideBookOpenCheck size={18} className="text-gray-600" />
+                        <span>My Survey</span>
                       </Link>
 
                       <button

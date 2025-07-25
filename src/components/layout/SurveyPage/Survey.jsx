@@ -5,13 +5,77 @@ import SideBG from "@/assets/SideBGSignIn.jpg";
 import confetti from 'canvas-confetti';
 import Checkbox from "@/components/elements/checkbox/Checkbox";
 import LazyImage from '@/components/elements/LazyImg/LazyImg';
+import { useAuthStore } from "@/domains/store/use-auth-store";
+import { useToast } from "@/utils/Toast";
+import { useSurvey } from "@/hooks/Survey/use-survey";
+import { useSurveyForm } from "@/hooks/Survey/use-survey-form";
 
 export default function Survey() {
   const [step, setStep] = useState(1);
-  const [userType, setUserType] = useState('');
-  const [selectedContinents, setSelectedContinents] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState({});
   const [countdown, setCountdown] = useState(5);
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { getCurrentUser, login, updateSurveyStatus } = useAuthStore();
+  const { user } = getCurrentUser();
+
+  // Use survey hooks
+  const { getSurveyQuestionsQuery } = useSurvey();
+  const { onSubmit: submitSurvey, isLoading: isSubmitting } = useSurveyForm();
+
+  const {
+    data: surveyData,
+    isLoading: isLoadingQuestions,
+    error: questionsError,
+  } = getSurveyQuestionsQuery;
+
+  const surveyQuestions = surveyData?.data || [];
+  const totalQuestions = surveyQuestions.length;
+  const currentQuestion = surveyQuestions[currentQuestionIndex];
+
+  // Check if it's first time user .loginCount === 1)
+  const isFirstTimeUser = user?.loginCount === 1;
+
+  // Prevent navigation away from survey if it's first time user and not completed
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isFirstTimeUser && !user?.isSurveyed && step < 4) {
+        e.preventDefault();
+        e.returnValue = "";
+        return "";
+      }
+    };
+
+    const handlePopState = (e) => {
+      if (isFirstTimeUser && !user?.isSurveyed && step < 4) {
+        e.preventDefault();
+        window.history.pushState(null, "", window.location.pathname);
+        toast({
+          title: "Survey Required",
+          description:
+            "Please complete the survey or skip it to continue using Art Journey.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    // Add event listeners only for first time users
+    if (isFirstTimeUser) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      window.addEventListener("popstate", handlePopState);
+
+      // Push current state to prevent back navigation
+      if (!user?.isSurveyed && step < 4) {
+        window.history.pushState(null, "", window.location.pathname);
+      }
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [user, step, toast, isFirstTimeUser]);
 
   // Handle countdown and redirect for success screen
   useEffect(() => {
@@ -20,91 +84,270 @@ export default function Survey() {
       confetti({
         particleCount: 100,
         spread: 70,
-        origin: { y: 0.6 }
+        origin: { y: 0.6 },
       });
-      
+
       // Set up countdown timer
       const timer = setInterval(() => {
-        setCountdown(prev => {
+        setCountdown((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
-            navigate('/');
+            navigate("/");
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
-      
+
       return () => clearInterval(timer);
     }
   }, [step, navigate]);
 
   const handleNext = () => {
-    setStep(step + 1);
+    if (step === 1) {
+      // Go to first question
+      setStep(2);
+    } else if (step === 2 && currentQuestionIndex < totalQuestions - 1) {
+      // Go to next question
+      setCurrentQuestionIndex((prev) => prev + 1);
+    } else if (step === 2 && currentQuestionIndex === totalQuestions - 1) {
+      // Go to summary/completion step
+      setStep(3);
+    }
   };
 
   const handleBack = () => {
-    setStep(step - 1);
+    if (step === 3) {
+      // Go back to last question
+      setStep(2);
+      setCurrentQuestionIndex(totalQuestions - 1);
+    } else if (step === 2 && currentQuestionIndex > 0) {
+      // Go to previous question
+      setCurrentQuestionIndex((prev) => prev - 1);
+    } else if (step === 2 && currentQuestionIndex === 0) {
+      // Go back to welcome screen
+      setStep(1);
+    }
   };
 
-  const handleUserTypeSelect = (type) => {
-    setUserType(type);
+  const handleSkip = () => {
+    if (user) {
+      // Mark as surveyed (skipped) and navigate to home
+      updateSurveyStatus(true);
+      toast({
+        title: "Survey Skipped",
+        description: "You can retake the survey anytime from your profile.",
+        variant: "default",
+      });
+      navigate("/");
+    }
   };
 
-  const handleContinentToggle = (continent) => {
-    setSelectedContinents(prev => {
-      if (prev.includes(continent)) {
-        return prev.filter(item => item !== continent);
+  const handleOptionSelect = (
+    questionId,
+    optionId,
+    isMultipleChoice = false
+  ) => {
+    setAnswers((prev) => {
+      if (isMultipleChoice) {
+        // Handle multiple choice questions
+        const currentAnswers = prev[questionId] || [];
+        if (currentAnswers.includes(optionId)) {
+          // Remove if already selected
+          return {
+            ...prev,
+            [questionId]: currentAnswers.filter((id) => id !== optionId),
+          };
+        } else {
+          // Add to selection
+          return {
+            ...prev,
+            [questionId]: [...currentAnswers, optionId],
+          };
+        }
       } else {
-        return [...prev, continent];
+        // Handle single choice questions
+        return {
+          ...prev,
+          [questionId]: [optionId],
+        };
       }
     });
   };
 
-  const handleSubmit = () => {
-    // Here you would typically send the survey data to your backend
-    console.log('Survey submitted:', { userType, selectedContinents });
-    // Move to success screen
-    setStep(4);
+  const isQuestionAnswered = (questionId) => {
+    const answer = answers[questionId];
+    return answer && answer.length > 0;
   };
 
-  // Progress step bar component
+  const isCurrentQuestionAnswered = () => {
+    return (
+      currentQuestion && isQuestionAnswered(currentQuestion.surveyQuestionId)
+    );
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    try {
+      // Format answers for API submission
+      const formattedAnswers = Object.entries(answers).flatMap(
+        ([questionId, optionIds]) =>
+          optionIds.map((optionId) => ({
+            surveyQuestionId: parseInt(questionId),
+            surveyOptionId: parseInt(optionId),
+          }))
+      );
+
+      // Submit using the form hook
+      await submitSurvey({
+        answers: formattedAnswers,
+      });
+
+      // Update user state to mark survey as completed
+      updateSurveyStatus(true);
+
+      toast({
+        title: "Survey Completed!",
+        description:
+          "Thank you for completing the survey. Welcome to Art Journey!",
+        variant: "success",
+      });
+
+      // Move to success screen
+      setStep(4);
+    } catch (error) {
+      console.error("Survey submission error:", error);
+
+      // Check if it's a validation error
+      if (error.name === "ZodError") {
+        toast({
+          title: "Invalid Survey Data",
+          description: "Please check your answers and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Submission Failed",
+          description:
+            error?.response?.data?.message ||
+            "Failed to submit survey. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  // Check if question allows multiple answers (based on content or could be a field from API)
+  const isMultipleChoice = (question) => {
+    return (
+      question?.surveyQuestionContent
+        ?.toLowerCase()
+        .includes("select all that apply") ||
+      question?.surveyQuestionContent
+        ?.toLowerCase()
+        .includes("(select multiple)")
+    );
+  };
+
+  // Progress step bar component - Progress increases when moving to next question
   const ProgressSteps = () => {
+    let progress = 0;
+
+    if (step === 1) {
+      progress = 0;
+    } else if (step === 2) {
+      // Progress based on current question index (moving through questions)
+      if (totalQuestions > 0) {
+        progress = ((currentQuestionIndex + 1) / totalQuestions) * 90; // 90% max for questions phase
+      }
+    } else if (step === 3) {
+      progress = 95; // Review step
+    } else if (step === 4) {
+      progress = 100; // Complete
+    }
+
     return (
       <div className="w-full mb-8">
-        <div className="flex items-center justify-between">
-          <div className={`flex flex-col items-center ${step >= 2 ? 'text-primary-yellow' : 'text-gray-400'}`}>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${step >= 2 ? 'border-primary-yellow bg-amber-50' : 'border-gray-300'}`}>
-              <span className="font-bold">1</span>
-            </div>
-            <span className="text-xs mt-1">Purpose</span>
-          </div>
-          
-          <div className={`flex-1 h-1 mx-2 ${step >= 3 ? 'bg-primary-yellow' : 'bg-gray-300'}`}></div>
-          
-          <div className={`flex flex-col items-center ${step >= 3 ? 'text-primary-yellow' : 'text-gray-400'}`}>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${step >= 3 ? 'border-primary-yellow bg-amber-50' : 'border-gray-300'}`}>
-              <span className="font-bold">2</span>
-            </div>
-            <span className="text-xs mt-1">Interests</span>
-          </div>
-          
-          <div className={`flex-1 h-1 mx-2 ${step >= 4 ? 'bg-primary-yellow' : 'bg-gray-300'}`}></div>
-          
-          <div className={`flex flex-col items-center ${step >= 4 ? 'text-primary-yellow' : 'text-gray-400'}`}>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${step >= 4 ? 'border-primary-yellow bg-amber-50' : 'border-gray-300'}`}>
-              <span className="font-bold">3</span>
-            </div>
-            <span className="text-xs mt-1">Complete</span>
-          </div>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-gray-600">
+            {step === 1
+              ? "Welcome"
+              : step === 2
+              ? `Question ${currentQuestionIndex + 1} of ${totalQuestions}`
+              : step === 3
+              ? "Review Your Answers"
+              : "Complete"}
+          </span>
+          <span className="text-sm text-gray-600">{Math.round(progress)}%</span>
         </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className="bg-primary-yellow h-2 rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        {step === 2 && (
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>Current: {currentQuestionIndex + 1}</span>
+            <span>Remaining: {totalQuestions - currentQuestionIndex - 1}</span>
+          </div>
+        )}
       </div>
     );
   };
 
+  // Calculate answered questions for validation
+  const answeredQuestionsCount = Object.keys(answers).filter((questionId) => {
+    const answer = answers[questionId];
+    return answer && answer.length > 0;
+  }).length;
+
+  // Check if all questions are answered for enabling review
+  const allQuestionsAnswered = answeredQuestionsCount === totalQuestions;
+
+  // Loading state
+  if (isLoadingQuestions) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-yellow mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading survey questions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (questionsError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Failed to load survey questions.</p>
+          <button
+            onClick={() => getSurveyQuestionsQuery.refetch()}
+            className={`${TailwindStyle.HIGHLIGHT_FRAME} px-6 py-2 rounded-md`}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center">
-      {/* Step 1: Welcome Screen - Fullscreen with low opacity */}
+      {/* Survey completion notice - only for first time users */}
+      {isFirstTimeUser && !user?.isSurveyed && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-amber-100 border border-amber-400 text-amber-700 px-4 py-2 rounded-lg shadow-lg z-50">
+          <p className="text-sm font-medium">
+            Welcome! Please complete the survey to personalize your experience
+            or skip it to continue.
+          </p>
+        </div>
+      )}
+
+      {/* Step 1: Welcome Screen */}
       {step === 1 && (
         <div className="fixed inset-0 flex items-center justify-center">
           <div className="absolute inset-0">
@@ -121,178 +364,215 @@ export default function Survey() {
             <h1 className="text-4xl font-bold text-primary-yellow mb-8">
               WELCOME TO ART JOURNEY
             </h1>
-            <button
-              onClick={handleNext}
-              className={`${TailwindStyle.HIGHLIGHT_FRAME} px-12 py-3 text-lg font-semibold rounded-md cursor-pointer`}
-            >
-              NEXT
-            </button>
+            <p className="text-white text-lg mb-8">
+              Let's personalize your art history learning experience
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={handleNext}
+                className={`${TailwindStyle.HIGHLIGHT_FRAME} px-12 py-3 text-lg font-semibold rounded-md cursor-pointer`}
+              >
+                START SURVEY
+              </button>
+              <button
+                onClick={handleSkip}
+                className="px-12 py-3 text-lg font-semibold rounded-md border border-white text-white hover:bg-white hover:text-gray-800 transition-colors"
+              >
+                SKIP SURVEY
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Step 2: User Type Selection */}
-      {step === 2 && (
+      {/* Step 2: Dynamic Questions */}
+      {step === 2 && currentQuestion && (
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full mx-4">
           <ProgressSteps />
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            How do you want to use Art Journey?
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            {currentQuestion.surveyQuestionContent}
           </h2>
-          <p className="text-gray-600 mb-6">
-            We'll personalize your setup experience accordingly.
-          </p>
 
-          <div className="space-y-4">
-            <div
-              className={`p-4 border rounded-lg cursor-pointer flex items-center gap-4 ${
-                userType === "teacher"
-                  ? "border-primary-yellow bg-amber-100"
-                  : "border-gray-300"
-              }`}
-              onClick={() => handleUserTypeSelect("teacher")}
-            >
-              <div className="bg-amber-100 p-2 rounded">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-primary-yellow"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p className="font-medium">
-                  I'm here to take resources to teach
-                </p>
-                <p className="text-sm text-gray-600">
-                  Evaluate resources of art history
-                </p>
-              </div>
-            </div>
+          <div className="space-y-3">
+            {currentQuestion.options.map((option) => {
+              const isSelected = answers[
+                currentQuestion.surveyQuestionId
+              ]?.includes(option.surveyOptionId);
+              const isMultiple = isMultipleChoice(currentQuestion);
 
-            <div
-              className={`p-4 border rounded-lg cursor-pointer flex items-center gap-4 ${
-                userType === "student"
-                  ? "border-primary-yellow bg-amber-100"
-                  : "border-gray-300"
-              }`}
-              onClick={() => handleUserTypeSelect("student")}
-            >
-              <div className="bg-amber-100 p-2 rounded">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-primary-yellow"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              return (
+                <div
+                  key={option.surveyOptionId}
+                  className="flex items-center p-2"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p className="font-medium">I'm here to practice and prepare</p>
-                <p className="text-sm text-gray-600">
-                  Solve challenges and learn new art history knowledge
-                </p>
-              </div>
-              <div className="ml-auto">
-                <span className="bg-amber-200 text-amber-800 text-xs px-2 py-1 rounded">
-                  Free trial
-                </span>
-              </div>
-            </div>
+                  {isMultiple ? (
+                    <Checkbox
+                      checked={isSelected}
+                      onChange={() =>
+                        handleOptionSelect(
+                          currentQuestion.surveyQuestionId,
+                          option.surveyOptionId,
+                          true
+                        )
+                      }
+                      color="primary-yellow"
+                    >
+                      <span
+                        className={
+                          isSelected ? "text-primary-yellow" : "text-gray-700"
+                        }
+                      >
+                        {option.surveyOptionContent}
+                      </span>
+                    </Checkbox>
+                  ) : (
+                    <div
+                      className={`w-full p-4 border rounded-lg cursor-pointer flex items-center gap-4 ${
+                        isSelected
+                          ? "border-primary-yellow bg-amber-100"
+                          : "border-gray-300 hover:border-amber-300"
+                      }`}
+                      onClick={() =>
+                        handleOptionSelect(
+                          currentQuestion.surveyQuestionId,
+                          option.surveyOptionId,
+                          false
+                        )
+                      }
+                    >
+                      <div
+                        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                          isSelected
+                            ? "border-primary-yellow"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {isSelected && (
+                          <div className="w-2 h-2 rounded-full bg-primary-yellow"></div>
+                        )}
+                      </div>
+                      <span
+                        className={
+                          isSelected
+                            ? "text-primary-yellow font-medium"
+                            : "text-gray-700"
+                        }
+                      >
+                        {option.surveyOptionContent}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-between">
+            <div className="flex gap-2">
+              <button
+                onClick={handleBack}
+                className="px-8 py-2 text-base font-semibold rounded-md border border-primary-yellow text-primary-yellow hover:bg-amber-50"
+              >
+                BACK
+              </button>
+              <button
+                onClick={handleSkip}
+                className="px-8 py-2 text-base font-semibold rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50"
+              >
+                SKIP SURVEY
+              </button>
+            </div>
+
             <button
               onClick={handleNext}
-              disabled={!userType}
-              className={`${
-                TailwindStyle.HIGHLIGHT_FRAME
-              } px-8 py-2 text-base font-semibold rounded-md ${
-                !userType ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`${TailwindStyle.HIGHLIGHT_FRAME} px-8 py-2 text-base font-semibold rounded-md`}
             >
-              NEXT
+              {currentQuestionIndex === totalQuestions - 1 ? "REVIEW" : "NEXT"}
             </button>
           </div>
         </div>
       )}
 
-      {/* Step 3: Continent Selection with Checkboxes */}
+      {/* Step 3: Review & Submit */}
       {step === 3 && (
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full mx-4">
           <ProgressSteps />
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Which continent do you like the art history?
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Review Your Answers
           </h2>
-          <p className="text-gray-600 mb-6">
-            We'll personalize your setup experience accordingly.
-          </p>
 
-          <div className="space-y-3">
-            {[
-              "Europe Art History",
-              "Asia Art History",
-              "Africa Art History",
-              "Oceania Art History",
-              "North America Art History",
-              "South America Art History",
-            ].map((item) => (
-              <div key={item} className="flex items-center p-2">
-                <Checkbox
-                  checked={selectedContinents.includes(item)}
-                  onChange={() => handleContinentToggle(item)}
-                  color="primary-yellow"
+          <div className="space-y-6 max-h-96 overflow-y-auto">
+            {surveyQuestions.map((question) => {
+              const selectedOptions = answers[question.surveyQuestionId] || [];
+              const selectedOptionTexts = question.options
+                .filter((option) =>
+                  selectedOptions.includes(option.surveyOptionId)
+                )
+                .map((option) => option.surveyOptionContent);
+
+              const isAnswered = selectedOptions.length > 0;
+
+              return (
+                <div
+                  key={question.surveyQuestionId}
+                  className={`border-b pb-4 ${
+                    !isAnswered ? "bg-gray-50 p-4 rounded-lg" : ""
+                  }`}
                 >
-                  <span
-                    className={
-                      selectedContinents.includes(item)
-                        ? "text-primary-yellow"
-                        : "text-gray-700"
-                    }
-                  >
-                    {item}
-                  </span>
-                </Checkbox>
-              </div>
-            ))}
+                  <h3 className="font-medium text-gray-800 mb-2">
+                    {question.surveyQuestionContent}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {isAnswered ? (
+                      selectedOptionTexts.map((text, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm"
+                        >
+                          {text}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-500 text-sm italic">
+                        No answer selected
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           <div className="mt-8 flex justify-between">
-            <button
-              onClick={handleBack}
-              className="px-8 py-2 text-base font-semibold rounded-md border border-primary-yellow text-primary-yellow hover:bg-amber-50"
-            >
-              BACK
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleBack}
+                className="px-8 py-2 text-base font-semibold rounded-md border border-primary-yellow text-primary-yellow hover:bg-amber-50"
+              >
+                BACK TO QUESTIONS
+              </button>
+              <button
+                onClick={handleSkip}
+                className="px-8 py-2 text-base font-semibold rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50"
+              >
+                SKIP SURVEY
+              </button>
+            </div>
 
             <button
               onClick={handleSubmit}
-              disabled={selectedContinents.length === 0}
+              disabled={isSubmitting || answeredQuestionsCount === 0}
               className={`${
                 TailwindStyle.HIGHLIGHT_FRAME
               } px-8 py-2 text-base font-semibold rounded-md ${
-                selectedContinents.length === 0
+                isSubmitting || answeredQuestionsCount === 0
                   ? "opacity-50 cursor-not-allowed"
                   : ""
               }`}
             >
-              NEXT
+              {isSubmitting ? "SUBMITTING..." : "SUBMIT SURVEY"}
             </button>
           </div>
         </div>
@@ -331,25 +611,9 @@ export default function Survey() {
             </h2>
 
             <p className="text-lg text-gray-600 mb-6">
-              Thank you for sharing your preferences. We've customized your
-              experience based on your selections.
+              Thank you for completing the survey. We've personalized your
+              experience based on your preferences.
             </p>
-
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-primary-yellow mb-4">
-                Your Selected Interests:
-              </h3>
-              <div className="flex flex-wrap justify-center gap-2">
-                {selectedContinents.map((continent) => (
-                  <span
-                    key={continent}
-                    className="px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-medium"
-                  >
-                    {continent}
-                  </span>
-                ))}
-              </div>
-            </div>
 
             <div className="text-center mb-6">
               <p className="text-gray-500">

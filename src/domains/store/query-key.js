@@ -8,6 +8,12 @@ export const QueryKey = {
     GET: "verify-email-get",
   },
 
+  SURVEY: {
+    CREATE_SUBMISSION: "survey-create-submission",
+    GET_QUESTIONS: "survey-get-questions",
+    GET_MY_SURVEY: "survey-get-my-survey",
+  },
+
   USER: {
     GET_PREMIUM_STATUS: "get-premium-status",
     GET_USER_PROFILE: "get-user-profile",

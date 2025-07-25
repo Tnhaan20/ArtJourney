@@ -24,6 +24,10 @@ const QuizPage = lazy(() => import("@/pages/LearnPage/QuizPage/QuizPage"));
 const ChallengePage = lazy(() =>
   import("@/pages/LearnPage/ChallengePage/ChallengePage")
 );
+
+const MySurvey = lazy(() =>
+  import("@/components/layout/SurveyPage/MySurvey")
+);
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
 const RankingPage = lazy(() => import("@/pages/RankingPage"));
 
@@ -263,6 +267,21 @@ export default function AppRoutes() {
             <ProtectedRoute restrictAdmin={true}>
               <SurveyPage />
             </ProtectedRoute>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/my-survey"
+        element={
+          <Suspense fallback={<PageLoader />}>
+                          <MainLayout>
+
+            <ProtectedRoute restrictAdmin={true}>
+              <MySurvey />
+              </ProtectedRoute>
+                            </MainLayout>
+
           </Suspense>
         }
       />
