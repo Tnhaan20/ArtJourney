@@ -54,10 +54,12 @@ export const QueryKey = {
   MODULE: {
     CREATE_MODULE: "create-module",
     GET_MODULE: "get-module",
+    DELETE_MODULE: "delete-module",
   },
   SUB_MODULE: {
     CREATE_SUB_MODULE: "create-sub-module",
     GET_SUB_MODULE: "get-sub-module",
+    DELETE_SUB_MODULE: "delete-sub-module",
   },
 
   LEARNING_CONTEXT: {
@@ -66,6 +68,7 @@ export const QueryKey = {
     MARK_AS_COMPLETE: "learning-context-mark-as-complete",
     CREATE_QUESTION: "learning-context-create-question",
     GET_QUESTION: "learning-context-get-question",
+    DELETE_LEARNING_CONTEXT: "learning-context-delete",
   },
 
   QUIZ: {

@@ -89,7 +89,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
       // Show success message for 2 seconds then reload
       const timer = setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 500);
 
       // Cleanup timer if component unmounts
       return () => clearTimeout(timer);
@@ -103,8 +103,7 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
       return;
     }
 
-    // If course is free (price = 0), enroll directly
-    if (course?.price === 0) {
+    if (course?.price === 0 && course?.isPremium === false) {
       try {
         await enrollUser(user.userId, courseId);
 
@@ -116,9 +115,9 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
       // If course has price, create payment
       try {
         const paymentData = {
-          buyerName: user?.name || user?.firstName || "Student",
-          buyerEmail: user?.email || "",
-          buyerPhone: user?.phone || "0354545454",
+          buyerName: user?.fullName,
+          buyerEmail: user?.email,
+          buyerPhone: user?.phoneNumber,
           description: `thanh toan khoa hoc`,
           items: [
             {
@@ -166,17 +165,64 @@ export default function CoursePublic({ courseId, isAuthenticated }) {
       };
     }
 
-    if (course?.price === 0) {
+    // ====== Check user premium status and course price ======
+
+    // =====================Check free tier user=====================
+    if (
+      course?.price === 0 &&
+      course?.isPremium === false &&
+      user?.premiumStatus === "FreeTier"
+    ) {
       return {
         text: isEnrolling
           ? "Enrolling..."
           : isSuccess
           ? "Enrolled! ✓"
-          : "Start Learning",
+          : "Enroll Now",
         disabled: isEnrolling,
         showPrice: false,
       };
-    } else {
+    }
+
+    // =====================Check free tier user=====================
+
+    // =====================Check premium active user=====================
+    else if (
+      course?.price >= 0 &&
+      course?.isPremium === true &&
+      user.premiumStatus === "PremiumActive"
+    ) {
+      return {
+        text: isEnrolling
+          ? "Enrolling..."
+          : isSuccess
+          ? "Enrolled! ✓"
+          : `Enroll Now`,
+        disabled: isEnrolling,
+        showPrice: true,
+      };
+    }
+
+    // =====================Check premium active user=====================
+
+    // =====================Check premium expired, suspended, free user=====================
+    else if (
+      (course?.price > 0 &&
+        course?.isPremium === true &&
+        user.premiumStatus === "PremiumExpired") ||
+      user.premiumStatus === "FreeTier" ||
+      user.premiumStatus === "PremiumSuspended"
+    ) {
+      return {
+        text: "Content required Premium Access",
+        disabled: true,
+        showPrice: false,
+      };
+    }
+
+    // =====================Check premium expired, suspended user=====================
+
+    else {
       return {
         text: isCreatingPayment
           ? "Creating Payment..."

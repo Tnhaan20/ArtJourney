@@ -13,7 +13,9 @@ export const learningContextServices = {
   },
   get: {
     getLearningContent: async (subModuleId) => {
-      const res = await axiosInstance.get(`/learning-contents/sub-module/${subModuleId}`);
+      const res = await axiosInstance.get(
+        `/learning-contents/sub-module/${subModuleId}`
+      );
       return res.data;
     },
 
@@ -31,5 +33,10 @@ export const learningContextServices = {
     },
   },
   put: {},
-  delete: {},
+  delete: {
+    deleteLearningContent: async (learningContentId) => {
+      const res = await axiosInstance.delete(`/learning-contents/${learningContentId}`);
+      return res.data;
+    },
+  },
 };

@@ -28,10 +28,38 @@ export const useSubModule = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
+        queryKey: [QueryKey.MODULE.GET_MODULE],
+      });
+    },
+  });
+
+  const deleteSubModuleMutation = useMutation({
+    mutationKey: [QueryKey.SUB_MODULE.DELETE_SUB_MODULE],
+    mutationFn: async (subModuleId) =>
+      await subModuleService.delete.deleteSubModule(subModuleId),
+
+    onSuccess: async (data) => {
+      toast({
+        title: "Sub-module deleted successfully",
+        description: data.message,
+        variant: "success",
+      });
+    },
+    onError: async (error) => {
+      toast({
+        title: "Sub-module deletion failed",
+        description: error.response?.data?.errors?.[0].message,
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
         queryKey: [QueryKey.SUB_MODULE.GET_SUB_MODULE],
       });
     },
   });
+
+
 
   const getSubModuleQuery = (moduleId) => {
     return useQuery({
@@ -49,5 +77,6 @@ export const useSubModule = () => {
   return {
     createSubModuleMutation,
     getSubModuleQuery,
+    deleteSubModuleMutation,
   };
 };

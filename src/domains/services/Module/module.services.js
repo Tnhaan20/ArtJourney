@@ -15,5 +15,10 @@ export const moduleService = {
     },
   },
   put: {},
-  delete: {},
+  delete: {
+    deleteModule: async (moduleId) => {
+      const res = await axiosInstance.delete(`/modules/${moduleId}`);
+      return res.data;
+    },
+  },
 };

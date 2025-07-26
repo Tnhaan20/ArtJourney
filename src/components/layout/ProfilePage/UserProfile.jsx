@@ -114,6 +114,13 @@ export default function UserProfile() {
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      console.log("🖼️ Avatar file selected:", {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+      });
+
       // Validate file type
       if (!file.type.startsWith("image/")) {
         toast({
@@ -134,10 +141,18 @@ export default function UserProfile() {
         return;
       }
 
+      // Clean up previous preview URL
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);
       setAvatarPreview(previewUrl);
       setAvatarFile(file);
+
+      // DON'T set the file in the form here, we'll pass it directly in handleFormSubmit
+      console.log("🖼️ Avatar preview and file state updated");
     }
   };
 
@@ -154,7 +169,7 @@ export default function UserProfile() {
         phoneNumber: data.phoneNumber || "",
         gender: data.gender,
         birthday: data.birthday || "",
-        avatarUrl: avatarFile, // Pass the File object directly
+        avatarUrl: avatarFile, // Pass the File object directly, not from form data
       };
 
       console.log("Submitting data:");
@@ -164,7 +179,9 @@ export default function UserProfile() {
       console.log("birthday:", submitData.birthday);
       console.log(
         "avatarUrl:",
-        avatarFile ? `[File: ${avatarFile.name}]` : "null"
+        avatarFile
+          ? `[File: ${avatarFile.name}, size: ${avatarFile.size}]`
+          : "null"
       );
 
       // Call the form hook's onSubmit directly with the data including the file
@@ -175,11 +192,20 @@ export default function UserProfile() {
       setAvatarFile(null);
       setHasChanges(false);
 
+      // Clean up preview URL to prevent memory leaks
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+
       // Refetch profile and reinitialize form
       await refetchProfile();
       setFormInitialized(false);
 
-    
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
+        variant: "success",
+      });
     } catch (error) {
       console.error("Form submission error:", error);
       toast({
@@ -194,6 +220,12 @@ export default function UserProfile() {
   const handleCancel = () => {
     if (originalFormData) {
       form.reset(originalFormData);
+
+      // Clean up avatar preview URL
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+
       setAvatarPreview(null);
       setAvatarFile(null);
       setHasChanges(false);

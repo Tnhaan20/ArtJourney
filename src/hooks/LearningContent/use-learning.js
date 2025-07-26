@@ -34,6 +34,32 @@ export const useLearning = () => {
     },
   });
 
+  const deleteLearningMutation = useMutation({
+    mutationKey: [QueryKey.LEARNING_CONTEXT.DELETE_LEARNING_CONTEXT],
+    mutationFn: async (learningItemId) =>
+      await learningContextServices.delete.deleteLearningContent(learningItemId),
+
+    onSuccess: async (data) => {
+      toast({
+        title: "Learning context deleted successfully",
+        description: data.message,
+        variant: "success",
+      });
+    },
+    onError: async (error) => {
+      toast({
+        title: "Learning context deletion failed",
+        description: error.response?.data?.errors?.[0].message,
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.SUB_MODULE.GET_SUB_MODULE],
+      });
+    },
+  });
+
   const createMarkAsComplete = useMutation({
     mutationKey: [QueryKey.LEARNING_CONTEXT.MARK_AS_COMPLETE],
     mutationFn: async (learningItemId) =>
@@ -98,6 +124,7 @@ export const useLearning = () => {
     getLearningContext,
     getLearningContent,
     createMarkAsComplete,
+    deleteLearningMutation,
     getLearningItem,
   };
 };

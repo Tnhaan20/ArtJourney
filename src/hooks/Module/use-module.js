@@ -33,6 +33,32 @@ export const useModule = () => {
     },
   });
 
+  const deleteModuleMutation = useMutation({
+    mutationKey: [QueryKey.MODULE.DELETE_MODULE],
+    mutationFn: async (moduleId) =>
+      await moduleService.delete.deleteModule(moduleId),
+
+    onSuccess: async (data) => {
+      toast({
+        title: "Module deleted successfully",
+        description: data.message,
+        variant: "success",
+      });
+    },
+    onError: async (error) => {
+      toast({
+        title: "Module deleted failed",
+        description: error.response?.data?.errors?.[0].message,
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.MODULE.GET_MODULE],
+      });
+    },
+  });
+
   const getModuleQuery = (courseId) => { 
     return useQuery({
       queryKey: [QueryKey.MODULE.GET_MODULE, courseId],
@@ -47,5 +73,6 @@ export const useModule = () => {
   return {
     createModuleMutation,
     getModuleQuery,
+    deleteModuleMutation,
   };
 };

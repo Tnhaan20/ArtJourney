@@ -3,67 +3,90 @@ import { z } from "zod";
 // File validation schema
 const fileSchema = z.instanceof(File).optional();
 
-export const useCourseSchema = z.object({
-  Title: z
-    .string()
-    .min(1, "Course name is required")
-    .min(3, "Course name must be at least 3 characters long")
-    .max(200, "Course name must be less than 200 characters"),
+export const useCourseSchema = z
+  .object({
+    Title: z
+      .string()
+      .min(1, "Course name is required")
+      .min(3, "Course name must be at least 3 characters long")
+      .max(200, "Course name must be less than 200 characters"),
 
-  ThumbnailImage: fileSchema,
+    ThumbnailImage: fileSchema,
 
-  Description: z
-    .string()
-    .min(1, "Course description is required")
-    .max(1000, "Description cannot exceed 1000 characters"),
+    Description: z
+      .string()
+      .min(1, "Course description is required")
+      .max(1000, "Description cannot exceed 1000 characters"),
 
-  Level: z.string().min(1, "Course level is required"),
+    Level: z
+      .string()
+      .min(1, "Please select a level")
+      .transform((val) => parseInt(val, 10))
+      .refine((val) => [0, 1, 2].includes(val), {
+        message: "Invalid level selected",
+      }),
 
-  Status: z.string().min(1, "Course status is required"),
+    Status: z
+      .string()
+      .min(1, "Please select a status")
+      .transform((val) => parseInt(val, 10))
+      .refine((val) => [0, 1, 2].includes(val), {
+        message: "Invalid status selected",
+      }),
 
-  HistoricalPeriodId: z
-    .string()
-    .min(1, "Please select a Historical Period")
-    .transform((val) => parseInt(val, 10))
-    .refine((val) => val > 0, {
-      message: "Please select a Historical Period",
-    }),
+    HistoricalPeriodId: z
+      .string()
+      .min(1, "Please select a Historical Period")
+      .transform((val) => parseInt(val, 10))
+      .refine((val) => val > 0, {
+        message: "Please select a Historical Period",
+      }),
 
-  RegionId: z
-    .string()
-    .min(1, "Please select a Region")
-    .transform((val) => parseInt(val, 10))
-    .refine((val) => val > 0, {
-      message: "Please select a Region",
-    }),
+    RegionId: z
+      .string()
+      .min(1, "Please select a Region")
+      .transform((val) => parseInt(val, 10))
+      .refine((val) => val > 0, {
+        message: "Please select a Region",
+      }),
 
-  LearningOutcomes: z.string().min(1, "Learning outcomes are required"),
+    LearningOutcomes: z.string().min(1, "Learning outcomes are required"),
 
-  EstimatedDuration: z
-    .string()
-    .min(1, "Estimated duration is required")
-    .regex(
-      /^\d{2}:\d{2}:\d{2}$/,
-      "Duration must be in format HH:mm:ss (e.g., 03:00:00)"
-    ),
+    EstimatedDuration: z
+      .string()
+      .min(1, "Estimated duration is required")
+      .regex(
+        /^\d{2}:\d{2}:\d{2}$/,
+        "Duration must be in format HH:mm:ss (e.g., 03:00:00)"
+      ),
 
-  // Keep IsPremium as string for validation, transform in onSubmit
-  IsPremium: z
-    .string()
-    .min(1, "Premium status is required")
-    .refine((val) => val === "0" || val === "1", {
-      message: "Premium status must be 0 or 1",
-    }),
+    IsPremium: z
+      .string()
+      .min(1, "Please select premium status")
+      .transform((val) => val === "true"), // Convert string to boolean
 
-  CoverImage: fileSchema,
-});
+    Price: z.number().min(0, "Price cannot be negative"),
+
+    CoverImage: fileSchema,
+  })
+  .refine(
+    (data) => {
+      // Cross-field validation: Premium courses must have price >= 10000
+      if (data.IsPremium && data.Price < 10000) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Premium courses must have a price of at least 10,000 VND",
+      path: ["Price"], // This associates the error with the Price field
+    }
+  );
 
 export const userEnrollCourse = z.object({
-  enrollmentStatus: z
-    .number(),
+  enrollmentStatus: z.number(),
 
-  learningStatus: z
-    .number(),
+  learningStatus: z.number(),
 
   userId: z
     .number()
@@ -81,8 +104,7 @@ export const userEnrollCourse = z.object({
 export const courseReviewSchema = z.object({
   courseId: z.number(),
 
-  rating: z.string()
-    .min(1, "Rating is required"),
+  rating: z.string().min(1, "Rating is required"),
 
   feedBack: z
     .string()

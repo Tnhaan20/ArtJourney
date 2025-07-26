@@ -41,12 +41,18 @@ export const ModuleTab = ({
   onBackToCourses,
 }) => {
   // All hooks at the top level
-  const { getModuleQuery } = useModule();
-  const { getSubModuleQuery } = useSubModule();
-  const { getLearningContext } = useLearning();
+  const { getModuleQuery, deleteModuleMutation } = useModule();
+  const { getSubModuleQuery, deleteSubModuleMutation } = useSubModule();
+  const { getLearningContext, deleteLearningMutation } = useLearning();
 
   // State hooks
   const [expandedSubModules, setExpandedSubModules] = useState(new Set());
+  const [deleteConfirmation, setDeleteConfirmation] = useState({
+    isOpen: false,
+    type: null, // 'module', 'submodule', 'learning'
+    id: null,
+    title: null,
+  });
 
   // Main data query
   const {
@@ -63,6 +69,80 @@ export const ModuleTab = ({
   const safeExpandedModules = useMemo(() => {
     return expandedModules || new Set();
   }, [expandedModules]);
+
+  // Delete handlers
+  const handleDeleteModule = async (moduleId) => {
+    try {
+      await deleteModuleMutation.mutateAsync(moduleId);
+      setDeleteConfirmation({ isOpen: false, type: null, id: null, title: null });
+      
+      // Remove from expanded modules if it was expanded
+      const newExpanded = new Set(safeExpandedModules);
+      newExpanded.delete(moduleId);
+      if (setExpandedModules) setExpandedModules(newExpanded);
+    } catch (error) {
+      console.error("Error deleting module:", error);
+    }
+  };
+
+  const handleDeleteSubModule = async (subModuleId) => {
+    try {
+      await deleteSubModuleMutation.mutateAsync(subModuleId);
+      setDeleteConfirmation({ isOpen: false, type: null, id: null, title: null });
+      
+      // Remove from expanded sub-modules if it was expanded
+      const newExpanded = new Set(expandedSubModules);
+      newExpanded.delete(subModuleId);
+      setExpandedSubModules(newExpanded);
+    } catch (error) {
+      console.error("Error deleting sub-module:", error);
+    }
+  };
+
+  const handleDeleteLearningContent = async (learningContentId) => {
+    try {
+      await deleteLearningMutation.mutateAsync(learningContentId);
+      setDeleteConfirmation({ isOpen: false, type: null, id: null, title: null });
+    } catch (error) {
+      console.error("Error deleting learning content:", error);
+    }
+  };
+
+  const openDeleteConfirmation = (type, id, title) => {
+    setDeleteConfirmation({
+      isOpen: true,
+      type,
+      id,
+      title,
+    });
+  };
+
+  const closeDeleteConfirmation = () => {
+    setDeleteConfirmation({
+      isOpen: false,
+      type: null,
+      id: null,
+      title: null,
+    });
+  };
+
+  const confirmDelete = () => {
+    const { type, id } = deleteConfirmation;
+    
+    switch (type) {
+      case 'module':
+        handleDeleteModule(id);
+        break;
+      case 'submodule':
+        handleDeleteSubModule(id);
+        break;
+      case 'learning':
+        handleDeleteLearningContent(id);
+        break;
+      default:
+        console.error("Unknown delete type:", type);
+    }
+  };
 
   // Loading and error states
   if (isModuleLoading) {
@@ -186,6 +266,9 @@ export const ModuleTab = ({
               setShowQuizModal={setShowQuizModal} // Pass it down
               getSubModuleQuery={getSubModuleQuery}
               getLearningContext={getLearningContext}
+              onDeleteModule={(id, title) => openDeleteConfirmation('module', id, title)}
+              onDeleteSubModule={(id, title) => openDeleteConfirmation('submodule', id, title)}
+              onDeleteLearningContent={(id, title) => openDeleteConfirmation('learning', id, title)}
             />
           ))
         ) : (
@@ -207,6 +290,42 @@ export const ModuleTab = ({
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmation.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Confirm Deletion
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete "{deleteConfirmation.title}"? 
+              {deleteConfirmation.type === 'module' && " This will also delete all sub-modules and learning content within this module."}
+              {deleteConfirmation.type === 'submodule' && " This will also delete all learning content within this sub-module."}
+              {deleteConfirmation.type === 'learning' && " This action cannot be undone."}
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={closeDeleteConfirmation}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                disabled={deleteModuleMutation.isPending || deleteSubModuleMutation.isPending || deleteLearningMutation.isPending}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                disabled={deleteModuleMutation.isPending || deleteSubModuleMutation.isPending || deleteLearningMutation.isPending}
+              >
+                {(deleteModuleMutation.isPending || deleteSubModuleMutation.isPending || deleteLearningMutation.isPending)
+                  ? "Deleting..."
+                  : "Delete"
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -229,6 +348,9 @@ const ModuleCard = ({
   setShowQuizModal = () => {}, // Make sure this is received
   getSubModuleQuery,
   getLearningContext,
+  onDeleteModule,
+  onDeleteSubModule,
+  onDeleteLearningContent,
 }) => {
   // Hook calls in separate component - always same number
   const subModuleQuery = getSubModuleQuery(module.moduleId);
@@ -299,7 +421,10 @@ const ModuleCard = ({
           <button className="p-2 text-gray-400 hover:text-gray-600">
             <Edit className="w-4 h-4" />
           </button>
-          <button className="p-2 text-gray-400 hover:text-red-600">
+          <button 
+            className="p-2 text-gray-400 hover:text-red-600"
+            onClick={() => onDeleteModule(module.moduleId, module.moduleTitle)}
+          >
             <Trash2 className="w-4 h-4" />
           </button>
         </div>
@@ -383,6 +508,8 @@ const ModuleCard = ({
                   setSelectedLearningContentId={setSelectedLearningContentId}
                   setShowQuizModal={setShowQuizModal} // Pass it down
                   getLearningContext={getLearningContext}
+                  onDeleteSubModule={onDeleteSubModule}
+                  onDeleteLearningContent={onDeleteLearningContent}
                 />
               ))}
             </div>
@@ -413,6 +540,8 @@ const SubModuleCard = ({
   setSelectedLearningContentId = () => {},
   setShowQuizModal = () => {},
   getLearningContext,
+  onDeleteSubModule,
+  onDeleteLearningContent,
 }) => {
   // Hook calls in separate component - always same number
   const learningContextQuery = getLearningContext
@@ -522,13 +651,6 @@ const SubModuleCard = ({
                 console.log("=== ADD CONTENT BUTTON CLICKED ===");
                 console.log("SubModule ID:", subModule.subModuleId);
                 console.log("Course ID:", courseId);
-                console.log("Available setters:", {
-                  setSelectedSubModuleId: typeof setSelectedSubModuleId,
-                  setSelectedCourseId: typeof setSelectedCourseId,
-                  setShowCombineModal: typeof setShowCombineModal,
-                  setSelectedLearningContentId:
-                    typeof setSelectedLearningContentId,
-                });
 
                 try {
                   // Use safe function calls with explicit checks
@@ -584,7 +706,10 @@ const SubModuleCard = ({
             <button className="p-1 text-gray-400 hover:text-gray-600">
               <Edit className="w-3 h-3" />
             </button>
-            <button className="p-1 text-gray-400 hover:text-red-600">
+            <button 
+              className="p-1 text-gray-400 hover:text-red-600"
+              onClick={() => onDeleteSubModule(subModule.subModuleId, subModule.subModuleTitle)}
+            >
               <Trash2 className="w-3 h-3" />
             </button>
           </div>
@@ -623,8 +748,6 @@ const SubModuleCard = ({
               };
 
               const uniqueKey = generateUniqueKey();
-
-              
 
               return (
                 <div
@@ -716,7 +839,15 @@ const SubModuleCard = ({
                       <button className="p-1 text-gray-400 hover:text-gray-600">
                         <Edit className="w-2 h-2" />
                       </button>
-                      <button className="p-1 text-gray-400 hover:text-red-600">
+                      <button 
+                        className="p-1 text-gray-400 hover:text-red-600"
+                        onClick={() => {
+                          const validId = context.learningContextId || context.learningContentId || context.id;
+                          if (validId) {
+                            onDeleteLearningContent(validId, context.title || "Untitled Content");
+                          }
+                        }}
+                      >
                         <Trash2 className="w-2 h-2" />
                       </button>
                     </div>

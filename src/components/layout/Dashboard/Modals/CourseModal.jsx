@@ -11,7 +11,7 @@ import { useHistoricalPeriods } from "@/hooks/Historical/use-historical";
 import { useRegion } from "@/hooks/Regions/use-regions";
 import { TailwindStyle } from "@/utils/Enum";
 import { X, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ImageUploader from "@/components/elements/image-uploader/img-upload";
 
 export default function CourseModal({
@@ -32,6 +32,24 @@ export default function CourseModal({
     { id: 1, value: "" },
   ]);
 
+  // Watch premium status to control price field
+  const isPremium = form.watch("IsPremium");
+  console.log(isPremium);
+
+  // Effect to handle price field based on premium status
+  useEffect(() => {
+    if (isPremium === "false") {
+      // If free tier, set price to 0 and disable
+      form.setValue("Price", 0);
+    } else if (isPremium === "true") {
+      // If premium, ensure minimum price
+      const currentPrice = form.getValues("Price");
+      if (!currentPrice || currentPrice < 10000) {
+        form.setValue("Price", 10000);
+      }
+    }
+  }, [isPremium, form]);
+
   // Safe data extraction
   const regions = getRegionQuery?.data?.data?.items || [];
   const isLoadingRegions = getRegionQuery?.isLoading;
@@ -40,11 +58,10 @@ export default function CourseModal({
     getAllHistoricalPeriodsQuery?.data?.data?.items || [];
   const isLoadingHistoricalPeriods = getAllHistoricalPeriodsQuery?.isLoading;
 
-  // Updated options according to API spec
   const levelOptions = [
-    { value: 0, label: "Beginner" },
-    { value: 1, label: "Intermediate" },
-    { value: 2, label: "Advanced" },
+    { value: "0", label: "Beginner" },
+    { value: "1", label: "Intermediate" },
+    { value: "2", label: "Advanced" },
   ];
 
   const statusOptions = [
@@ -54,8 +71,8 @@ export default function CourseModal({
   ];
 
   const premiumOptions = [
-    { value: "0", label: "Free" },
-    { value: "1", label: "Premium" },
+    { value: "false", label: "Free" },
+    { value: "true", label: "Premium" },
   ];
 
   // Handle thumbnail image selection
@@ -108,9 +125,21 @@ export default function CourseModal({
     form.setValue("LearningOutcomes", JSON.stringify(outcomeObject));
   };
 
+  // Format price display
+  const formatPrice = (value) => {
+    if (!value) return "";
+    return new Intl.NumberFormat("vi-VN").format(value);
+  };
+
+  // Handle price input change
+  const handlePriceChange = (e) => {
+    const value = e.target.value.replace(/[^\d]/g, ""); // Remove non-digits
+    const numericValue = parseInt(value) || 0;
+    form.setValue("Price", numericValue);
+  };
+
   // Handle form submit
   const handleFormSubmit = async (data) => {
-   
     const isValid = await form.trigger();
 
     if (!isValid) {
@@ -121,13 +150,13 @@ export default function CourseModal({
       await onSubmit(data);
       onClose();
     } catch (error) {
+      console.error("Course creation error:", error);
     }
   };
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
 
     const formData = form.getValues();
     await handleFormSubmit(formData);
@@ -419,6 +448,105 @@ export default function CourseModal({
                         </div>
                       </div>
 
+                      {/* Premium Status and Price */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-primary-black mb-2">
+                            Premium Status{" "}
+                            <span className="text-red-500">*</span>
+                          </label>
+                          <FormField
+                            control={form.control}
+                            name="IsPremium"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <select
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow"
+                                    {...field}
+                                  >
+                                    <option value="">Select Type</option>
+                                    {premiumOptions.map((option) => (
+                                      <option
+                                        key={option.value}
+                                        value={option.value}
+                                      >
+                                        {option.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-primary-black mb-2">
+                            Price (VND) <span className="text-red-500">*</span>
+                          </label>
+                          <FormField
+                            control={form.control}
+                            name="Price"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <div className="relative">
+                                    <input
+                                      type="text"
+                                      placeholder={
+                                        isPremium === "false" || !isPremium
+                                          ? "Free Course"
+                                          : "Enter price (min 10,000 VND)"
+                                      }
+                                      value={formatPrice(field.value)}
+                                      onChange={handlePriceChange}
+                                      disabled={
+                                        isPremium === "false" || !isPremium
+                                      }
+                                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow ${
+                                        isPremium === "false" || !isPremium
+                                          ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                                          : "border-gray-300"
+                                      }`}
+                                    />
+                                    {(isPremium === "false" || !isPremium) && (
+                                      <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                        <span className="text-green-600 font-medium text-sm">
+                                          {!isPremium
+                                            ? "SELECT PREMIUM STATUS"
+                                            : "FREE"}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                                <div className="flex justify-between items-center mt-1">
+                                  <p className="text-xs text-gray-500">
+                                    {isPremium === "false" || !isPremium
+                                      ? !isPremium
+                                        ? "Please select premium status first"
+                                        : "Free courses have no cost"
+                                      : "Minimum price: 10,000 VND"}
+                                  </p>
+                                  {isPremium === "true" ? (
+                                    <p className="text-xs text-gray-400">
+                                      ≈{" "}
+                                      {formatPrice(
+                                        Math.round((field.value || 0) / 24000)
+                                      )}{" "}
+                                      USD
+                                    </p>
+                                  ) : null}
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+
                       {/* Learning Outcomes - Dynamic */}
                       <div>
                         <div className="flex items-center justify-between mb-4">
@@ -500,66 +628,32 @@ export default function CourseModal({
                         />
                       </div>
 
-                      {/* Duration and Premium Status */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-primary-black mb-2">
-                            Estimated Duration{" "}
-                            <span className="text-red-500">*</span>
-                          </label>
-                          <FormField
-                            control={form.control}
-                            name="EstimatedDuration"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <input
-                                    type="text"
-                                    placeholder="03:00:00"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Format: HH:mm:ss
-                                </p>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-primary-black mb-2">
-                            Premium Status{" "}
-                            <span className="text-red-500">*</span>
-                          </label>
-                          <FormField
-                            control={form.control}
-                            name="IsPremium"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <select
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow"
-                                    {...field}
-                                  >
-                                    <option value="">Select Type</option>
-                                    {premiumOptions.map((option) => (
-                                      <option
-                                        key={option.value}
-                                        value={option.value}
-                                      >
-                                        {option.label}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                      {/* Duration */}
+                      <div>
+                        <label className="block text-sm font-medium text-primary-black mb-2">
+                          Estimated Duration{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        <FormField
+                          control={form.control}
+                          name="EstimatedDuration"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <input
+                                  type="text"
+                                  placeholder="03:00:00"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-yellow focus:border-primary-yellow"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                              <p className="text-xs text-gray-500 mt-1">
+                                Format: HH:mm:ss
+                              </p>
+                            </FormItem>
+                          )}
+                        />
                       </div>
 
                       {/* Add bottom padding to ensure buttons are not hidden */}

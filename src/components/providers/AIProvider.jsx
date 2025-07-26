@@ -19,6 +19,7 @@ export const AIProvider = ({ children }) => {
     "/challenge", // Challenge pages (legacy)
     "/course/challenge/", // Challenge pages (legacy)
     "course/", // This will match any course-related route including challenges
+    "/survey"
   ];
 
   const shouldHideChat = excludedPaths.some((path) =>

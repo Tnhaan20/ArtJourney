@@ -9,10 +9,11 @@ export const updateUserProfileSchema = z
       .string()
       .min(2, "Full name must be at least 2 characters long")
       .max(100, "Full name cannot exceed 100 characters")
-      .regex(/^[a-zA-Z\s]+$/, "Full name can only contain letters and spaces")
+      .regex(/^[\p{L}\s]+$/u, "Full name can only contain letters and spaces")
       .trim()
       .optional(),
-
+    
+    
     phoneNumber: z
       .string()
       .regex(/^[+]?[\d\s\-()]+$/, "Phone number format is invalid")

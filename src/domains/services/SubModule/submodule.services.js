@@ -10,10 +10,19 @@ export const subModuleService = {
   },
   get: {
     getSubModule: async (subModuleId) => {
-      const res = await axiosInstance.get(`/modules/${subModuleId}/sub-modules`);
+      const res = await axiosInstance.get(
+        `/modules/${subModuleId}/sub-modules`
+      );
       return res.data;
     },
   },
   put: {},
-  delete: {},
+  delete: {
+    deleteSubModule: async (subModuleId) => {
+      const res = await axiosInstance.delete(
+        `/submodule/${subModuleId}`
+      );
+      return res.data;
+    },
+  },
 };

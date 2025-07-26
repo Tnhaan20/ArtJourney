@@ -47,7 +47,6 @@ export const useAuthStore = create(
         try {
           // Validate the current session
           const response = await AuthServices.get.me();
-          console.log("checkAuth response:", response);
 
           // Based on the API response structure where user data is in the data field
           const userData = response?.data;
@@ -71,7 +70,6 @@ export const useAuthStore = create(
               role: userData.role,
               isAuthenticated: true,
             });
-            console.log("User authenticated:", userData);
           }
         } catch (error) {
           // If validation fails, reset auth state

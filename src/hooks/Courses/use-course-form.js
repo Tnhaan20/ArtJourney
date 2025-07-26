@@ -14,53 +14,32 @@ export const useCourseForm = () => {
       Title: "",
       ThumbnailImage: null,
       Description: "",
-      Level: "",
-      Status: "",
+      Level: "", // String for form handling
+      Status: "", // String for form handling
       HistoricalPeriodId: "",
       RegionId: "",
       LearningOutcomes: "",
       EstimatedDuration: "",
-      IsPremium: "",
+      IsPremium: "", // String for form handling
       CoverImage: null,
+      Price: 0, // Number for price
     },
     mode: "onChange",
   });
 
   // Define success callback to reset form
   const handleSuccess = () => {
-    console.log("🧹 Clearing form data...");
     form.reset();
   };
 
   const { createCourseMutation } = useCourse({ onSuccess: handleSuccess });
 
   const onSubmit = async (data) => {
-    console.log("📝 Form onSubmit with VALIDATED data:", data);
+
     try {
-      // Convert all values to correct types for API
-      const submitData = {
-        ...data,
-        Level: parseInt(data.Level),
-        Status: parseInt(data.Status),
-        // Convert IsPremium to boolean
-        IsPremium:
-          data.IsPremium === "1" ||
-          data.IsPremium === "true" ||
-          data.IsPremium === true,
-        // HistoricalPeriodId và RegionId đã được transform trong schema
-      };
-
-      console.log("📝 Transformed submit data:", submitData);
-      console.log(
-        "📝 IsPremium type:",
-        typeof submitData.IsPremium,
-        submitData.IsPremium
-      );
-
-      await createCourseMutation.mutateAsync(submitData);
-      console.log("📝 Form submission completed");
+      // Data is already transformed by Zod schema, so we can use it directly
+      await createCourseMutation.mutateAsync(data);
     } catch (error) {
-      console.error("📝 Form submission error:", error);
     }
   };
 
@@ -75,25 +54,25 @@ export const useReviewCourseForm = () => {
   const form = useForm({
     resolver: zodResolver(courseReviewSchema),
     defaultValues: {
-  courseId: 0,
-  rating: "",
-  feedBack: ""
-},
+      courseId: 0,
+      rating: "",
+      feedBack: "",
+    },
     mode: "onChange",
   });
 
   const { createCourseReview } = useCourse();
 
-   const onSubmit = async (data) => {
-     await createCourseReview.mutateAsync(data);
-     form.reset();
-   };
+  const onSubmit = async (data) => {
+    await createCourseReview.mutateAsync(data);
+    form.reset();
+  };
 
-   return {
-     form,
-     onSubmit,
-     isLoading: createCourseReview.isPending,
-   };
+  return {
+    form,
+    onSubmit,
+    isLoading: createCourseReview.isPending,
+  };
 };
 
 export const useUserEnrollForm = () => {

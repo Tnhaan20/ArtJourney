@@ -25,26 +25,40 @@ export const useUserForm = () => {
 
         const onSubmit = async (data) => {
           try {
+            console.log("🔍 useUserForm onSubmit received data:", data);
+            console.log(
+              "🔍 Avatar file check:",
+              data.avatarUrl instanceof File ? "✅ Is File" : "❌ Not a File",
+              data.avatarUrl
+            );
+
             let submitData;
 
             if (data.avatarUrl && data.avatarUrl instanceof File) {
-              // Create FormData for file upload
+              // Create FormData for file upload (similar to CourseModal)
               submitData = new FormData();
-              submitData.append("fullName", data.fullName || "");
-              submitData.append("phoneNumber", data.phoneNumber || "");
-              submitData.append("gender", data.gender.toString());
-              submitData.append("birthday", data.birthday || "");
-              submitData.append("avatarUrl", data.avatarUrl); // File object
+              submitData.append("FullName", data.fullName || "");
+              submitData.append("PhoneNumber", data.phoneNumber || "");
+              submitData.append("Gender", data.gender.toString());
+              submitData.append("Birthday", data.birthday || "");
+              submitData.append("AvatarUrl", data.avatarUrl); // File object with correct name
 
-              console.log("Creating FormData with file:");
+              console.log("📤 Creating FormData with file:");
+              console.log("📤 File name:", data.avatarUrl.name);
+              console.log("📤 File size:", data.avatarUrl.size);
+              console.log("📤 File type:", data.avatarUrl.type);
+
+              // Log all FormData entries
               for (let [key, value] of submitData.entries()) {
                 console.log(
-                  key,
-                  value instanceof File ? `File: ${value.name}` : value
+                  `📤 FormData - ${key}:`,
+                  value instanceof File
+                    ? `[File: ${value.name}, ${value.size} bytes]`
+                    : value
                 );
               }
             } else {
-              // Regular JSON object without avatar update
+              // Regular JSON object without avatar update (similar to CourseModal approach)
               submitData = {
                 fullName: data.fullName || "",
                 phoneNumber: data.phoneNumber || "",
@@ -53,12 +67,17 @@ export const useUserForm = () => {
                 // Don't include avatarUrl if no file to upload
               };
 
-              console.log("Creating JSON object:", submitData);
+              console.log("📤 Creating JSON object:", submitData);
             }
 
+            console.log(
+              "📤 Final submitData type:",
+              submitData instanceof FormData ? "FormData" : "JSON Object"
+            );
+            
             await updateUserProfile.mutateAsync(submitData);
           } catch (error) {
-            console.error("User profile update failed:", error);
+            console.error("🚨 User profile update failed:", error);
             throw error;
           }
         };

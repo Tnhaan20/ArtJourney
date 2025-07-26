@@ -20,6 +20,10 @@ export default function HomePrice() {
     yearly: false,
   });
 
+  // Check if any payment is being processed
+  const isAnyPaymentProcessing =
+    loadingStates.monthly || loadingStates.yearly || isCreatingPayment;
+
   const handlePayment = async (billingType) => {
     if (!isAuthenticated) {
       navigate("/signin", {
@@ -30,6 +34,11 @@ export default function HomePrice() {
           plan: billingType,
         },
       });
+      return;
+    }
+
+    // Prevent multiple payment processing
+    if (isAnyPaymentProcessing) {
       return;
     }
 
@@ -211,23 +220,26 @@ export default function HomePrice() {
                   ))}
                 </div>
 
+                {/* Monthly Plan Button */}
                 <button
                   type="submit"
                   onClick={() => handlePayment("monthly")}
-                  disabled={loadingStates.monthly}
+                  disabled={isAnyPaymentProcessing}
                   className={` w-full py-4 ${
                     TailwindStyle.HIGHLIGHT_FRAME
                   } text-white rounded-full text-lg font-bold 
                                     transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block text-center
                                     ${
-                                      loadingStates.monthly
-                                        ? "opacity-30 cursor-not-allowed"
-                                        : ""
+                                      isAnyPaymentProcessing
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : "cursor-pointer"
                                     }
                                     `}
                 >
                   {loadingStates.monthly
                     ? "Processing..."
+                    : loadingStates.yearly
+                    ? t("home.pricing.plans.monthly.button")
                     : t("home.pricing.plans.monthly.button")}
                 </button>
               </div>
@@ -288,23 +300,26 @@ export default function HomePrice() {
                 ))}
               </div>
 
+              {/* Annual Plan Button */}
               <button
                 type="submit"
                 onClick={() => handlePayment("yearly")}
-                disabled={loadingStates.yearly}
+                disabled={isAnyPaymentProcessing}
                 className={` w-full py-4 ${
                   TailwindStyle.HIGHLIGHT_FRAME
                 } text-white rounded-full text-lg font-bold 
                                     transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block text-center
                                     ${
-                                      loadingStates.yearly
-                                        ? "opacity-70 cursor-not-allowed"
+                                      isAnyPaymentProcessing
+                                        ? "opacity-50 cursor-not-allowed"
                                         : "cursor-pointer"
                                     }
                                     `}
               >
                 {loadingStates.yearly
                   ? "Processing..."
+                  : loadingStates.monthly
+                  ? t("home.pricing.plans.annual.button")
                   : t("home.pricing.plans.annual.button")}
               </button>
             </div>
