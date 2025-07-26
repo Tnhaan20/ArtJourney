@@ -5,32 +5,31 @@ const fileSchema = z.instanceof(File).optional();
 
 export const updateUserProfileSchema = z
   .object({
-    fullName: z
+    FullName: z
       .string()
       .min(2, "Full name must be at least 2 characters long")
       .max(100, "Full name cannot exceed 100 characters")
       .regex(/^[\p{L}\s]+$/u, "Full name can only contain letters and spaces")
       .trim()
       .optional(),
-    
-    
-    phoneNumber: z
+
+    PhoneNumber: z
       .string()
       .regex(/^[+]?[\d\s\-()]+$/, "Phone number format is invalid")
       .min(10, "Phone number must be at least 10 digits")
       .max(10, "Phone number must be at least 10 digits")
       .optional(),
 
-    gender: z
+    Gender: z
       .number()
       .int("Gender must be an integer")
       .min(0, "Gender must be 0, 1, or 2")
       .max(2, "Gender must be 0, 1, or 2")
       .optional(),
 
-    avatarUrl: fileSchema,
+    Avatar: fileSchema,
 
-    birthday: z
+    Birthday: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/, "Birthday must be in YYYY-MM-DD format")
       .refine(

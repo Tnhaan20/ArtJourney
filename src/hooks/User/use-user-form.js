@@ -14,68 +14,48 @@ export const useUserForm = () => {
         const form = useForm({
           resolver: zodResolver(updateUserProfileSchema),
           defaultValues: {
-            fullName: "",
-            phoneNumber: "",
-            gender: 0,
-            avatarUrl: null, // File type default
-            birthday: "",
+            FullName: "",
+            PhoneNumber: "",
+            Gender: 0,
+            Avatar: null,
+            Birthday: "",
             ...defaultValues,
           },
         });
 
         const onSubmit = async (data) => {
           try {
-            console.log("🔍 useUserForm onSubmit received data:", data);
-            console.log(
-              "🔍 Avatar file check:",
-              data.avatarUrl instanceof File ? "✅ Is File" : "❌ Not a File",
-              data.avatarUrl
-            );
+            
 
             let submitData;
 
-            if (data.avatarUrl && data.avatarUrl instanceof File) {
-              // Create FormData for file upload (similar to CourseModal)
+            if (data.Avatar && data.Avatar instanceof File) {
+              // Create FormData for file upload (avatar update)
               submitData = new FormData();
-              submitData.append("FullName", data.fullName || "");
-              submitData.append("PhoneNumber", data.phoneNumber || "");
-              submitData.append("Gender", data.gender.toString());
-              submitData.append("Birthday", data.birthday || "");
-              submitData.append("AvatarUrl", data.avatarUrl); // File object with correct name
+              submitData.append("FullName", data.FullName || "");
+              submitData.append("PhoneNumber", data.PhoneNumber || "");
+              submitData.append("Gender", data.Gender.toString());
+              submitData.append("Birthday", data.Birthday || "");
+              submitData.append("Avatar", data.Avatar); // Use "Avatar" as field name
 
-              console.log("📤 Creating FormData with file:");
-              console.log("📤 File name:", data.avatarUrl.name);
-              console.log("📤 File size:", data.avatarUrl.size);
-              console.log("📤 File type:", data.avatarUrl.type);
-
-              // Log all FormData entries
-              for (let [key, value] of submitData.entries()) {
-                console.log(
-                  `📤 FormData - ${key}:`,
-                  value instanceof File
-                    ? `[File: ${value.name}, ${value.size} bytes]`
-                    : value
-                );
-              }
+              
             } else {
-              // Regular JSON object without avatar update (similar to CourseModal approach)
+              // Regular JSON object for profile data update (no avatar)
               submitData = {
-                fullName: data.fullName || "",
-                phoneNumber: data.phoneNumber || "",
-                gender: data.gender,
-                birthday: data.birthday || "",
-                // Don't include avatarUrl if no file to upload
+                FullName: data.FullName || "",
+                PhoneNumber: data.PhoneNumber || "",
+                Gender: data.Gender,
+                Birthday: data.Birthday || "",
+                // Don't include Avatar field for profile-only updates
               };
 
-              console.log("📤 Creating JSON object:", submitData);
             }
 
-            console.log(
-              "📤 Final submitData type:",
-              submitData instanceof FormData ? "FormData" : "JSON Object"
-            );
             
-            await updateUserProfile.mutateAsync(submitData);
+
+            const result = await updateUserProfile.mutateAsync(submitData);
+
+            return result;
           } catch (error) {
             console.error("🚨 User profile update failed:", error);
             throw error;
@@ -84,7 +64,7 @@ export const useUserForm = () => {
 
         return {
           form,
-          onSubmit, // Return the raw onSubmit function
+          onSubmit,
           isLoading: updateUserProfile.isPending,
           error: updateUserProfile.error,
         };

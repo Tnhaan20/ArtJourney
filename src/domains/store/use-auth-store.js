@@ -108,6 +108,19 @@ export const useAuthStore = create(
           });
         }
       },
+
+      // Add refresh user method
+      refreshUser: async () => {
+        try {
+          const response = await AuthServices.get.me();
+          if (response.status === 0 && response.data) {
+            set({ user: response.data });
+            return response.data;
+          }
+        } catch (error) {
+          console.error("Failed to refresh user data:", error);
+        }
+      },
     }),
     { name: "user-storage" }
   )

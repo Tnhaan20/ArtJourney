@@ -26,11 +26,12 @@ import { TailwindStyle } from "@/utils/Enum";
 import { useAuth } from "@/hooks/Auth/use-auth";
 import { useUser } from "@/hooks/User/use-user";
 import { useUserForm } from "@/hooks/User/use-user-form";
+import AvatarUploadModal from "./AvatarUploadModal";
+import { AuthServices } from "@/domains/services/Auth/auth.services";
 
 export default function UserProfile() {
-  const { user } = useAuthStore();
+  const { user, refreshUser } = useAuthStore(); // Add refreshUser
   const { toast } = useToast();
-  const fileInputRef = useRef(null);
 
   // Sử dụng custom hooks
   const { useSendVerifyEmail } = useAuth();
@@ -38,13 +39,15 @@ export default function UserProfile() {
   const { updateUserProfileForm } = useUserForm();
   const verifyEmailQuery = useSendVerifyEmail();
 
-  // Local state for avatar preview and tracking changes
-  const [avatarPreview, setAvatarPreview] = useState(null);
-  const [avatarFile, setAvatarFile] = useState(null);
+  // Local state for form and UI
   const [isVerifyEmailLoading, setIsVerifyEmailLoading] = useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [originalFormData, setOriginalFormData] = useState({});
+
+  // Avatar modal state
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [isAvatarUpdateLoading, setIsAvatarUpdateLoading] = useState(false);
 
   // Get user profile data
   const {
@@ -52,19 +55,19 @@ export default function UserProfile() {
     isLoading: isProfileLoading,
     refetch: refetchProfile,
   } = getUserProfileQuery;
+
   const currentUser = userProfile?.data || user;
 
-  // Initialize form with user data
+  // Initialize form with user data (without avatar)
   const {
     form,
-    onSubmit: handleSubmitForm, // Rename to avoid confusion
+    onSubmit: handleSubmitForm,
     isLoading: isUpdateLoading,
   } = updateUserProfileForm({
-    fullName: "",
-    phoneNumber: "",
-    gender: 0,
-    avatarUrl: null,
-    birthday: "",
+    FullName: "",
+    PhoneNumber: "",
+    Gender: 0,
+    Birthday: "",
   });
 
   // Effect to refetch profile data when component mounts
@@ -78,11 +81,10 @@ export default function UserProfile() {
   useEffect(() => {
     if (currentUser && !formInitialized) {
       const formData = {
-        fullName: currentUser?.fullName || "",
-        phoneNumber: currentUser?.phoneNumber || "",
-        gender: currentUser?.gender || 0,
-        // Don't include avatarUrl in form reset since it's a File type
-        birthday: currentUser?.birthday
+        FullName: currentUser?.fullName || "",
+        PhoneNumber: currentUser?.phoneNumber || "",
+        Gender: currentUser?.gender || 0,
+        Birthday: currentUser?.birthday
           ? new Date(currentUser.birthday).toISOString().slice(0, 10)
           : "",
       };
@@ -100,114 +102,86 @@ export default function UserProfile() {
   useEffect(() => {
     if (formInitialized && originalFormData) {
       const hasFormChanges = Object.keys(originalFormData).some((key) => {
-        if (key === "avatarUrl") return false; // Handle avatar separately since it's a file
         return watchedValues[key] !== originalFormData[key];
       });
 
-      const hasAvatarChange = avatarFile !== null;
-
-      setHasChanges(hasFormChanges || hasAvatarChange);
+      setHasChanges(hasFormChanges);
     }
-  }, [watchedValues, originalFormData, formInitialized, avatarFile]);
+  }, [watchedValues, originalFormData, formInitialized]);
 
-  // Handle avatar upload
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("🖼️ Avatar file selected:", {
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        lastModified: file.lastModified,
-      });
-
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        toast({
-          title: "Invalid file type",
-          description: "Please select an image file.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "File too large",
-          description: "Please select an image smaller than 5MB.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Clean up previous preview URL
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
-
-      // Create preview URL
-      const previewUrl = URL.createObjectURL(file);
-      setAvatarPreview(previewUrl);
-      setAvatarFile(file);
-
-      // DON'T set the file in the form here, we'll pass it directly in handleFormSubmit
-      console.log("🖼️ Avatar preview and file state updated");
-    }
-  };
-
+  // Handle opening avatar modal
   const handleAvatarClick = () => {
-    fileInputRef.current?.click();
+    setShowAvatarModal(true);
   };
 
-  // Handle form submission
-  const handleFormSubmit = async (data) => {
+  // Handle avatar update (only avatar)
+  const handleAvatarUpdate = async (avatarFile) => {
+    setIsAvatarUpdateLoading(true);
     try {
-      // Prepare submission data with file
-      const submitData = {
-        fullName: data.fullName || "",
-        phoneNumber: data.phoneNumber || "",
-        gender: data.gender,
-        birthday: data.birthday || "",
-        avatarUrl: avatarFile, // Pass the File object directly, not from form data
+     
+      // Prepare data for avatar-only update using correct field names
+      const avatarUpdateData = {
+        FullName: currentUser?.fullName || "",
+        PhoneNumber: currentUser?.phoneNumber || "",
+        Gender: currentUser?.gender || 0,
+        Birthday: currentUser?.birthday
+          ? new Date(currentUser.birthday).toISOString().slice(0, 10)
+          : "",
+        Avatar: avatarFile, // Use correct field name
       };
 
-      console.log("Submitting data:");
-      console.log("fullName:", submitData.fullName);
-      console.log("phoneNumber:", submitData.phoneNumber);
-      console.log("gender:", submitData.gender);
-      console.log("birthday:", submitData.birthday);
-      console.log(
-        "avatarUrl:",
-        avatarFile
-          ? `[File: ${avatarFile.name}, size: ${avatarFile.size}]`
-          : "null"
-      );
+      await handleSubmitForm(avatarUpdateData);
+      
+      // Refresh all user data sources
+      await Promise.all([
+        refetchProfile(),
+        refreshUser(), // Add this to update auth store
+      ]);
 
-      // Call the form hook's onSubmit directly with the data including the file
+    } catch (error) {
+      console.error("❌ Avatar update error:", error);
+      toast({
+        title: "Update failed",
+        description: "Failed to update avatar. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAvatarUpdateLoading(false);
+    }
+  };
+
+  // Handle profile form submission (without avatar)
+  const handleProfileFormSubmit = async (data) => {
+    try {
+
+      // Prepare submission data without avatar using correct field names
+      const submitData = {
+        FullName: data.FullName || "",
+        PhoneNumber: data.PhoneNumber || "",
+        Gender: data.Gender,
+        Birthday: data.Birthday || "",
+        // No Avatar field for profile data updates
+      };
+
       await handleSubmitForm(submitData);
 
-      // Reset states after successful update
-      setAvatarPreview(null);
-      setAvatarFile(null);
+      // Reset form state
       setHasChanges(false);
+      setOriginalFormData(data);
 
-      // Clean up preview URL to prevent memory leaks
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
-
-      // Refetch profile and reinitialize form
-      await refetchProfile();
-      setFormInitialized(false);
+      // Refresh all user data sources
+      await Promise.all([
+        refetchProfile(),
+        refreshUser(), // Add this to update auth store
+      ]);
 
       toast({
         title: "Profile updated",
-        description: "Your profile has been updated successfully.",
+        description: "Your profile information has been updated successfully.",
         variant: "success",
       });
     } catch (error) {
-      console.error("Form submission error:", error);
+      console.error("❌ Profile form submission error:", error);
       toast({
         title: "Update failed",
         description: "Failed to update profile. Please try again.",
@@ -220,20 +194,7 @@ export default function UserProfile() {
   const handleCancel = () => {
     if (originalFormData) {
       form.reset(originalFormData);
-
-      // Clean up avatar preview URL
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
-
-      setAvatarPreview(null);
-      setAvatarFile(null);
       setHasChanges(false);
-
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
     }
   };
 
@@ -382,9 +343,9 @@ export default function UserProfile() {
               className="relative w-32 h-32 rounded-full overflow-hidden bg-amber-50 mb-4 cursor-pointer group"
               onClick={handleAvatarClick}
             >
-              {avatarPreview || currentUser?.avatarUrl ? (
+              {currentUser?.avatarUrl ? (
                 <img
-                  src={avatarPreview || currentUser.avatarUrl}
+                  src={currentUser.avatarUrl}
                   alt="Profile"
                   className="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
                 />
@@ -401,21 +362,9 @@ export default function UserProfile() {
               </div>
             </div>
 
-            {/* Show image change indicator */}
-            {avatarPreview && (
-              <p className="text-xs text-amber-600 mb-2">
-                New image selected - Save changes to update
-              </p>
-            )}
-
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              className="hidden"
-            />
+            <p className="text-xs text-gray-500 mb-4 text-center">
+              Click to change profile picture
+            </p>
 
             <div className="text-center mb-4">
               <p className="font-medium text-lg">{currentUser?.fullName}</p>
@@ -464,7 +413,7 @@ export default function UserProfile() {
             </CardDescription>
           </CardHeader>
 
-          <form onSubmit={form.handleSubmit(handleFormSubmit)}>
+          <form onSubmit={form.handleSubmit(handleProfileFormSubmit)}>
             <CardContent className="space-y-4 gap-2 px-4 py-6">
               <div className="grid gap-4">
                 <div className="space-y-2">
@@ -472,11 +421,11 @@ export default function UserProfile() {
                   <Input
                     id="fullName"
                     placeholder="Your name"
-                    {...form.register("fullName")}
+                    {...form.register("FullName")}
                   />
-                  {form.formState.errors.fullName && (
+                  {form.formState.errors.FullName && (
                     <p className="text-red-500 text-xs">
-                      {form.formState.errors.fullName.message}
+                      {form.formState.errors.FullName.message}
                     </p>
                   )}
                 </div>
@@ -486,11 +435,11 @@ export default function UserProfile() {
                   <Input
                     id="phoneNumber"
                     placeholder="Your phone number"
-                    {...form.register("phoneNumber")}
+                    {...form.register("PhoneNumber")}
                   />
-                  {form.formState.errors.phoneNumber && (
+                  {form.formState.errors.PhoneNumber && (
                     <p className="text-red-500 text-xs">
-                      {form.formState.errors.phoneNumber.message}
+                      {form.formState.errors.PhoneNumber.message}
                     </p>
                   )}
                 </div>
@@ -515,16 +464,16 @@ export default function UserProfile() {
                   <Label htmlFor="gender">Gender</Label>
                   <select
                     id="gender"
-                    {...form.register("gender", { valueAsNumber: true })}
+                    {...form.register("Gender", { valueAsNumber: true })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   >
                     <option value={0}>Male</option>
                     <option value={1}>Female</option>
                     <option value={2}>Other</option>
                   </select>
-                  {form.formState.errors.gender && (
+                  {form.formState.errors.Gender && (
                     <p className="text-red-500 text-xs">
-                      {form.formState.errors.gender.message}
+                      {form.formState.errors.Gender.message}
                     </p>
                   )}
                 </div>
@@ -534,11 +483,11 @@ export default function UserProfile() {
                   <Input
                     id="birthday"
                     type="date"
-                    {...form.register("birthday")}
+                    {...form.register("Birthday")}
                   />
-                  {form.formState.errors.birthday && (
+                  {form.formState.errors.Birthday && (
                     <p className="text-red-500 text-xs">
-                      {form.formState.errors.birthday.message}
+                      {form.formState.errors.Birthday.message}
                     </p>
                   )}
                 </div>
@@ -569,6 +518,15 @@ export default function UserProfile() {
           </form>
         </Card>
       </div>
+
+      {/* Avatar Upload Modal */}
+      <AvatarUploadModal
+        isOpen={showAvatarModal}
+        onClose={() => setShowAvatarModal(false)}
+        onSave={handleAvatarUpdate}
+        isLoading={isAvatarUpdateLoading}
+        currentAvatarUrl={currentUser?.avatarUrl}
+      />
     </div>
   );
 }
