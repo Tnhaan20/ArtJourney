@@ -25,6 +25,8 @@ const ChallengePage = lazy(() =>
   import("@/pages/LearnPage/ChallengePage/ChallengePage")
 );
 
+
+
 const MySurvey = lazy(() =>
   import("@/components/layout/SurveyPage/MySurvey")
 );
@@ -48,6 +50,14 @@ const TermsPage = lazy(() => import("@/pages/TermsPage/TermsPage"));
 // Learn page components
 const CourseList = lazy(() =>
   import("@/components/layout/LearnPage/CourseList")
+);
+
+const UserAllCert = lazy(() =>
+  import("@/components/layout/CertificatePage/UserAllCert")
+);
+
+const UserDetailCert = lazy(() =>
+  import("@/components/layout/CertificatePage/UserDetailCert")
 );
 const SearchResultsPage = lazy(() => import("@/pages/LearnPage/SearchPage"));
 
@@ -275,13 +285,37 @@ export default function AppRoutes() {
         path="/my-survey"
         element={
           <Suspense fallback={<PageLoader />}>
-                          <MainLayout>
-
-            <ProtectedRoute restrictAdmin={true}>
-              <MySurvey />
+            <MainLayout>
+              <ProtectedRoute restrictAdmin={true}>
+                <MySurvey />
               </ProtectedRoute>
-                            </MainLayout>
+            </MainLayout>
+          </Suspense>
+        }
+      />
 
+      <Route
+        path="/certificate"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
+              <ProtectedRoute restrictAdmin={true}>
+                <UserAllCert />
+              </ProtectedRoute>
+            </MainLayout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/certificate/:certificateId"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
+              <ProtectedRoute restrictAdmin={true}>
+                <UserDetailCert />
+              </ProtectedRoute>
+            </MainLayout>
           </Suspense>
         }
       />

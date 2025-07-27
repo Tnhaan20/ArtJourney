@@ -20,7 +20,6 @@ export const QueryKey = {
     UPDATE_PROFILE: "update-profile",
   },
 
-
   REGIONS: {
     CREATE_REGION: "region-create",
     GET_REGION: "region-get",
@@ -43,12 +42,22 @@ export const QueryKey = {
     GET_COURSE_BY_ID: "course-get-by-id",
     GET_COURSE_BY_ID_GUEST: "course-get-by-id-guest",
     REVIEW_COURSE: "course-review",
-    GET_COURSE_REVIEW: "course-get-review", 
+    GET_COURSE_REVIEW: "course-get-review",
     USER: {
       GET_USER_COURSE_INFO: "course-get-user-course-info",
       ENROLL_USER_COURSE: "course-enroll-user-course",
       ENROLLED_COURSES: "enrolled-courses",
     },
+  },
+
+  CERTIFICATE: {
+    CREATE_USER_CERTIFICATE: "CREATE_USER_CERTIFICATE",
+    CREATE_CERTIFICATE: "CREATE_CERTIFICATE",
+    DELETE_CERTIFICATE: "DELETE_CERTIFICATE",
+    GET_USER_CERTIFICATES: "GET_USER_CERTIFICATES",
+    GET_ALL_CERTIFICATES: "GET_ALL_CERTIFICATES",
+    GET_CERTIFICATE_BY_ID: "GET_CERTIFICATE_BY_ID",
+    GET_CERTIFICATE_BY_COURSE_ID: "GET_CERTIFICATE_BY_COURSE_ID",
   },
 
   MODULE: {
@@ -77,7 +86,6 @@ export const QueryKey = {
     GET_QUIZ_BY_CONTENT_ID: "quiz-get-by-content-id",
     START_QUIZ: "quiz-start",
     SUBMIT_QUIZ: "quiz-submit",
-
   },
 
   AI: {

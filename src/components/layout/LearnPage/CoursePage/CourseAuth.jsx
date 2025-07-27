@@ -37,11 +37,12 @@ import {
   Calendar as CalendarIcon,
   MessageSquare,
   Send,
+  ExternalLink,
 } from "lucide-react";
 import { TailwindStyle } from "@/utils/Enum";
 import TimerUtil from "@/lib/timer";
 
-export default function CourseAuth({ learningProgress, courseId }) {
+export default function CourseAuth({ learningProgress, courseId, existingCertificate }) {
   const { getCoursesById } = useCourse();
   const { getChallengeByCourse } = useGamification();
   const { getLeaderboardByChallengeId } = useLeaderboard();
@@ -565,12 +566,45 @@ export default function CourseAuth({ learningProgress, courseId }) {
                       ? "Course completed! 🎉"
                       : "Keep going, you're doing great!"}
                   </p>
+
+                  {/* Certificate Achievement Notification */}
+                  {progressPercentage === 100 && existingCertificate && (
+                    <div className="mt-4 p-3 bg-green-500/20 border border-green-400/30 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <Award className="w-5 h-5 text-green-300" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-green-100">
+                            Certificate Earned!
+                          </p>
+                          <p className="text-xs text-green-200">
+                            You've successfully completed this course
+                          </p>
+                        </div>
+                        {existingCertificate.certificateImageUrl && (
+                          <img
+                            src={existingCertificate.certificateImageUrl}
+                            alt="Certificate"
+                            className="w-12 h-8 object-cover rounded border border-green-300/50"
+                          />
+                        )}
+                      </div>
+                      <Link
+                        to={`/certificate/${existingCertificate.id}`}
+                        className="mt-2 inline-flex items-center text-xs text-green-300 hover:text-green-100 transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3 mr-1" />
+                        View Full Certificate
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Right Column - Learning Outcomes */}
               <div className="lg:justify-self-end">
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 p-8 shadow-2xl max-w-md">
+                  
+
                   <div className="flex items-center mb-6">
                     <Target size={24} className="text-primary-yellow mr-3" />
                     <h3 className="text-xl mongro-bold font-bold text-gray-800">

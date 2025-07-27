@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Flame,
   LucideBookOpenCheck,
+  Medal,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import MobileMenu from "./MobileMenu";
@@ -157,7 +158,7 @@ export default function Header() {
                 {/* Profile Dropdown Menu */}
                 {showProfileMenu && (
                   <div
-                    className={`absolute mt-2 w-48 ${TailwindStyle.GLASSMORPHISM} transform -translate-x-1/2 left-1/2 rounded-xl shadow-lg overflow-hidden z-50`}
+                    className={`absolute mt-2 w-52 ${TailwindStyle.GLASSMORPHISM} transform -translate-x-1/2 left-1/2 rounded-xl shadow-lg overflow-hidden z-50`}
                   >
                     <div className="flex flex-col">
                       {/* Streak Info in Dropdown */}
@@ -197,8 +198,23 @@ export default function Header() {
                         className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-800 hover:bg-white/10 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
-                        <LucideBookOpenCheck size={18} className="text-gray-600" />
+                        <LucideBookOpenCheck
+                          size={18}
+                          className="text-gray-600"
+                        />
                         <span>My Survey</span>
+                      </Link>
+
+                      <Link
+                        to="/certificate"
+                        className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-800 hover:bg-white/10 transition-colors"
+                        onClick={() => setShowProfileMenu(false)}
+                      >
+                        <Medal
+                          size={18}
+                          className="text-gray-600"
+                        />
+                        <span>My Accomplishment</span>
                       </Link>
 
                       <button

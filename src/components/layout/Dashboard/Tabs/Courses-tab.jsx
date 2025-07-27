@@ -14,7 +14,8 @@ import {
   Users,
   Star,
   BookOpen,
-  Trophy, // Add Trophy icon for gamification
+  Trophy,
+  Medal, // ✅ Add Medal icon
 } from "lucide-react";
 import { StatCard } from "@/components/layout/Dashboard/Stat-card";
 import { TailwindStyle } from "@/utils/Enum";
@@ -22,6 +23,7 @@ import { useCourse } from "@/hooks/Courses/use-course";
 import { assets } from "@/assets/assets";
 import { useModule } from "@/hooks/Module/use-module";
 import { ModuleTab } from "./Module-tab";
+import { CertificateTab } from "./Certificate-tab"; // ✅ Add Certificate tab import
 import { useState, useEffect, useMemo } from "react";
 
 export const CoursesTab = ({
@@ -38,15 +40,17 @@ export const CoursesTab = ({
   setSelectedSubModuleId,
   setSelectedLearningContentId,
   setShowQuizModal,
-  setShowChallengeTab, // Add this prop to navigate to challenge tab
-  setSelectedCourseForChallenge, // Add this prop to pass selected course
+  setShowChallengeTab,
+  setSelectedCourseForChallenge,
+  setShowCertificateModal, // ✅ Add certificate modal prop
 }) => {
   // Get data from API
   const { getAllCoursesQuery, deleteCourse } = useCourse();
   const { data: coursesResponse, isLoading, error } = getAllCoursesQuery;
 
-  // State to track which course is showing modules
+  // State to track which course is showing modules/certificates
   const [showModuleView, setShowModuleView] = useState(false);
+  const [showCertificateView, setShowCertificateView] = useState(false); // ✅ Add certificate view state
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   // Create delete mutation
@@ -92,17 +96,17 @@ export const CoursesTab = ({
           : course.status === 0
           ? "Draft"
           : "Archived",
-      instructor: "Admin", // Mock data
+      instructor: "Admin",
       level:
         course.level === 0
           ? "Beginner"
           : course.level === 1
           ? "Intermediate"
           : "Advanced",
-      duration: course.estimatedDuration || "2h 30m", // Mock fallback
+      duration: course.estimatedDuration || "2h 30m",
       price: course.isPremium ? "Premium" : "Free",
-      enrolled: Math.floor(Math.random() * 5000), // Mock data
-      rating: (4.0 + Math.random() * 1.0).toFixed(1), // Mock data
+      enrolled: Math.floor(Math.random() * 5000),
+      rating: (4.0 + Math.random() * 1.0).toFixed(1),
       regionName: course.regionName,
     }));
   }, [allCourses]);
@@ -111,11 +115,20 @@ export const CoursesTab = ({
   const handleArrowClick = (course) => {
     setSelectedCourse(course);
     setShowModuleView(true);
+    setShowCertificateView(false); // ✅ Reset certificate view
+  };
+
+  // ✅ Function to handle medal click - show certificate view
+  const handleMedalClick = (course) => {
+    setSelectedCourse(course);
+    setShowCertificateView(true);
+    setShowModuleView(false); // Reset module view
   };
 
   // Function to go back to courses view
   const handleBackToCourses = () => {
     setShowModuleView(false);
+    setShowCertificateView(false); // ✅ Reset certificate view
     setSelectedCourse(null);
   };
 
@@ -160,6 +173,19 @@ export const CoursesTab = ({
     );
   }
 
+  // ✅ If showing certificate view, render CertificateTab
+  if (showCertificateView && selectedCourse) {
+    return (
+      <CertificateTab
+        courseId={selectedCourse.id}
+        courseTitle={selectedCourse.title}
+        setShowCertificateModal={setShowCertificateModal} // ✅ Pass this prop
+        setSelectedCourseId={setSelectedCourseId}
+        onBackToCourses={handleBackToCourses}
+      />
+    );
+  }
+
   // If showing module view, render ModuleTab
   if (showModuleView && selectedCourse) {
     return (
@@ -172,7 +198,7 @@ export const CoursesTab = ({
         setSelectedModuleId={setSelectedModuleId}
         setShowModuleModal={setShowModuleModal}
         setSelectedCourseId={setSelectedCourseId}
-        setShowCombineModal={setShowCombineModal} // ← Đảm bảo prop này được truyền xuống
+        setShowCombineModal={setShowCombineModal}
         setSelectedSubModuleId={setSelectedSubModuleId}
         setSelectedLearningContentId={setSelectedLearningContentId}
         setShowQuizModal={setShowQuizModal}
@@ -284,15 +310,23 @@ export const CoursesTab = ({
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
+                    {/* ✅ Certificate/Medal button */}
+                    <button
+                      onClick={() => handleMedalClick(course)}
+                      className="p-2 text-gray-400 hover:text-yellow-600 transition-colors"
+                      title="Manage Certificates"
+                    >
+                      <Medal className="w-4 h-4" />
+                    </button>
                     {/* Gamification/Challenge button */}
                     <button
                       onClick={() => handleGamificationClick(course)}
-                      className="p-2 text-gray-400 hover:text-yellow-600 transition-colors"
+                      className="p-2 text-gray-400 hover:text-orange-600 transition-colors"
                       title="Manage Challenges"
                     >
                       <Trophy className="w-4 h-4" />
                     </button>
-                    {/* Modified arrow button to show ModuleTab */}
+                    {/* Arrow button to show ModuleTab */}
                     <button
                       onClick={() => handleArrowClick(course)}
                       className="p-2 text-gray-400 hover:text-gray-600"
@@ -320,10 +354,19 @@ export const CoursesTab = ({
                   </div>
                 </div>
 
-                {/* Simplified Course Footer - removed Add Module button */}
+                {/* Course Footer */}
                 <div className="border-t border-gray-200 pt-4">
                   <div className="text-sm text-gray-600 text-center">
-                    Click arrow to view and manage modules for this course.
+                    <span className="text-yellow-600 font-medium">Medal:</span>{" "}
+                    Manage certificates •
+                    <span className="text-orange-600 font-medium ml-2">
+                      Trophy:
+                    </span>{" "}
+                    Manage challenges •
+                    <span className="text-gray-600 font-medium ml-2">
+                      Arrow:
+                    </span>{" "}
+                    View modules
                   </div>
                 </div>
               </div>

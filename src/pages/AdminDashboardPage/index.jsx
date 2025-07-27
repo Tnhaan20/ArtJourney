@@ -16,15 +16,20 @@ import HistoricalPeriodModal from "@/components/layout/Dashboard/Modals/Historic
 import { SubModuleModal } from "@/components/layout/Dashboard/Modals/SubModuleModal";
 import { QuizModal } from "@/components/layout/Dashboard/Modals/Learn&Quiz/QuizModal";
 import { ChallengeModal } from "@/components/layout/Dashboard/Modals/ChallengeModal";
+import CertificateModal from "@/components/layout/Dashboard/Modals/CertificateModal";
 
 const ArtJourneyAdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState(null);
+
+  // Modal states
   const [showCourseModal, setShowCourseModal] = useState(false);
   const [showModuleModal, setShowModuleModal] = useState(false);
   const [showSubModuleModal, setShowSubModuleModal] = useState(false);
   const [showCombineModal, setShowCombineModal] = useState(false);
+  const [showCertificateModal, setShowCertificateModal] = useState(false); // ✅ Make sure this exists
+
   const [expandedCourses, setExpandedCourses] = useState(new Set());
   const [expandedModules, setExpandedModules] = useState(new Set());
   const [showHistoricalPeriodModal, setShowHistoricalPeriodModal] =
@@ -100,7 +105,7 @@ const ArtJourneyAdminDashboard = () => {
             setShowCourseModal={setShowCourseModal}
             setShowModuleModal={setShowModuleModal}
             setShowSubModuleModal={setShowSubModuleModal}
-            setShowCombineModal={setShowCombineModal} // ← Đảm bảo prop này được truyền
+            setShowCombineModal={setShowCombineModal}
             setSelectedCourseId={setSelectedCourseId}
             setSelectedModuleId={setSelectedModuleId}
             setSelectedSubModuleId={setSelectedSubModuleId}
@@ -108,6 +113,7 @@ const ArtJourneyAdminDashboard = () => {
             setShowQuizModal={setShowQuizModal}
             setShowChallengeTab={setShowChallengeTab}
             setSelectedCourseForChallenge={setSelectedCourseForChallenge}
+            setShowCertificateModal={setShowCertificateModal} // ✅ Make sure this is passed
           />
         );
       case "quizzes":
@@ -185,6 +191,18 @@ const ArtJourneyAdminDashboard = () => {
             setShowModuleModal(false);
             setSelectedCourseId(null);
           }}
+        />
+      )}
+
+      {showCertificateModal && (
+        <CertificateModal
+          isOpen={showCertificateModal}
+          onClose={() => {
+            console.log("Closing CertificateModal");
+            setShowCertificateModal(false);
+            setSelectedCourseId(null);
+          }}
+          selectedCourseId={selectedCourseId}
         />
       )}
 
