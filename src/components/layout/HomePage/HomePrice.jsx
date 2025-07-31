@@ -29,7 +29,7 @@ export default function HomePrice() {
       navigate("/signin", {
         replace: true,
         state: {
-          from: "/home",
+          from: "/",
           action: "payment",
           plan: billingType,
         },

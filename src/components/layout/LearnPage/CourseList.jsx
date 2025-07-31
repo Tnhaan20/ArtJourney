@@ -473,11 +473,7 @@ export default function CourseList() {
                                   <h3 className="font-medium text-lg transition-all duration-300 truncate group-hover:opacity-0">
                                     {course.title}
                                   </h3>
-                                  {course.description && (
-                                    <p className="text-sm text-gray-600 mt-2 line-clamp-2 group-hover:opacity-0">
-                                      {course.description}
-                                    </p>
-                                  )}
+                                  
 
                                   {/* Hover overlay */}
                                   <div className="absolute inset-0 bg-[#f8e7ce] p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 rounded-b-lg flex flex-col justify-start">
