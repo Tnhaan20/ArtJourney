@@ -124,13 +124,7 @@ export default function CourseDetail() {
           console.error("❌ Failed to create award certificate:", error);
 
           // Show error notification
-          toast({
-            title: "Certificate Creation Failed",
-            description:
-              error.response?.data?.message ||
-              "We couldn't create your certificate right now. Please try again later.",
-            variant: "destructive",
-          });
+          
 
           // Reset the processed flag to allow retry
           setCertificateProcessed(false);

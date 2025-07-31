@@ -47,11 +47,7 @@ export const useCertificate = () => {
     onError: async (error) => {
       console.error("❌ Certificate creation failed:", error);
       
-      toast({
-        title: "Certificate Creation Failed",
-        description: error.response?.data?.message || error.response?.data?.errors?.[0]?.message || "Failed to create certificate. Please try again.",
-        variant: "destructive",
-      });
+      
     },
   });
 
@@ -111,11 +107,7 @@ export const useCertificate = () => {
     onError: async (error) => {
       console.error("❌ Custom certificate creation failed:", error);
       
-      toast({
-        title: "Certificate Creation Failed",
-        description: error.response?.data?.message || error.response?.data?.errors?.[0]?.message || "Failed to create certificate. Please try again.",
-        variant: "destructive",
-      });
+      
     },
   });
 
