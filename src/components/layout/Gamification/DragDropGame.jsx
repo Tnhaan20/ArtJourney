@@ -147,7 +147,7 @@ export default function DragDropGame({ courseId, challengeId, challengeData, cha
 
   // Submit session using form
   const submitGameSession = (finalScore, totalTime, isCompleted) => {
-    if (!user?.id) {
+    if (!user?.userId) {
       toast({
         title: "🔐 Authentication Required",
         description: "Please login to save your progress!",
