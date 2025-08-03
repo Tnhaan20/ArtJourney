@@ -24,6 +24,9 @@ const QuizPage = lazy(() => import("@/pages/LearnPage/QuizPage/QuizPage"));
 const ChallengePage = lazy(() =>
   import("@/pages/LearnPage/ChallengePage/ChallengePage")
 );
+const PrivacyPage = lazy(() =>
+  import("@/pages/PolicyPage/Policy")
+);
 
 
 
@@ -315,6 +318,17 @@ export default function AppRoutes() {
               <ProtectedRoute restrictAdmin={true}>
                 <UserDetailCert />
               </ProtectedRoute>
+            </MainLayout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/privacy"
+        element={
+          <Suspense fallback={<PageLoader />}>
+            <MainLayout>
+              <PrivacyPage />
             </MainLayout>
           </Suspense>
         }
