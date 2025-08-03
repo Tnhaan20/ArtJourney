@@ -89,7 +89,7 @@ export default function SubModuleContent() {
   };
 
   const handleStartQuizAttempt = async (learningContentId) => {
-    if (!user?.id) {
+    if (!user?.userId) {
       toast({
         title: "Authentication required",
         description: "Please log in to start the quiz.",
