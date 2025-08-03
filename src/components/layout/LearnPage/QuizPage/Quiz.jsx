@@ -373,11 +373,7 @@ export default function Quiz() {
           <div className="flex flex-col items-center">
             <Loader2 className="h-12 w-12 animate-spin text-primary-yellow mb-4" />
             <p className="text-gray-600">Loading quiz questions...</p>
-            {quizAttemptId && (
-              <p className="text-sm text-gray-500 mt-2">
-                Attempt ID: {quizAttemptId}
-              </p>
-            )}
+            
           </div>
         </div>
       </div>
@@ -461,7 +457,6 @@ export default function Quiz() {
               <p className="text-gray-600 mt-1">{quizData.description}</p>
               {quizAttemptId && (
                 <div className="mt-2 text-xs text-gray-500 space-y-1">
-                  <p>Attempt ID: {quizAttemptId}</p>
                   {attemptData?.startedAt && (
                     <p>Started: {formatDateTime(attemptData.startedAt)}</p>
                   )}
