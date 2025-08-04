@@ -273,21 +273,7 @@ export default function CourseAuth({ learningProgress, courseId, existingCertifi
     });
   };
 
-  // Helper function to get challenge status
-  const getChallengeStatus = (challenge) => {
-    if (challenge.challengeSessions && challenge.challengeSessions.length > 0) {
-      return {
-        text: "Completed",
-        color: "green",
-        icon: <Medal size={16} className="text-green-600" />,
-      };
-    }
-    return {
-      text: "Not Started",
-      color: "gray",
-      icon: <Clock size={16} className="text-gray-500" />,
-    };
-  };
+
 
   // Helper function to get highest score
   const getHighestScore = (challenge) => {
@@ -923,7 +909,6 @@ export default function CourseAuth({ learningProgress, courseId, existingCertifi
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {challenges.map((challenge) => {
-                    const status = getChallengeStatus(challenge);
                     const highestScore = getHighestScore(challenge);
 
                     return (
@@ -996,15 +981,6 @@ export default function CourseAuth({ learningProgress, courseId, existingCertifi
                             )}
                           </div>
                           <div className="flex space-x-2">
-                            <button
-                              onClick={() =>
-                                setSelectedChallengeId(challenge.id)
-                              }
-                              className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center space-x-1"
-                            >
-                              <TrendingUp size={12} />
-                              <span>Leaderboard</span>
-                            </button>
                             <Link
                               to={`/course/${courseId}/challenge/${challenge.id}`}
                               className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 rounded-lg text-sm font-medium hover:from-amber-600 hover:to-orange-600 transition-all duration-200 flex items-center space-x-1"

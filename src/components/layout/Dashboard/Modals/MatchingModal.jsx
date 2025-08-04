@@ -36,9 +36,28 @@ export const MatchingModal = ({
   // Use gamification hooks
   const { getArtworkByChallenge } = useGamification();
 
+  // Helper function to create a new artwork detail object
+  const createNewArtworkDetail = () => ({
+    artist: "",
+    period: "",
+    year: "",
+    artworkId: 0,
+  });
+
+  // Helper function to create a new artwork object
+  const createNewArtwork = () => {
+    const challengeId = selectedChallenge?.id || selectedChallenge?.challengeId || 0;
+    const newArtwork = {
+      Image: null,
+      Title: "",
+      ChallengeId: challengeId,
+    };
+    return newArtwork;
+  };
+
   // Local states
   const [currentStep, setCurrentStep] = useState("artwork");
-  const [detailCount, setDetailCount] = useState(1);
+  const [detailForms, setDetailForms] = useState([createNewArtworkDetail()]);
   const [selectedImages, setSelectedImages] = useState({});
 
   // Fetch artworks when in details step
@@ -55,40 +74,21 @@ export const MatchingModal = ({
 
   // Watch form values
   const artworkValues = artworkForm.watch();
-  const detailValues = detailForm.watch();;
-
-  // Helper function to create a new artwork object
-  const createNewArtwork = () => {
-    const newArtwork = {
-      Image: null,
-      Title: "",
-      ChallengeId: challengeId,
-    };
-    return newArtwork;
-  };
-
-  // Helper function to create a new artwork detail object
-  const createNewArtworkDetail = () => ({
-    artist: "",
-    period: "",
-    year: "",
-    artworkId: 0,
-  });
+  const detailValues = detailForm.watch();
 
   // Reset forms when modal opens
   useEffect(() => {
     if (isOpen && selectedChallenge) {
       setCurrentStep("artwork");
-      setDetailCount(1);
+      setDetailForms([createNewArtworkDetail()]);
       setSelectedImages({});
 
       // Reset artwork form with single artwork object
       const newArtwork = createNewArtwork();
       artworkForm.reset(newArtwork);
 
-      // Reset detail form
-      const newDetail = [createNewArtworkDetail()];
-      detailForm.reset(newDetail);
+      // Reset detail form with initial detail
+      detailForm.reset([createNewArtworkDetail()]);
     }
   }, [isOpen, selectedChallenge, challengeId, artworkForm, detailForm]);
 
@@ -135,28 +135,30 @@ export const MatchingModal = ({
 
   // Add artwork detail
   const addDetail = () => {
+    // Get current form values to preserve user input
     const currentValues = detailForm.getValues();
-
-    // Ensure currentValues is an array
     const safeCurrentValues = Array.isArray(currentValues) ? currentValues : [];
-
-    const newValues = [...safeCurrentValues, createNewArtworkDetail()];
-
-    setDetailCount((prev) => prev + 1);
-    detailForm.reset(newValues);
+    
+    // Add new detail to the existing values
+    const newDetail = createNewArtworkDetail();
+    const updatedForms = [...safeCurrentValues, newDetail];
+    
+    setDetailForms(updatedForms);
+    detailForm.reset(updatedForms);
   };
 
   // Remove artwork detail
   const removeDetail = (index) => {
-    const currentValues = detailForm.getValues();
-
-    // Ensure currentValues is an array
-    const safeCurrentValues = Array.isArray(currentValues) ? currentValues : [];
-
-    if (safeCurrentValues.length > 1) {
-      const newValues = safeCurrentValues.filter((_, i) => i !== index);
-      setDetailCount((prev) => prev - 1);
-      detailForm.reset(newValues);
+    if (detailForms.length > 1) {
+      // Get current form values to preserve user input
+      const currentValues = detailForm.getValues();
+      const safeCurrentValues = Array.isArray(currentValues) ? currentValues : [];
+      
+      // Remove the detail at the specified index
+      const updatedForms = safeCurrentValues.filter((_, i) => i !== index);
+      
+      setDetailForms(updatedForms);
+      detailForm.reset(updatedForms);
     }
   };
 
@@ -246,7 +248,7 @@ export const MatchingModal = ({
               }`}
             >
               <span className="font-medium">
-                2. Add Details ({detailCount})
+                2. Add Details ({detailForms.length})
               </span>
             </div>
           </div>
@@ -399,7 +401,7 @@ export const MatchingModal = ({
                 className="space-y-6"
               >
                 <div className="space-y-6">
-                  {Array.from({ length: detailCount }, (_, index) => (
+                  {detailForms.map((_, index) => (
                     <div
                       key={`detail-${index}`}
                       className="border border-gray-200 rounded-lg p-6 bg-gray-50"
@@ -408,7 +410,7 @@ export const MatchingModal = ({
                         <h3 className="text-lg font-semibold text-gray-900">
                           Artwork Detail {index + 1}
                         </h3>
-                        {detailCount > 1 && (
+                        {detailForms.length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeDetail(index)}
@@ -530,18 +532,6 @@ export const MatchingModal = ({
                       </div>
                     </div>
                   ))}
-                </div>
-
-                <div className="flex justify-center">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={addDetail}
-                    className="flex items-center space-x-2 border-dashed border-2 border-gray-300 hover:border-gray-400 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>Add Another Detail</span>
-                  </Button>
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">

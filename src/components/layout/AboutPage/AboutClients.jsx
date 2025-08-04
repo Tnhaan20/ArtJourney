@@ -199,15 +199,7 @@ export default function AboutClients() {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="text-center mt-12">
-          <button className="inline-flex items-center gap-3 bg-[#DDA853] hover:bg-[#DDA853]/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 group">
-            <span>{t("about.clients.cta.button")}</span>
-            <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
-              <Quote className="w-4 h-4" />
-            </div>
-          </button>
-        </div>
+       
       </div>
     </div>
   );

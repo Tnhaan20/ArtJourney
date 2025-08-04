@@ -128,6 +128,17 @@ export default function ChallengePage() {
             autoStart={true} // Auto start the game
           />
         );
+      
+      case "Matching":
+        return (
+          <DragDropGame
+            courseId={courseId}
+            challengeId={challengeId}
+            challengeData={challengeData.data}
+            challengeInfo={currentChallenge}
+            autoStart={true} // Auto start the game
+          />
+        );
 
       case "Quiz":
         return (

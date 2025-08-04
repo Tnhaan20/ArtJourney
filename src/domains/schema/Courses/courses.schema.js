@@ -71,14 +71,13 @@ export const useCourseSchema = z
   })
   .refine(
     (data) => {
-      // Cross-field validation: Premium courses must have price >= 10000
-      if (data.IsPremium && data.Price < 10000) {
+      if (data.IsPremium && (data.Price < 20000 || data.Price > 40000)) {
         return false;
       }
       return true;
     },
     {
-      message: "Premium courses must have a price of at least 10,000 VND",
+      message: "Premium courses must have a price of at least 20,000 VND and at most 40,000 VND",
       path: ["Price"], // This associates the error with the Price field
     }
   );

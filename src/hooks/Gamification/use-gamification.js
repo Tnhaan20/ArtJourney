@@ -37,22 +37,6 @@ export const useGamification = () => {
         mutationKey: [QueryKey.CHALLENGE.CREATE_CHALLENGE_SESSION],
         mutationFn: async (payload) =>
             await gamificationService.post.createChallengeSession(payload),
-    
-        onSuccess: async (data) => {
-            toast({
-            title: "Session created successfully",
-            description: data.message,
-            variant: "success",
-            });
-        },
-        onError: async (error) => {
-            toast({
-            title: "Session creation failed",
-            description: error.response?.data?.errors?.[0].message,
-            variant: "destructive",
-            });
-        },
-        
     });
 
     const createArtwork = useMutation({

@@ -113,13 +113,7 @@ export default function AboutHero() {
                 <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
 
-              <Link
-                to="/gallery"
-                className="inline-flex items-center justify-center gap-2 border-2 border-[#DDA853] text-[#DDA853] hover:bg-[#DDA853] hover:text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:shadow-lg"
-              >
-                <Heart className="w-4 h-4" />
-                <span>{t("about.hero.buttons.exploreGallery")}</span>
-              </Link>
+              
             </div>
           </div>
 

@@ -241,20 +241,7 @@ export default function AboutStories() {
               </div>
             </div>
 
-            {/* Call to Action */}
-            <div className="pt-8 border-t border-gray-200">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className="inline-flex items-center gap-2 bg-[#DDA853] hover:bg-[#DDA853]/90 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105 group">
-                  <span>{t("about.stories.cta.join")}</span>
-                  <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                </button>
-
-                <button className="inline-flex items-center gap-2 border-2 border-[#DDA853] text-[#DDA853] hover:bg-[#DDA853] hover:text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:shadow-lg">
-                  <Heart className="w-5 h-5" />
-                  <span>{t("about.stories.cta.learn")}</span>
-                </button>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
