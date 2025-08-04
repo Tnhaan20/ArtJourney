@@ -66,10 +66,7 @@ export const ChallengeModal = ({ isOpen, onClose, selectedCourse = null }) => {
 
   // Challenge type options
   const challengeTypes = [
-    { value: "Puzzle", label: "Puzzle Challenge" },
     { value: "Matching", label: "Matching Challenge" },
-    { value: "Timeline", label: "Timeline Challenge" },
-    { value: "Interactive", label: "Interactive Challenge" },
   ];
 
   // Duration options in seconds

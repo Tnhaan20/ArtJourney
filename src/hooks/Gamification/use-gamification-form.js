@@ -1,19 +1,19 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { 
-  sessionSchema, 
-  artworkDetailArraySchema,  // Change to array schema
-  artworkArraySchema,
-  challengeArraySchema
+import {
+  sessionSchema,
+  artworkDetailArraySchema, // Change to array schema
+  challengeArraySchema,
+  artworkSchema,
 } from "@/domains/schema/Gamification/gamification.schema";
 import { useGamification } from "./use-gamification";
 
 export const useGamificationForm = () => {
-  const { 
-    createChallengeMutation, 
-    createSession, 
-    createArtwork, 
-    createArtworkDetail 
+  const {
+    createChallengeMutation,
+    createSession,
+    createArtwork,
+    createArtworkDetail,
   } = useGamification();
 
   // Challenge Form - sends array of challenges
@@ -28,7 +28,7 @@ export const useGamificationForm = () => {
           durationSeconds: 0,
           courseId: 0,
           ...defaultValues,
-        }
+        },
       ],
     });
 
@@ -93,7 +93,7 @@ export const useGamificationForm = () => {
           year: "",
           artworkId: 0,
           ...defaultValues,
-        }
+        },
       ],
     });
 
@@ -116,18 +116,16 @@ export const useGamificationForm = () => {
     };
   };
 
-  // Artwork Form - sends array of artworks
+  // Artwork Form - sends single artwork
   const useArtworkForm = (defaultValues = {}) => {
     const form = useForm({
-      resolver: zodResolver(artworkArraySchema),
-      defaultValues: [
-        {
-          image: "",
-          title: "",
-          challengeId: 0,
-          ...defaultValues,
-        }
-      ],
+      resolver: zodResolver(artworkSchema),
+      defaultValues: {
+        Image: undefined,
+        Title: "",
+        ChallengeId: 0,
+        ...defaultValues,
+      },
     });
 
     const onSubmit = async (data) => {

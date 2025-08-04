@@ -24,11 +24,12 @@ export const artworkDetailSchema = z.object({
 });
 
 export const artworkSchema = z.object({
-  image: z.string(),
-  title: z.string(),
-  challengeId: z.number()
+  Image: z.any().refine((file) => file instanceof File, {
+    message: "Image is required and must be a file",
+  }),
+  Title: z.string().min(1, "Title is required"),
+  ChallengeId: z.number().min(1, "Challenge ID is required"),
 });
 
 export const challengeArraySchema = z.array(challengeSchema);
 export const artworkDetailArraySchema = z.array(artworkDetailSchema);
-export const artworkArraySchema = z.array(artworkSchema);

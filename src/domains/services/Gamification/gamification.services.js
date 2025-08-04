@@ -18,10 +18,11 @@ export const gamificationService = {
     },
 
     createArtworks: async (data) => {
-      const res = await axiosInstance.post(
-        "/challenge/artworks",
-        data
-      );
+      const res = await axiosInstance.post("/challenge/artwork", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return res.data;
     },
     createArtworkDetail: async (data) => {
