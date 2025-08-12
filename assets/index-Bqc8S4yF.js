@@ -1,0 +1,1 @@
+import{j as e}from"./index-C-krFRSx.js";function t(){return e.jsx("div",{className:"",children:e.jsx("div",{className:"flex items-center justify-center min-h-screen",children:e.jsx("span",{className:"text-2xl font-semibold text-gray-700",children:"Community Page Coming Soon"})})})}export{t as default};
