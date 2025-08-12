@@ -72,10 +72,6 @@ export const MatchingModal = ({
 
   const artworks = artworksResponse?.data || [];
 
-  // Watch form values
-  const artworkValues = artworkForm.watch();
-  const detailValues = detailForm.watch();
-
   // Reset forms when modal opens
   useEffect(() => {
     if (isOpen && selectedChallenge) {

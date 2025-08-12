@@ -251,11 +251,11 @@ export default function Header() {
               </div>
             )}
           </div>
-          <div
+          {/* <div
             className={`${TailwindStyle.GLASSMORPHISM} flex items-center justify-center z-50 p-0 aspect-square cursor-pointer `}
           >
             <LanguageSwitcher />
-          </div>
+          </div> */}
           {/* Mobile Menu Button */}
           <button
             className="md:hidden flex items-center justify-center"
