@@ -417,7 +417,7 @@ export const AIChat = () => {
                                 </p>
                                 {!message.isUser && message.modelUsed && (
                                   <p className="text-xs text-gray-400 font-mono">
-                                    {message.modelUsed}
+                                    Gemini 2.0 Flash
                                   </p>
                                 )}
                               </div>
